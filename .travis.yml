@@ -11,11 +11,11 @@ addons:
   sonarcloud:
     organization: "nvt-kts-12"
     token:
-      secure: "travis encrypt 9a47c09a4e39c6cdd354299aa2e801a354cf0282" # encrypted value of your token
+      secure: $SONAR_TOKEN # encrypted value of your token
 
 before_install:
   - chmod +x mvnw
 
 script:
   - ./mvnw clean install -DskipTests=false -B
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=nvt-kts-12_backend
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=$SONAR_KEY
