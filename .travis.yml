@@ -20,7 +20,8 @@ before_install:
   - chmod +x mvnw
 
 before_script:
-  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
+  - echo "USE mysql;\nUPDATE user SET authentication_string=PASSWORD('') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
+
 
 script:
   - ./mvnw clean install -DskipTests=false -B
