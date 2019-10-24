@@ -3,26 +3,29 @@ package nvt.kts.TicketApp.domain.model.location;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import nvt.kts.TicketApp.domain.model.AbstractEntity;
 
-@NoArgsConstructor
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
 @Getter
 @Setter
-public class Location {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@NoArgsConstructor
+@Entity
+public class Location extends AbstractEntity {
 
-    @NotNull
-    private String name;
+    @OneToOne
+    private LocationScheme scheme;
 
-    @NotNull
-    private String address;
-
-    @NotNull
-    private Layout layout;
-
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "location_sectors_ids", joinColumns = @JoinColumn(name = "location_id"))
+    @Column(name = "sectorsids")
+    private List<Long> sectorsIds;
+    
+    public Location(Long id, @NotNull LocationScheme scheme, @NotNull List<Long> sectorsIds) {
+        super(id);
+        this.scheme = scheme;
+        this.sectorsIds = sectorsIds;
+    }
 }
