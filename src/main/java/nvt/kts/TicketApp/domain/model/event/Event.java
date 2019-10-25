@@ -19,7 +19,7 @@ public class Event extends AbstractEntity {
     @NotNull
     private String description;
 
-    @OneToMany
+    @OneToMany(mappedBy = "event")
     private List<EventDay> eventDays;
 
     public Event(Long id, @NotNull String name,

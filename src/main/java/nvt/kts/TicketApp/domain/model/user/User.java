@@ -24,7 +24,7 @@ public class User extends AbstractUser {
     @NotNull
     private int bankAccount;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Ticket> tickets;
 
     public User(Long id, @NotNull String username, @NotNull String password,

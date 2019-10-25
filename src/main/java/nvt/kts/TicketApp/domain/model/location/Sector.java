@@ -8,6 +8,7 @@ import nvt.kts.TicketApp.domain.model.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -34,7 +35,7 @@ public class Sector extends AbstractEntity {
     @NotNull
     private double price;
 
-    @Column(name = "capacity")
+    @NotNull
     private int capacity;
 
     @Column(name = "row_num")
@@ -46,11 +47,14 @@ public class Sector extends AbstractEntity {
     @NotNull
     private SectorType type;
 
-    public Sector(Long id, @NotNull double topLeftX, @NotNull double topLeftY,
-                  @NotNull double bottomRightX, @NotNull double bottomRightY,
-                  @NotNull boolean vip, @NotNull double price, int capacity,
-                  int rowNum, int colNum,
-                  @NotNull SectorType type) {
+    @ManyToOne
+    private LocationScheme locationScheme;
+
+    public Sector(Long id, @NotNull double topLeftX,
+                  @NotNull double topLeftY, @NotNull double bottomRightX,
+                  @NotNull double bottomRightY, @NotNull boolean vip,
+                  @NotNull double price, @NotNull int capacity, int rowNum, int colNum,
+                  @NotNull SectorType type, LocationScheme locationScheme) {
         super(id);
         this.topLeftX = topLeftX;
         this.topLeftY = topLeftY;
@@ -62,5 +66,6 @@ public class Sector extends AbstractEntity {
         this.rowNum = rowNum;
         this.colNum = colNum;
         this.type = type;
+        this.locationScheme = locationScheme;
     }
 }

@@ -21,7 +21,7 @@ public class LocationScheme extends AbstractEntity {
     @NotNull
     private String address;
 
-    @OneToMany
+    @OneToMany(mappedBy = "locationScheme")
     private List<Sector> sectors;
 
     public LocationScheme(Long id, @NotNull String name,

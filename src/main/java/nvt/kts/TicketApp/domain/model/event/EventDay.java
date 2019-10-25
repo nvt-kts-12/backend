@@ -8,6 +8,7 @@ import nvt.kts.TicketApp.domain.model.location.Location;
 import nvt.kts.TicketApp.domain.model.ticket.Ticket;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
@@ -32,17 +33,21 @@ public class EventDay extends AbstractEntity {
     @NotNull
     private EventDayState state;
 
-    @OneToMany
+    @OneToMany(mappedBy = "eventDay")
     private List<Ticket> tickets;
 
-    public EventDay(Long id, @NotNull Date date,
-                    @NotNull Location location, @NotNull Date reservationExpirationDate,
-                    @NotNull EventDayState state, List<Ticket> tickets) {
+    @ManyToOne
+    private Event event;
+
+    public EventDay(Long id, @NotNull Date date, Location location,
+                    @NotNull Date reservationExpirationDate,
+                    @NotNull EventDayState state, List<Ticket> tickets, Event event) {
         super(id);
         this.date = date;
         this.location = location;
         this.reservationExpirationDate = reservationExpirationDate;
         this.state = state;
         this.tickets = tickets;
+        this.event = event;
     }
 }
