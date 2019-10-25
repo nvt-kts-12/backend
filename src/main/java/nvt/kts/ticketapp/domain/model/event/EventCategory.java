@@ -1,4 +1,4 @@
-package nvt.kts.TicketApp.domain.model.event;
+package nvt.kts.ticketapp.domain.model.event;
 
 public enum EventCategory {
     SPORT, CULTURAL, ENTERTAINMENT

@@ -1,9 +1,9 @@
-package nvt.kts.TicketApp.domain.model.location;
+package nvt.kts.ticketapp.domain.model.location;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import nvt.kts.TicketApp.domain.model.AbstractEntity;
+import nvt.kts.ticketapp.domain.model.AbstractEntity;
 
 
 import javax.persistence.Column;

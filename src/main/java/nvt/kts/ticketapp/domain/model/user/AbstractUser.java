@@ -1,12 +1,9 @@
-package nvt.kts.TicketApp.domain.model.user;
+package nvt.kts.ticketapp.domain.model.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import nvt.kts.TicketApp.domain.model.AbstractEntity;
 
-import static javax.persistence.DiscriminatorType.STRING;
-import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
 import javax.persistence.*;

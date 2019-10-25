@@ -1,11 +1,11 @@
-package nvt.kts.TicketApp.domain.model.ticket;
+package nvt.kts.ticketapp.domain.model.ticket;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import nvt.kts.TicketApp.domain.model.AbstractEntity;
-import nvt.kts.TicketApp.domain.model.event.EventDay;
-import nvt.kts.TicketApp.domain.model.user.User;
+import nvt.kts.ticketapp.domain.model.AbstractEntity;
+import nvt.kts.ticketapp.domain.model.event.EventDay;
+import nvt.kts.ticketapp.domain.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

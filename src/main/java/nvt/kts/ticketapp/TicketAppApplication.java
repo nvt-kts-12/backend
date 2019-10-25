@@ -1,4 +1,4 @@
-package nvt.kts.TicketApp;
+package nvt.kts.ticketapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

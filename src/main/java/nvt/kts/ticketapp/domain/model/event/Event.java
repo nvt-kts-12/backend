@@ -1,6 +1,6 @@
-package nvt.kts.TicketApp.domain.model.event;
+package nvt.kts.ticketapp.domain.model.event;
 
-import nvt.kts.TicketApp.domain.model.AbstractEntity;
+import nvt.kts.ticketapp.domain.model.AbstractEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;

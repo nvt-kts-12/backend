@@ -1,4 +1,4 @@
-package nvt.kts.TicketApp.domain.model.user;
+package nvt.kts.ticketapp.domain.model.user;
 
 import lombok.NoArgsConstructor;
 
