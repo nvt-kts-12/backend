@@ -1,4 +1,4 @@
-package nvt.kts.TicketApp;
+package nvt.kts.ticketapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
