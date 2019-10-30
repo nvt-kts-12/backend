@@ -1,8 +1,11 @@
 package nvt.kts.ticketapp.controller;
 
+import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.location.LocationServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,5 +18,7 @@ public class LocationController {
         locationService = locationService;
     }
 
-    @PostMapping("")
+    public void save(Location location){
+        locationService.save(location);
+    }
 }
