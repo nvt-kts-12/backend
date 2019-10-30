@@ -33,9 +33,6 @@ public class EventDay extends AbstractEntity {
     @NotNull
     private EventDayState state;
 
-    @OneToMany(mappedBy = "eventDay")
-    private List<Ticket> tickets;
-
     @ManyToOne
     private Event event;
 
@@ -47,7 +44,6 @@ public class EventDay extends AbstractEntity {
         this.location = location;
         this.reservationExpirationDate = reservationExpirationDate;
         this.state = state;
-        this.tickets = tickets;
         this.event = event;
     }
 }
