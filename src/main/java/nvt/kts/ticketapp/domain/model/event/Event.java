@@ -19,9 +19,6 @@ public class Event extends AbstractEntity {
     @NotNull
     private String description;
 
-    @OneToMany(mappedBy = "event")
-    private List<EventDay> eventDays;
-
     public Event(Long id, @NotNull String name,
                  @NotNull EventCategory category,
                  @NotNull String description, List<EventDay> eventDays) {
@@ -29,6 +26,5 @@ public class Event extends AbstractEntity {
         this.name = name;
         this.category = category;
         this.description = description;
-        this.eventDays = eventDays;
     }
 }
