@@ -50,12 +50,11 @@ public class Sector extends AbstractEntity {
     @ManyToOne
     private LocationScheme locationScheme;
 
-    public Sector(Long id, @NotNull double topLeftX,
+    public Sector(@NotNull double topLeftX,
                   @NotNull double topLeftY, @NotNull double bottomRightX,
                   @NotNull double bottomRightY, @NotNull boolean vip,
                   @NotNull double price, @NotNull int capacity, int rowNum, int colNum,
                   @NotNull SectorType type, LocationScheme locationScheme) {
-        super(id);
         this.topLeftX = topLeftX;
         this.topLeftY = topLeftY;
         this.bottomRightX = bottomRightX;

@@ -36,10 +36,9 @@ public class EventDay extends AbstractEntity {
     @ManyToOne
     private Event event;
 
-    public EventDay(Long id, @NotNull Date date, Location location,
+    public EventDay(@NotNull Date date, Location location,
                     @NotNull Date reservationExpirationDate,
                     @NotNull EventDayState state, List<Ticket> tickets, Event event) {
-        super(id);
         this.date = date;
         this.location = location;
         this.reservationExpirationDate = reservationExpirationDate;
