@@ -20,10 +20,6 @@ public abstract class AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean deleted;
+    private boolean deleted = false;
 
-    public AbstractEntity(Long id) {
-        this.id = id;
-        this.deleted = false;
-    }
 }

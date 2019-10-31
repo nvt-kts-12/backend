@@ -22,7 +22,6 @@ public class Event extends AbstractEntity {
     public Event(Long id, @NotNull String name,
                  @NotNull EventCategory category,
                  @NotNull String description, List<EventDay> eventDays) {
-        super(id);
         this.name = name;
         this.category = category;
         this.description = description;

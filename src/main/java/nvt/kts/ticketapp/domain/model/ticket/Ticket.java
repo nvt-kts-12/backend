@@ -37,10 +37,9 @@ public class Ticket extends AbstractEntity {
     @ManyToOne
     private User user;
 
-    public Ticket(Long id, @NotNull boolean sold,
+    public Ticket(@NotNull boolean sold,
                   @NotNull Long sectorId, int seatRow, int seatCol,
                   @NotNull double price, EventDay eventDay, User user) {
-        super(id);
         this.sold = sold;
         this.sectorId = sectorId;
         this.seatRow = seatRow;

@@ -21,14 +21,8 @@ public class User extends AbstractUser {
     @NotNull
     private String email;
 
-    @NotNull
-    private int bankAccount;
-
-    public User(Long id, @NotNull String username, @NotNull String password,
-                @NotNull String firstName, @NotNull String lastName, @NotNull UserRole userRole,
-                @NotNull String email, @NotNull int bankAccount, List<Ticket> tickets) {
-        super(id, username, password, firstName, lastName, userRole);
+    public User(@NotNull String username, @NotNull String password, @NotNull String firstName, @NotNull String lastName, @NotNull UserRole userRole, @NotNull String email) {
+        super(username, password, firstName, lastName, userRole);
         this.email = email;
-        this.bankAccount = bankAccount;
     }
 }
