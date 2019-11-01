@@ -3,6 +3,7 @@ package nvt.kts.ticketapp.domain.model.user;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
@@ -35,11 +36,10 @@ public abstract class AbstractUser {
     @NotNull
     private UserRole userRole;
 
-    public AbstractUser(Long id, @NotNull String username,
-                        @NotNull String password, @NotNull String firstName,
-                        @NotNull String lastName, @NotNull UserRole userRole) {
-        this.id = id;
+    public AbstractUser(@NotNull String username, @NotNull String password, @NotNull String firstName, @NotNull String lastName, @NotNull UserRole userRole) {
         this.username = username;
+
+        // TODO encode password with BCryptPasswordEncoder
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;

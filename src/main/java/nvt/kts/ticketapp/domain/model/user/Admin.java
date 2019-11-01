@@ -11,9 +11,9 @@ import javax.validation.constraints.NotNull;
 @Table(name="admins")
 public class Admin extends AbstractUser{
 
-    public Admin(Long id, @NotNull String username, @NotNull String password,
+    public Admin(@NotNull String username, @NotNull String password,
                  @NotNull String firstName, @NotNull String lastName,
                  @NotNull UserRole userRole) {
-        super(id, username, password, firstName, lastName, userRole);
+        super(username, password, firstName, lastName, userRole);
     }
 }
