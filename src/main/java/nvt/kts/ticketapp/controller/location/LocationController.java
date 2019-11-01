@@ -14,9 +14,8 @@ public class LocationController {
 
     private LocationService locationService;
 
-    @Autowired
     public LocationController(LocationServiceImpl locationService){
-        locationService = locationService;
+        this.locationService = locationService;
     }
 
     @PostMapping("/save")

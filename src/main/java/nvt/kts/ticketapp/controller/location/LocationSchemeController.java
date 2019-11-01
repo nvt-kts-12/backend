@@ -13,9 +13,11 @@ import java.util.List;
 @RestController
 public class LocationSchemeController {
 
-    @Autowired
     private LocationSchemeService locationSchemeService;
 
+    public LocationSchemeController(LocationSchemeServiceImpl locationSchemeService){
+        this.locationSchemeService = locationSchemeService;
+    }
 
     @PostMapping
     public void save(LocationScheme locationScheme, List<SectorDTO> sectors){

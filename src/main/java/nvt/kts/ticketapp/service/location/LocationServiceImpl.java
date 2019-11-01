@@ -17,19 +17,21 @@ import java.util.Optional;
 @Service
 public class LocationServiceImpl implements LocationService {
 
-    @Autowired
     private LocationRepository locationRepository;
 
     private ModelMapper modelMapper = new ModelMapper();
     private LocationMapper locationMapper = new LocationMapper();
 
+    public LocationServiceImpl(LocationRepository locationRepository){
+        this.locationRepository = locationRepository;
+    }
 
     public void save(LocationDTO location) {
         //todo
     }
 
     public LocationDTO getOne(Long id) {
-        Optional<Location> location = locationRepository.findById(id);
+        Location location = locationRepository.findById(id).orElse(new Location());
         return locationMapper.entityToDto(location.get());
     }
 

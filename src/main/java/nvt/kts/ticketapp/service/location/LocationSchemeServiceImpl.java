@@ -11,8 +11,11 @@ import java.util.List;
 @Service
 public class LocationSchemeServiceImpl implements LocationSchemeService {
 
-    @Autowired
     private LocationSchemeRepository locationSchemeRepository;
+
+    public LocationSchemeServiceImpl(LocationSchemeRepository locationSchemeRepository){
+        this.locationSchemeRepository = locationSchemeRepository;
+    }
 
     public void save(LocationScheme locationScheme, List<SectorDTO> sectors) {
         //todo

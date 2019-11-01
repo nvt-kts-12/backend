@@ -2,9 +2,11 @@ package nvt.kts.ticketapp.service.location;
 
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface LocationSchemeService {
 
     /**
