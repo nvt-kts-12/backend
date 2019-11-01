@@ -21,8 +21,8 @@ public class LocationScheme extends AbstractEntity {
     @NotNull
     private String address;
 
-    public LocationScheme(Long id, @NotNull String name, @NotNull String address) {
-        super(id);
+    public LocationScheme(@NotNull String name,
+                          @NotNull String address, List<Sector> sectors) {
         this.name = name;
         this.address = address;
     }
