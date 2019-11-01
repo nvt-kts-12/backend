@@ -12,8 +12,12 @@ import java.util.List;
 @RequestMapping("/location")
 public class LocationController {
 
-    @Autowired
     private LocationService locationService;
+
+    @Autowired
+    public LocationController(LocationServiceImpl locationService){
+        locationService = locationService;
+    }
 
     @PostMapping("/save")
     public void save(LocationDTO location){
