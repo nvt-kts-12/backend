@@ -1,31 +1,48 @@
 package nvt.kts.ticketapp.service.location;
 
+import nvt.kts.ticketapp.domain.dto.location.LocationDTO;
 import nvt.kts.ticketapp.domain.model.location.Location;
-import nvt.kts.ticketapp.repository.LocationRepository;
+import nvt.kts.ticketapp.repository.location.LocationRepository;
+import nvt.kts.ticketapp.util.LocationMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class LocationServiceImpl implements LocationService {
 
     @Autowired
     private LocationRepository locationRepository;
 
-    public void save(Location location) {
+    private ModelMapper modelMapper = new ModelMapper();
+    private LocationMapper locationMapper = new LocationMapper();
+
+
+    public void save(LocationDTO location) {
         //todo
     }
 
-    public Location getOne(Long id) {
+    public LocationDTO getOne(Long id) {
         Optional<Location> location = locationRepository.findById(id);
-        return location.get();
+        return locationMapper.entityToDto(location.get());
     }
 
-    public List<Location> getAll(int page, int size) {
+    public List<LocationDTO> get(int page, int size) {
         Page<Location> locations = locationRepository.findAll(PageRequest.of(page, size));
-        return (List<Location>) locations;
+        return locationMapper.entitiesToDtos(locations.getContent());
+    }
+
+    public void delete(Long id) {
+        Location location = locationRepository.findById(id).orElse(new Location());
+
+        location.setDeleted(true);
+        locationRepository.save(location);
     }
 
 

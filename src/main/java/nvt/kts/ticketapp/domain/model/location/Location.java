@@ -18,8 +18,9 @@ public class Location extends AbstractEntity {
     @OneToOne
     private LocationScheme scheme;
 
-    public Location(Long id, @NotNull LocationScheme scheme, @NotNull List<Long> sectorsIds) {
+    public Location(Long id, @NotNull LocationScheme scheme) {
         super(id);
         this.scheme = scheme;
     }
+
 }
