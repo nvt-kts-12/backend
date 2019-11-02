@@ -38,7 +38,7 @@ public class EventDay extends AbstractEntity {
 
     public EventDay(@NotNull Date date, Location location,
                     @NotNull Date reservationExpirationDate,
-                    @NotNull EventDayState state, List<Ticket> tickets, Event event) {
+                    @NotNull EventDayState state, Event event) {
         this.date = date;
         this.location = location;
         this.reservationExpirationDate = reservationExpirationDate;
