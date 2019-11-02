@@ -6,6 +6,7 @@ import nvt.kts.ticketapp.domain.model.location.SectorType;
 @Data
 public class SectorDTO {
 
+    private Long id;
     private double topLeftX;
     private double topLeftY;
 

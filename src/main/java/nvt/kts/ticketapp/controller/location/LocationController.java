@@ -1,9 +1,13 @@
 package nvt.kts.ticketapp.controller.location;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationDTO;
+import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.location.LocationServiceImpl;
+import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,12 +29,23 @@ public class LocationController {
 
     @PostMapping("/delete/{id}")
     public void delete(@PathVariable Long id){
-        locationService.delete(id);
+        try {
+            locationService.delete(id);
+        } catch (LocationNotFound locationNotFound) {
+            locationNotFound.printStackTrace();
+        }
     }
 
     @GetMapping("/get/{id}")
-    public LocationDTO get(@PathVariable Long id){
-        return locationService.getOne(id);
+    public ResponseEntity get(@PathVariable Long id)  {
+        LocationDTO locationDTO = null;
+        try {
+            locationDTO = locationService.getOne(id);
+        } catch (LocationNotFound locationNotFound) {
+            locationNotFound.printStackTrace();
+            return new ResponseEntity<String>(locationNotFound.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<LocationDTO>(locationDTO, HttpStatus.OK);
     }
 
     @GetMapping("/getAll")

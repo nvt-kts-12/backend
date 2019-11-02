@@ -1,6 +1,7 @@
 package nvt.kts.ticketapp.service.location;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationDTO;
+import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import org.springframework.stereotype.Service;
 
 
@@ -20,7 +21,7 @@ public interface LocationService {
      * @param id    -   location id
      * @return
      */
-    public LocationDTO getOne(Long id);
+    public LocationDTO getOne(Long id) throws LocationNotFound;
 
     /**
      * Provides list of all locations
@@ -32,5 +33,5 @@ public interface LocationService {
      * Removes location with given id
      * @param id
      */
-    public void delete(Long id);
+    public void delete(Long id) throws LocationNotFound;
 }

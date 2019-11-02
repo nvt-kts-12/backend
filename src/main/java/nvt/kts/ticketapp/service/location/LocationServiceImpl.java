@@ -2,25 +2,21 @@ package nvt.kts.ticketapp.service.location;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationDTO;
 import nvt.kts.ticketapp.domain.model.location.Location;
+import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import nvt.kts.ticketapp.repository.location.LocationRepository;
-import nvt.kts.ticketapp.util.LocationMapper;
+import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LocationServiceImpl implements LocationService {
 
     private LocationRepository locationRepository;
-
-    private ModelMapper modelMapper = new ModelMapper();
-    private LocationMapper locationMapper = new LocationMapper();
 
     public LocationServiceImpl(LocationRepository locationRepository){
         this.locationRepository = locationRepository;
@@ -30,22 +26,38 @@ public class LocationServiceImpl implements LocationService {
         //todo
     }
 
-    public LocationDTO getOne(Long id) {
-        Location location = locationRepository.findById(id).orElse(new Location());
-        return locationMapper.entityToDto(location.get());
+    public LocationDTO getOne(Long id) throws LocationNotFound {
+        Location location = locationRepository.findById(id).orElse(null);
+        if(location == null || location.isDeleted()){
+            throw new LocationNotFound(id);
+        }else{
+            return ObjectMapperUtils.map(location, LocationDTO.class);
+        }
     }
 
     public List<LocationDTO> get(int page, int size) {
         Page<Location> locations = locationRepository.findAll(PageRequest.of(page, size));
-        return locationMapper.entitiesToDtos(locations.getContent());
+        return ObjectMapperUtils.mapAll(removeDeletedLocations(locations.getContent()), LocationDTO.class);
     }
 
-    public void delete(Long id) {
-        Location location = locationRepository.findById(id).orElse(new Location());
-
-        location.setDeleted(true);
-        locationRepository.save(location);
+    public void delete(Long id) throws LocationNotFound{
+        Location location = locationRepository.findById(id).orElse(null);
+        if(location == null || location.isDeleted()){
+            throw new LocationNotFound(id);
+        }else{
+            location.setDeleted(true);
+            locationRepository.save(location);
+        }
     }
 
 
+    private List<Location> removeDeletedLocations(List<Location> locations){
+        List<Location> locationsToReturn = new ArrayList<>();
+        for (Location location : locations) {
+            if(!location.isDeleted()){
+                locationsToReturn.add(location);
+            }
+        }
+        return locationsToReturn;
+    }
 }
