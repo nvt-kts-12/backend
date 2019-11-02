@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.service.event;
+package nvt.kts.ticketapp.exception.event;
 
 public class ReservationExpireDateInvalid extends Exception {
 

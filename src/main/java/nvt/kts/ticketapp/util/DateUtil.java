@@ -1,24 +1,23 @@
 package nvt.kts.ticketapp.util;
 
-import nvt.kts.ticketapp.exception.date.DateFormatNotValid;
+import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import static nvt.kts.ticketapp.config.Constants.DATE_FORMAT;
 import static nvt.kts.ticketapp.config.Constants.DATE_TIME_FORMAT;
 
 public class DateUtil {
 
-    public static Date parseDate(String date) throws DateFormatNotValid {
+    public static Date parseDate(String date) throws DateFormatIsNotValid {
 
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT);
          try {
             return sdf.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
-            throw new DateFormatNotValid();
+            throw new DateFormatIsNotValid();
         }
     }
 

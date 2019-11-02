@@ -10,19 +10,20 @@ import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.domain.model.location.LocationSector;
 import nvt.kts.ticketapp.domain.model.location.Sector;
-import nvt.kts.ticketapp.exception.date.DateCantBeInPast;
-import nvt.kts.ticketapp.exception.date.DateFormatNotValid;
+import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
+import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
+import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
 import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
-import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeNotExist;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.exception.sector.SectorCapacityOverload;
-import nvt.kts.ticketapp.exception.sector.SectorNotExist;
+import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
 import nvt.kts.ticketapp.repository.event.EventRepository;
 import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.SectorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,6 @@ public class EventServiceImpl implements EventService {
     private final SectorService sectorService;
     private final LocationSectorService locationSectorService;
 
-    @Autowired
     public EventServiceImpl(EventRepository eventRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService) {
         this.eventRepository = eventRepository;
         this.eventDayService = eventDayService;
@@ -55,9 +55,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event save(EventEventDaysDTO eventEventDaysDTO) throws DateFormatNotValid, LocationSchemeNotExist, SectorNotExist, LocationNotAvailableThatDate, ParseException, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInPast, ReservationExpireDateInvalid {
+    public Event save(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, ParseException, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid {
 
-        Event event = new Event(eventEventDaysDTO.getEvent().getName(), eventEventDaysDTO.getEvent().getCategory(), eventEventDaysDTO.getEvent().getDescription());
+        Event event = ObjectMapperUtils.map(eventEventDaysDTO.getEvent(), Event.class);
 
         List<EventDay> eventDays = new ArrayList<>();
         List<Location> locations = new ArrayList<>();
@@ -111,10 +111,10 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
-    private void checkDates(Date date, Date reservationExpireDate) throws DateCantBeInPast, ReservationExpireDateInvalid {
+    private void checkDates(Date date, Date reservationExpireDate) throws DateCantBeInThePast, ReservationExpireDateInvalid {
 
         if (dateInPast(date) || dateInPast(reservationExpireDate)) {
-            throw new DateCantBeInPast();
+            throw new DateCantBeInThePast();
         }
 
         if (reservationExpireDate.after(date)) {
@@ -125,10 +125,10 @@ public class EventServiceImpl implements EventService {
 
     private void checkAvailabilityOfLocationOnDate(Long locationSchemeId, Date date) throws ParseException, LocationNotAvailableThatDate {
 
-        List<EventDay> eventDays = eventDayService.getAll();
+        List<EventDay> eventDays = eventDayService.findAllByDate(date);
 
-        for (EventDay eventDay: eventDays) {
-            if (datesEqual(eventDay.getDate(), date)) {
+        if (!eventDays.isEmpty()) {
+            for (EventDay eventDay: eventDays) {
                 if (eventDay.getLocation().getScheme().getId() == locationSchemeId) {
                     throw new LocationNotAvailableThatDate();
                 }

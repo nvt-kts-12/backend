@@ -20,7 +20,6 @@ public class AuthenticationController {
 
     private UserService userService;
 
-    @Autowired
     public AuthenticationController(UserService userService) {
         this.userService = userService;
     }

@@ -5,6 +5,7 @@ import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -12,7 +13,6 @@ public class EventDayServiceImpl implements EventDayService {
 
     private final EventDaysRepository eventDaysRepository;
 
-    @Autowired
     public EventDayServiceImpl(EventDaysRepository eventDaysRepository) {
         this.eventDaysRepository = eventDaysRepository;
     }
@@ -23,7 +23,8 @@ public class EventDayServiceImpl implements EventDayService {
     }
 
     @Override
-    public List<EventDay> getAll() {
-        return eventDaysRepository.findAll();
+    public List<EventDay> findAllByDate(Date date) {
+        return eventDaysRepository.findAllByDate(date);
     }
+
 }

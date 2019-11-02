@@ -12,7 +12,6 @@ public class LocationSectorServiceImpl implements LocationSectorService {
 
     private final LocationSectorRepository locationSectorRepository;
 
-    @Autowired
     public LocationSectorServiceImpl(LocationSectorRepository locationSectorRepository) {
         this.locationSectorRepository = locationSectorRepository;
     }
