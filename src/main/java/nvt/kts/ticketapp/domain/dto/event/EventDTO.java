@@ -10,7 +10,6 @@ import nvt.kts.ticketapp.domain.model.event.EventCategory;
 @Setter
 public class EventDTO {
 
-
     private Long id;
     private String description;
     private String name;

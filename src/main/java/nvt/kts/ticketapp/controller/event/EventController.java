@@ -2,8 +2,17 @@ package nvt.kts.ticketapp.controller.event;
 
 
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
+import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
+import nvt.kts.ticketapp.exception.date.DateCantBeInPast;
+import nvt.kts.ticketapp.exception.date.DateFormatNotValid;
+import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
+import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeNotExist;
+import nvt.kts.ticketapp.exception.sector.SectorCapacityOverload;
+import nvt.kts.ticketapp.exception.sector.SectorNotExist;
 import nvt.kts.ticketapp.service.event.EventService;
+import nvt.kts.ticketapp.service.event.ReservationExpireDateInvalid;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Optional;
 
 @RestController
@@ -27,9 +37,14 @@ public class EventController {
     }
 
      @PostMapping()
-     private ResponseEntity<EventDTO> save (@RequestBody EventDTO eventDTO){
-           Event event = null;
-           event = eventService.save(eventDTO);
+     private ResponseEntity save (@RequestBody EventEventDaysDTO eventEventDaysDTO){
+         Event event = null;
+         try {
+             event = eventService.save(eventEventDaysDTO);
+         } catch (DateFormatNotValid | LocationSchemeNotExist | SectorNotExist | LocationNotAvailableThatDate | ParseException | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInPast | ReservationExpireDateInvalid ex) {
+             ex.printStackTrace();
+             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+         }
 
          return new ResponseEntity<EventDTO>(ObjectMapperUtils.map(event, EventDTO.class), HttpStatus.OK);
      }
@@ -39,21 +54,4 @@ public class EventController {
 
          return new ResponseEntity<Page<Event>>(eventService.findAll(pageable),HttpStatus.OK);
      }
-
-
-    @PutMapping("/{id}")
-    public ResponseEntity<EventDTO> update(@PathVariable(value = "id") Long eventId,
-                                           @RequestBody EventDTO eventDetails){
-
-        Event event = eventService.findOne(eventId);
-        event.setName(eventDetails.getName());
-        event.setCategory(eventDetails.getCategory());
-        event.setDescription(eventDetails.getDescription());
-
-        final Event updatedEmployee = eventService.save(ObjectMapperUtils.map(event, EventDTO.class));
-        return ResponseEntity.ok(eventDetails);
-    }
-
-
-
 }

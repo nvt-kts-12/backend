@@ -10,4 +10,7 @@ public class Constants {
     // minimum 3 characters, letters and numbers, first must be letter
     public static final String USERNAME_REGEX = "[a-zA-Z]{1}[a-zA-Z0-9]{2,}";
 
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.sss'Z'";
+
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 }

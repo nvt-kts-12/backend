@@ -30,12 +30,6 @@ public class Sector extends AbstractEntity {
     private double bottomRightY;
 
     @NotNull
-    private boolean vip;
-
-    @NotNull
-    private double price;
-
-    @NotNull
     private int capacity;
 
     @Column(name = "row_num")
@@ -52,15 +46,13 @@ public class Sector extends AbstractEntity {
 
     public Sector(@NotNull double topLeftX,
                   @NotNull double topLeftY, @NotNull double bottomRightX,
-                  @NotNull double bottomRightY, @NotNull boolean vip,
-                  @NotNull double price, @NotNull int capacity, int rowNum, int colNum,
+                  @NotNull double bottomRightY,
+                  @NotNull int capacity, int rowNum, int colNum,
                   @NotNull SectorType type, LocationScheme locationScheme) {
         this.topLeftX = topLeftX;
         this.topLeftY = topLeftY;
         this.bottomRightX = bottomRightX;
         this.bottomRightY = bottomRightY;
-        this.vip = vip;
-        this.price = price;
         this.capacity = capacity;
         this.rowNum = rowNum;
         this.colNum = colNum;

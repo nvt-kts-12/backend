@@ -25,7 +25,7 @@ public class Event extends AbstractEntity {
     @NotNull
     private String description;
 
-    public Event(Long id, @NotNull String name,
+    public Event(@NotNull String name,
                  @NotNull EventCategory category,
                  @NotNull String description) {
         this.name = name;
