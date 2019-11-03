@@ -77,7 +77,7 @@ public class EventServiceImpl implements EventService {
             checkDates(date, reservationExpireDate);
 
             Long locationSchemeId = eventDayDTO.getLocation().getLocationSchemeId();
-            LocationScheme locationScheme = locationSchemeService.get(locationSchemeId);
+            LocationScheme locationScheme = locationSchemeService.getScheme(locationSchemeId);
 
             // check if a location is available that date
             checkAvailabilityOfLocationOnDate(locationScheme.getId(), date);

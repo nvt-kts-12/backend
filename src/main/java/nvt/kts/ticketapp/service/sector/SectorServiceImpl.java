@@ -32,28 +32,23 @@ public class SectorServiceImpl implements SectorService {
     }
 
     public List<SectorDTO> getAll() {
-        return ObjectMapperUtils.mapAll(sectorRepository.findAll(), SectorDTO.class);
+        return ObjectMapperUtils.mapAll(sectorRepository.findAllByDeletedFalse(), SectorDTO.class);
     }
 
     public SectorDTO get(Long id) throws SectorDoesNotExist {
-        Sector sector = sectorRepository.findById(id).orElse(null);
-        if(sector == null) throw new SectorDoesNotExist();
+        Sector sector = sectorRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new SectorDoesNotExist());
 
         return ObjectMapperUtils.map(sector, SectorDTO.class);
     }
 
     public List<SectorDTO> getByScheme(Long schemeId) {
-        List<Sector> sectors = sectorRepository.findAllByLocationSchemeId(schemeId);
+        List<Sector> sectors = sectorRepository.findAllByLocationSchemeIdAndDeletedFalse(schemeId);
         return ObjectMapperUtils.mapAll(sectors, SectorDTO.class);
     }
 
     public Sector getSector(Long id) throws SectorDoesNotExist{
-        Optional<Sector> sector = sectorRepository.findOneById(id);
+        Sector sector = sectorRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new SectorDoesNotExist());
 
-        if (sector.isEmpty()) {
-            throw new SectorDoesNotExist();
-        }
-
-        return sector.get();
+        return sector;
     }
 }

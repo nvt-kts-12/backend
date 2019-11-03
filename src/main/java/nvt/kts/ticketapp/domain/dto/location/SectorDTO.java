@@ -13,10 +13,6 @@ public class SectorDTO {
     private double bottomRightX;
     private double bottomRightY;
 
-    private boolean vip;
-
-    private double price;
-
     private int capacity;
 
     private int rowNum;

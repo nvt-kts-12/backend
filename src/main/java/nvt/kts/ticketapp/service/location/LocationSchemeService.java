@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.service.location;
 
+import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
@@ -23,11 +24,19 @@ public interface LocationSchemeService {
      * @return  -   returns location scheme with sectors provided
      * @throws LocationSchemeDoesNotExist
      */
-    public LocationScheme get(Long id) throws LocationSchemeDoesNotExist;
+    public LocationSchemeDTO get(Long id) throws LocationSchemeDoesNotExist;
 
     /**
      * Provides all location schemes
      * @return
      */
-    public List<LocationScheme> getAll();
+    public List<LocationSchemeDTO> getAll();
+
+    /**
+     * Provides location scheme Entity by its id
+     * @param id    -   id of scheme that is searched for
+     * @return
+     * @throws LocationSchemeDoesNotExist
+     */
+    public LocationScheme getScheme(Long id) throws LocationSchemeDoesNotExist;
 }

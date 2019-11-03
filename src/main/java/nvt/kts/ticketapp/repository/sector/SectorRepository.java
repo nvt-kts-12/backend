@@ -9,7 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface SectorRepository  extends JpaRepository<Sector, Long> {
-    Optional<Sector> findOneById(Long sectorId);
+    Optional<Sector> findByIdAndDeletedFalse(Long id);
 
-    List<Sector> findAllByLocationSchemeId(Long schemeId);
+    List<Sector> findAllByDeletedFalse();
+
+    List<Sector> findAllByLocationSchemeIdAndDeletedFalse(Long schemeId);
 }

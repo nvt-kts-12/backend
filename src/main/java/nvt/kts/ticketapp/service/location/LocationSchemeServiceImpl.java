@@ -1,9 +1,11 @@
 package nvt.kts.ticketapp.service.location;
 
+import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.repository.locationScheme.LocationSchemeRepository;
+import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public class LocationSchemeServiceImpl implements LocationSchemeService {
 
     public LocationScheme save(LocationScheme locationScheme) throws LocationSchemeAlreadyExists {
         if(locationScheme.getId() == null &&
-                locationSchemeRepository.findByNameIgnoreCase(locationScheme.getName()).isPresent()){
+                locationSchemeRepository.findByNameIgnoreCaseAndDeletedFalse(locationScheme.getName()).isPresent()){
             // because id is null i know he is trying to save new scheme with existing name
             throw new LocationSchemeAlreadyExists(locationScheme.getName());
         }
@@ -27,16 +29,22 @@ public class LocationSchemeServiceImpl implements LocationSchemeService {
         return locationSchemeRepository.save(locationScheme);
     }
 
-    public LocationScheme get(Long id) throws LocationSchemeDoesNotExist {
-        LocationScheme location = locationSchemeRepository.findById(id).orElse(null);
+    public LocationSchemeDTO get(Long id) throws LocationSchemeDoesNotExist {
+        LocationScheme location = locationSchemeRepository.findByIdAndDeletedFalse(id).
+                                    orElseThrow(() -> new LocationSchemeDoesNotExist(id));
 
-        if(location == null || location.isDeleted()){
-            throw new LocationSchemeDoesNotExist(id);
-        }
-        return location;
+        return ObjectMapperUtils.map(location, LocationSchemeDTO.class);
     }
 
-    public List<LocationScheme> getAll() {
-        return locationSchemeRepository.findAll();
+    public List<LocationSchemeDTO> getAll() {
+        return ObjectMapperUtils.mapAll(locationSchemeRepository.findAllByDeletedFalse(), LocationSchemeDTO.class);
+
+    }
+
+    public LocationScheme getScheme(Long id) throws LocationSchemeDoesNotExist {
+        LocationScheme location = locationSchemeRepository.findByIdAndDeletedFalse(id).
+                orElseThrow(() -> new LocationSchemeDoesNotExist(id));
+
+        return location;
     }
 }

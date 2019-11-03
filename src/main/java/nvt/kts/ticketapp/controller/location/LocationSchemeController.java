@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.controller.location;
 
+import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
@@ -27,7 +28,7 @@ public class LocationSchemeController {
     @GetMapping("/{id}")
     public ResponseEntity get(@PathVariable Long id){
         try {
-            return new ResponseEntity<LocationScheme>(locationSchemeService.get(id), HttpStatus.OK);
+            return new ResponseEntity<LocationSchemeDTO>(locationSchemeService.get(id), HttpStatus.OK);
         } catch (LocationSchemeDoesNotExist locationSchemeDoesNotExist) {
             locationSchemeDoesNotExist.printStackTrace();
             return new ResponseEntity<String>(locationSchemeDoesNotExist.getMessage(), HttpStatus.BAD_REQUEST);
@@ -36,6 +37,6 @@ public class LocationSchemeController {
 
     @GetMapping
     public ResponseEntity getAll(){
-        return new ResponseEntity<List<LocationScheme>>(locationSchemeService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<List<LocationSchemeDTO>>(locationSchemeService.getAll(), HttpStatus.OK);
     }
 }
