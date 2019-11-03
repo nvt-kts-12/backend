@@ -1,32 +1,22 @@
 package nvt.kts.ticketapp.service.location;
 
 import nvt.kts.ticketapp.domain.model.location.Location;
-import nvt.kts.ticketapp.repository.LocationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import nvt.kts.ticketapp.repository.location.LocationRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public class LocationServiceImpl implements LocationService {
 
-    @Autowired
-    private LocationRepository locationRepository;
+    private final LocationRepository locationRepository;
 
-    public void save(Location location) {
-        //todo
+    public LocationServiceImpl(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
     }
 
-    public Location getOne(Long id) {
-        Optional<Location> location = locationRepository.findById(id);
-        return location.get();
+    @Override
+    public void saveAll(List<Location> locations) {
+        locationRepository.saveAll(locations);
     }
-
-    public List<Location> getAll(int page, int size) {
-        Page<Location> locations = locationRepository.findAll(PageRequest.of(page, size));
-        return (List<Location>) locations;
-    }
-
-
 }
