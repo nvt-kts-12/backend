@@ -2,9 +2,12 @@ package nvt.kts.ticketapp.service.sector;
 
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
+import nvt.kts.ticketapp.domain.model.location.LocationSector;
 import nvt.kts.ticketapp.domain.model.location.Sector;
 import nvt.kts.ticketapp.exception.location.SectorNotFound;
+import nvt.kts.ticketapp.exception.sector.CanNotDeleteSchemeSectors;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
+import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
 import nvt.kts.ticketapp.repository.sector.SectorRepository;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +20,11 @@ import java.util.Optional;
 public class SectorServiceImpl implements SectorService {
 
     private final SectorRepository sectorRepository;
+    private LocationSectorRepository locationSectorRepository;
 
-    public SectorServiceImpl(SectorRepository sectorRepository) {
+    public SectorServiceImpl(SectorRepository sectorRepository, LocationSectorRepository locationSectorRepository) {
         this.sectorRepository = sectorRepository;
+        this.locationSectorRepository = locationSectorRepository;
     }
 
 
@@ -50,5 +55,19 @@ public class SectorServiceImpl implements SectorService {
         Sector sector = sectorRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new SectorDoesNotExist());
 
         return sector;
+    }
+
+    public void delete(List<SectorDTO> sectorDTOS) throws CanNotDeleteSchemeSectors {
+        List<Sector> sectors = ObjectMapperUtils.mapAll(sectorDTOS, Sector.class);
+
+        for (Sector sector: sectors) {
+            List<LocationSector> locationSectors = locationSectorRepository.findAllBySectorId(sector.getId());
+            if(locationSectors.size()>0){
+                throw new CanNotDeleteSchemeSectors(sector.getLocationScheme().getId());
+            }
+            sector.setDeleted(true);
+        }
+
+        sectorRepository.saveAll(sectors);
     }
 }

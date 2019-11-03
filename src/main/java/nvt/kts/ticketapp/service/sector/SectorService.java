@@ -4,6 +4,7 @@ import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.domain.model.location.Sector;
 import nvt.kts.ticketapp.exception.location.SectorNotFound;
+import nvt.kts.ticketapp.exception.sector.CanNotDeleteSchemeSectors;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +12,6 @@ import java.util.List;
 
 @Service
 public interface SectorService  {
-
-//    Sector findOneById(Long sectorId) throws SectorDoesNotExist;
 
     /**
      * Saves sectors for given scheme
@@ -47,4 +46,10 @@ public interface SectorService  {
      * @return
      */
     public Sector getSector(Long id) throws SectorDoesNotExist;
+
+    /**
+     * Deletes all given sectors from database
+     * @param sectorDTOS    -   list of sectors to delete
+     */
+    public void delete(List<SectorDTO> sectorDTOS) throws CanNotDeleteSchemeSectors;
 }

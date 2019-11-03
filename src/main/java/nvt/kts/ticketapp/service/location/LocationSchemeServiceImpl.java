@@ -1,9 +1,12 @@
 package nvt.kts.ticketapp.service.location;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
+import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
+import nvt.kts.ticketapp.exception.locationScheme.CanNotDeleteScheme;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
+import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.locationScheme.LocationSchemeRepository;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
@@ -14,9 +17,12 @@ import java.util.List;
 public class LocationSchemeServiceImpl implements LocationSchemeService {
 
     private LocationSchemeRepository locationSchemeRepository;
+    private LocationRepository locationRepository;
 
-    public LocationSchemeServiceImpl(LocationSchemeRepository locationSchemeRepository){
+    public LocationSchemeServiceImpl(LocationSchemeRepository locationSchemeRepository,
+                                     LocationRepository locationRepository){
         this.locationSchemeRepository = locationSchemeRepository;
+        this.locationRepository = locationRepository;
     }
 
     public LocationScheme save(LocationScheme locationScheme) throws LocationSchemeAlreadyExists {
@@ -46,5 +52,19 @@ public class LocationSchemeServiceImpl implements LocationSchemeService {
                 orElseThrow(() -> new LocationSchemeDoesNotExist(id));
 
         return location;
+    }
+
+    public void delete(Long id) throws LocationSchemeDoesNotExist, CanNotDeleteScheme {
+        LocationScheme locationScheme = locationSchemeRepository.findByIdAndDeletedFalse(id).
+                orElseThrow(() -> new LocationSchemeDoesNotExist(id));
+
+        List<Location> locations = locationRepository.findAllBySchemeIdAndDeletedFalse(locationScheme.getId());
+
+        if(locations.size() > 0){
+            throw new CanNotDeleteScheme(id);
+        }
+
+        locationScheme.setDeleted(true);
+        locationSchemeRepository.save(locationScheme);
     }
 }

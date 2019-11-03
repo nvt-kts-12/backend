@@ -2,7 +2,10 @@ package nvt.kts.ticketapp.controller.location;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
+import nvt.kts.ticketapp.exception.locationScheme.CanNotDeleteScheme;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
+import nvt.kts.ticketapp.exception.sector.CanNotDeleteSchemeSectors;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.location.LocationSchemeServiceImpl;
 import nvt.kts.ticketapp.service.sector.SectorService;
@@ -41,5 +44,15 @@ public class LocationSchemeSectorController {
     @GetMapping("/{schemeId}")
     public List<SectorDTO> getByScheme(@PathVariable Long schemeId){
         return sectorService.getByScheme(schemeId);
+    }
+
+    @DeleteMapping()
+    public void delete(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO){
+        try {
+            sectorService.delete(locationSchemeSectorsDTO.getSectors());
+            locationSchemeService.delete(locationSchemeSectorsDTO.getLocationScheme().getId());
+        } catch (CanNotDeleteSchemeSectors | LocationSchemeDoesNotExist | CanNotDeleteScheme ex) {
+            ex.printStackTrace();
+        }
     }
 }
