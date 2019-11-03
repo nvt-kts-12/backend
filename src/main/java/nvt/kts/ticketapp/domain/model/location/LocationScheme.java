@@ -22,7 +22,7 @@ public class LocationScheme extends AbstractEntity {
     private String address;
 
     public LocationScheme(@NotNull String name,
-                          @NotNull String address, List<Sector> sectors) {
+                          @NotNull String address) {
         this.name = name;
         this.address = address;
     }

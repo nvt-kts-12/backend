@@ -21,4 +21,5 @@ public class Location extends AbstractEntity {
     public Location(@NotNull LocationScheme scheme) {
         this.scheme = scheme;
     }
+
 }
