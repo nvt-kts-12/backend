@@ -1,14 +1,9 @@
 package nvt.kts.ticketapp.service.location;
 
-import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
-import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
-import nvt.kts.ticketapp.domain.model.location.Sector;
-import nvt.kts.ticketapp.exception.location.LocationSchemeAlreadyExists;
-import nvt.kts.ticketapp.exception.location.LocationSchemeNotFound;
-import nvt.kts.ticketapp.repository.location.LocationSchemeRepository;
-import nvt.kts.ticketapp.repository.location.SectorRepository;
-import nvt.kts.ticketapp.util.ObjectMapperUtils;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
+import nvt.kts.ticketapp.repository.locationScheme.LocationSchemeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +12,9 @@ import java.util.List;
 public class LocationSchemeServiceImpl implements LocationSchemeService {
 
     private LocationSchemeRepository locationSchemeRepository;
-    private SectorRepository sectorRepository;
 
-    public LocationSchemeServiceImpl(LocationSchemeRepository locationSchemeRepository, SectorRepository sectorRepository){
+    public LocationSchemeServiceImpl(LocationSchemeRepository locationSchemeRepository){
         this.locationSchemeRepository = locationSchemeRepository;
-        this.sectorRepository = sectorRepository;
     }
 
     public LocationScheme save(LocationScheme locationScheme) throws LocationSchemeAlreadyExists {
@@ -34,11 +27,11 @@ public class LocationSchemeServiceImpl implements LocationSchemeService {
         return locationSchemeRepository.save(locationScheme);
     }
 
-    public LocationScheme get(Long id) throws LocationSchemeNotFound {
+    public LocationScheme get(Long id) throws LocationSchemeDoesNotExist {
         LocationScheme location = locationSchemeRepository.findById(id).orElse(null);
 
         if(location == null || location.isDeleted()){
-            throw new LocationSchemeNotFound(id);
+            throw new LocationSchemeDoesNotExist(id);
         }
         return location;
     }

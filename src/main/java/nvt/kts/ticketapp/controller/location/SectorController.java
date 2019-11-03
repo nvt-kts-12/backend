@@ -2,8 +2,9 @@ package nvt.kts.ticketapp.controller.location;
 
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.exception.location.SectorNotFound;
-import nvt.kts.ticketapp.service.location.SectorService;
-import nvt.kts.ticketapp.service.location.SectorServiceImpl;
+import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
+import nvt.kts.ticketapp.service.sector.SectorService;
+import nvt.kts.ticketapp.service.sector.SectorServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +34,9 @@ public class SectorController {
     public ResponseEntity get(@PathVariable Long id){
         try {
             return new ResponseEntity<SectorDTO>(sectorService.get(id), HttpStatus.OK);
-        } catch (SectorNotFound sectorNotFound) {
-            sectorNotFound.printStackTrace();
-            return new ResponseEntity<String>(sectorNotFound.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (SectorDoesNotExist sectorDoesNotExist) {
+            sectorDoesNotExist.printStackTrace();
+            return new ResponseEntity<String>(sectorDoesNotExist.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -1,9 +1,8 @@
 package nvt.kts.ticketapp.service.location;
 
-import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
-import nvt.kts.ticketapp.exception.location.LocationSchemeAlreadyExists;
-import nvt.kts.ticketapp.exception.location.LocationSchemeNotFound;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +21,9 @@ public interface LocationSchemeService {
      * Provides location scheme with given id
      * @param id
      * @return  -   returns location scheme with sectors provided
-     * @throws LocationSchemeNotFound
+     * @throws LocationSchemeDoesNotExist
      */
-    public LocationScheme get(Long id) throws LocationSchemeNotFound;
+    public LocationScheme get(Long id) throws LocationSchemeDoesNotExist;
 
     /**
      * Provides all location schemes
