@@ -3,7 +3,11 @@ package nvt.kts.ticketapp.domain.model.user;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nvt.kts.ticketapp.config.WebSecurityConfig;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
@@ -25,7 +29,7 @@ public abstract class AbstractUser {
     private String username;
 
     @NotNull
-    private String password;
+    protected String password;
 
     @NotNull
     private String firstName;
@@ -38,11 +42,14 @@ public abstract class AbstractUser {
 
     public AbstractUser(@NotNull String username, @NotNull String password, @NotNull String firstName, @NotNull String lastName, @NotNull UserRole userRole) {
         this.username = username;
-
-        // TODO encode password with BCryptPasswordEncoder
-        this.password = password;
+        this.password = this.encodePassword(password);
         this.firstName = firstName;
         this.lastName = lastName;
         this.userRole = userRole;
+    }
+
+    private String encodePassword(String password) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.encode(password);
     }
 }
