@@ -3,9 +3,8 @@ package nvt.kts.ticketapp.controller.location;
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
-import nvt.kts.ticketapp.domain.dto.user.UserDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
-import nvt.kts.ticketapp.exception.locationScheme.CanNotDeleteScheme;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeCanNotBeDeleted;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.exception.sector.CanNotDeleteSchemeSectors;
@@ -61,7 +60,7 @@ public class LocationSchemeSectorController {
             return new ResponseEntity<LocationSchemeSectorsDTO>(
                     new LocationSchemeSectorsDTO(sectorDTOS, locationSchemeDTO), HttpStatus.OK);
 
-        } catch (CanNotDeleteSchemeSectors | LocationSchemeDoesNotExist | CanNotDeleteScheme ex) {
+        } catch (CanNotDeleteSchemeSectors | LocationSchemeDoesNotExist | LocationSchemeCanNotBeDeleted ex) {
             ex.printStackTrace();
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }

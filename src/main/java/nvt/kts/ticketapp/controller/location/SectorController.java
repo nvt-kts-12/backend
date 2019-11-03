@@ -1,7 +1,6 @@
 package nvt.kts.ticketapp.controller.location;
 
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
-import nvt.kts.ticketapp.exception.location.SectorNotFound;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
 import nvt.kts.ticketapp.service.sector.SectorService;
 import nvt.kts.ticketapp.service.sector.SectorServiceImpl;

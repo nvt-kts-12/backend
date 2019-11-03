@@ -2,7 +2,7 @@ package nvt.kts.ticketapp.service.location;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
-import nvt.kts.ticketapp.exception.locationScheme.CanNotDeleteScheme;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeCanNotBeDeleted;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import org.springframework.stereotype.Service;
@@ -46,5 +46,5 @@ public interface LocationSchemeService {
      * @param id    -   id of scheme that is going to be deleted
      * @throws LocationSchemeDoesNotExist
      */
-    public LocationSchemeDTO delete(Long id) throws LocationSchemeDoesNotExist, CanNotDeleteScheme;
+    public LocationSchemeDTO delete(Long id) throws LocationSchemeDoesNotExist, LocationSchemeCanNotBeDeleted;
 }

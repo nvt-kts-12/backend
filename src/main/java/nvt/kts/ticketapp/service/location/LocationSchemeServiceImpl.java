@@ -3,7 +3,7 @@ package nvt.kts.ticketapp.service.location;
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
-import nvt.kts.ticketapp.exception.locationScheme.CanNotDeleteScheme;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeCanNotBeDeleted;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.repository.location.LocationRepository;
@@ -47,14 +47,14 @@ public class LocationSchemeServiceImpl implements LocationSchemeService {
 
     }
 
-    public LocationSchemeDTO delete(Long id) throws LocationSchemeDoesNotExist, CanNotDeleteScheme {
+    public LocationSchemeDTO delete(Long id) throws LocationSchemeDoesNotExist, LocationSchemeCanNotBeDeleted {
         LocationScheme locationScheme = locationSchemeRepository.findByIdAndDeletedFalse(id).
                 orElseThrow(() -> new LocationSchemeDoesNotExist(id));
 
         List<Location> locations = locationRepository.findAllBySchemeIdAndDeletedFalse(locationScheme.getId());
 
-        if(locations.size() > 0){
-            throw new CanNotDeleteScheme(id);
+        if(!locations.isEmpty()){
+            throw new LocationSchemeCanNotBeDeleted(id);
         }
 
         locationScheme.setDeleted(true);
