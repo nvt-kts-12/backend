@@ -3,7 +3,9 @@ package nvt.kts.ticketapp.controller.event;
 
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
+import nvt.kts.ticketapp.domain.dto.event.EventDayReservationDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
+import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
@@ -22,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping(path="api/event")
@@ -50,5 +53,12 @@ public class EventController {
      private ResponseEntity<Page<Event>> show (Pageable pageable){
 
          return new ResponseEntity<Page<Event>>(eventService.findAll(pageable),HttpStatus.OK);
+     }
+
+     @PostMapping("/reserve")
+     private ResponseEntity reserve(@RequestBody EventDayReservationDTO eventDayReservationDTO) {
+
+         List<Ticket> tickets = eventService.reserve(eventDayReservationDTO);
+
      }
 }

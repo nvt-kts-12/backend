@@ -1,7 +1,9 @@
 package nvt.kts.ticketapp.service.event;
 
+import nvt.kts.ticketapp.domain.dto.event.EventDayReservationDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
+import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.List;
 
 
 @Service
@@ -24,4 +27,5 @@ public interface EventService  {
     Page<Event> findAll(Pageable pageable);
     Event findOne(Long eventId);
 
+    List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO) throws Exception;
 }

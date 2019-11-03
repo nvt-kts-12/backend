@@ -1,6 +1,7 @@
 package nvt.kts.ticketapp.service.event;
 
 import nvt.kts.ticketapp.domain.dto.event.EventDayDTO;
+import nvt.kts.ticketapp.domain.dto.event.EventDayReservationDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
 import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
@@ -10,8 +11,11 @@ import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.domain.model.location.LocationSector;
 import nvt.kts.ticketapp.domain.model.location.Sector;
+import nvt.kts.ticketapp.domain.model.ticket.Ticket;
+import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
+import nvt.kts.ticketapp.exception.event.EventDayDoesNotExist;
 import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
 import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
 import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
@@ -19,11 +23,13 @@ import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.exception.sector.SectorCapacityOverload;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
 import nvt.kts.ticketapp.repository.event.EventRepository;
+import nvt.kts.ticketapp.repository.user.UserRepository;
 import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.SectorService;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,6 +38,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static nvt.kts.ticketapp.util.DateUtil.*;
 
@@ -44,6 +51,9 @@ public class EventServiceImpl implements EventService {
     private final LocationService locationService;
     private final SectorService sectorService;
     private final LocationSectorService locationSectorService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public EventServiceImpl(EventRepository eventRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService) {
         this.eventRepository = eventRepository;
@@ -143,6 +153,27 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event findOne(Long id){return eventRepository.getOne(id);}
+
+    @Override
+    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO) throws Exception {
+
+        // TODO get user from context
+        Optional<User> user = userRepository.findOneByUsername("pera");
+
+        if (user.isEmpty()) {
+            // exc
+            throw new Exception();
+        }
+
+        EventDay eventDay = eventDayService.findOneById(eventDayReservationDTO.getEventDayId());
+
+
+
+
+        return  null;
+
+
+    }
 
 
 }
