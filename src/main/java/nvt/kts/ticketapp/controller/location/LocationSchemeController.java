@@ -1,13 +1,9 @@
 package nvt.kts.ticketapp.controller.location;
 
-import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
-import nvt.kts.ticketapp.exception.location.LocationSchemeAlreadyExists;
-import nvt.kts.ticketapp.exception.location.LocationSchemeNotFound;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.location.LocationSchemeServiceImpl;
-import nvt.kts.ticketapp.service.location.SectorService;
-import nvt.kts.ticketapp.service.location.SectorServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +28,9 @@ public class LocationSchemeController {
     public ResponseEntity get(@PathVariable Long id){
         try {
             return new ResponseEntity<LocationScheme>(locationSchemeService.get(id), HttpStatus.OK);
-        } catch (LocationSchemeNotFound locationSchemeNotFound) {
-            locationSchemeNotFound.printStackTrace();
-            return new ResponseEntity<String>(locationSchemeNotFound.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (LocationSchemeDoesNotExist locationSchemeDoesNotExist) {
+            locationSchemeDoesNotExist.printStackTrace();
+            return new ResponseEntity<String>(locationSchemeDoesNotExist.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

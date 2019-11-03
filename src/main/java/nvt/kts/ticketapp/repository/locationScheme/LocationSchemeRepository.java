@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface LocationSchemeRepository extends JpaRepository<LocationScheme, Long> {
 
     Optional<LocationScheme> findOneById(Long id);
+
+    Optional<LocationScheme> findByNameIgnoreCase(String name);
 }

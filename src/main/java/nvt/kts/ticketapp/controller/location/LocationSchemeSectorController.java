@@ -2,11 +2,11 @@ package nvt.kts.ticketapp.controller.location;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
-import nvt.kts.ticketapp.exception.location.LocationSchemeAlreadyExists;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.location.LocationSchemeServiceImpl;
-import nvt.kts.ticketapp.service.location.SectorService;
-import nvt.kts.ticketapp.service.location.SectorServiceImpl;
+import nvt.kts.ticketapp.service.sector.SectorService;
+import nvt.kts.ticketapp.service.sector.SectorServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

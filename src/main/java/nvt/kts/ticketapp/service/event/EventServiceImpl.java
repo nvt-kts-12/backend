@@ -77,7 +77,7 @@ public class EventServiceImpl implements EventService {
             checkDates(date, reservationExpireDate);
 
             Long locationSchemeId = eventDayDTO.getLocation().getLocationSchemeId();
-            LocationScheme locationScheme = locationSchemeService.findOneById(locationSchemeId);
+            LocationScheme locationScheme = locationSchemeService.get(locationSchemeId);
 
             // check if a location is available that date
             checkAvailabilityOfLocationOnDate(locationScheme.getId(), date);
@@ -91,7 +91,7 @@ public class EventServiceImpl implements EventService {
             // create locationSectors
             for (LocationSectorsDTO locationSectorsDTO : eventDayDTO.getLocation().getLocationSectors()) {
 
-                Sector sector = sectorService.findOneById(locationSectorsDTO.getSectorId());
+                Sector sector = sectorService.getSector(locationSectorsDTO.getSectorId());
 
                 if (sector.getCapacity() < locationSectorsDTO.getCapacity()) {
                     throw new SectorCapacityOverload();
