@@ -47,14 +47,7 @@ public class LocationSchemeServiceImpl implements LocationSchemeService {
 
     }
 
-    public LocationScheme getScheme(Long id) throws LocationSchemeDoesNotExist {
-        LocationScheme location = locationSchemeRepository.findByIdAndDeletedFalse(id).
-                orElseThrow(() -> new LocationSchemeDoesNotExist(id));
-
-        return location;
-    }
-
-    public void delete(Long id) throws LocationSchemeDoesNotExist, CanNotDeleteScheme {
+    public LocationSchemeDTO delete(Long id) throws LocationSchemeDoesNotExist, CanNotDeleteScheme {
         LocationScheme locationScheme = locationSchemeRepository.findByIdAndDeletedFalse(id).
                 orElseThrow(() -> new LocationSchemeDoesNotExist(id));
 
@@ -65,6 +58,14 @@ public class LocationSchemeServiceImpl implements LocationSchemeService {
         }
 
         locationScheme.setDeleted(true);
-        locationSchemeRepository.save(locationScheme);
+        return ObjectMapperUtils.map(locationSchemeRepository.save(locationScheme), LocationSchemeDTO.class);
+    }
+
+
+    public LocationScheme getScheme(Long id) throws LocationSchemeDoesNotExist {
+        LocationScheme location = locationSchemeRepository.findByIdAndDeletedFalse(id).
+                orElseThrow(() -> new LocationSchemeDoesNotExist(id));
+
+        return location;
     }
 }

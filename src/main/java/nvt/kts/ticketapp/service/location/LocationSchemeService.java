@@ -46,5 +46,5 @@ public interface LocationSchemeService {
      * @param id    -   id of scheme that is going to be deleted
      * @throws LocationSchemeDoesNotExist
      */
-    public void delete(Long id) throws LocationSchemeDoesNotExist, CanNotDeleteScheme;
+    public LocationSchemeDTO delete(Long id) throws LocationSchemeDoesNotExist, CanNotDeleteScheme;
 }

@@ -57,7 +57,7 @@ public class SectorServiceImpl implements SectorService {
         return sector;
     }
 
-    public void delete(List<SectorDTO> sectorDTOS) throws CanNotDeleteSchemeSectors {
+    public List<SectorDTO> delete(List<SectorDTO> sectorDTOS) throws CanNotDeleteSchemeSectors {
         List<Sector> sectors = ObjectMapperUtils.mapAll(sectorDTOS, Sector.class);
 
         for (Sector sector: sectors) {
@@ -68,6 +68,6 @@ public class SectorServiceImpl implements SectorService {
             sector.setDeleted(true);
         }
 
-        sectorRepository.saveAll(sectors);
+        return ObjectMapperUtils.mapAll(sectorRepository.saveAll(sectors), SectorDTO.class);
     }
 }

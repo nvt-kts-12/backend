@@ -1,7 +1,10 @@
 package nvt.kts.ticketapp.controller.location;
 
+import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
+import nvt.kts.ticketapp.domain.dto.user.UserDTO;
+import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.exception.locationScheme.CanNotDeleteScheme;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
@@ -10,6 +13,9 @@ import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.location.LocationSchemeServiceImpl;
 import nvt.kts.ticketapp.service.sector.SectorService;
 import nvt.kts.ticketapp.service.sector.SectorServiceImpl;
+import nvt.kts.ticketapp.util.ObjectMapperUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +41,7 @@ public class LocationSchemeSectorController {
     public void save(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO){
         try {
             sectorService.saveAll(locationSchemeSectorsDTO.getSectors(),
-                    locationSchemeService.save(locationSchemeSectorsDTO.getLocationScheme()));
+                    locationSchemeService.save(ObjectMapperUtils.map(locationSchemeSectorsDTO.getLocationScheme(), LocationScheme.class)));
         } catch (LocationSchemeAlreadyExists locationSchemeAlreadyExists) {
             locationSchemeAlreadyExists.printStackTrace();
         }
@@ -47,12 +53,17 @@ public class LocationSchemeSectorController {
     }
 
     @DeleteMapping()
-    public void delete(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO){
+    public ResponseEntity delete(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO){
         try {
-            sectorService.delete(locationSchemeSectorsDTO.getSectors());
-            locationSchemeService.delete(locationSchemeSectorsDTO.getLocationScheme().getId());
+            List<SectorDTO> sectorDTOS = sectorService.delete(locationSchemeSectorsDTO.getSectors());
+            LocationSchemeDTO locationSchemeDTO = locationSchemeService.delete(locationSchemeSectorsDTO.getLocationScheme().getId());
+
+            return new ResponseEntity<LocationSchemeSectorsDTO>(
+                    new LocationSchemeSectorsDTO(sectorDTOS, locationSchemeDTO), HttpStatus.OK);
+
         } catch (CanNotDeleteSchemeSectors | LocationSchemeDoesNotExist | CanNotDeleteScheme ex) {
             ex.printStackTrace();
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

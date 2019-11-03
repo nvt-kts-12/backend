@@ -1,20 +1,17 @@
 package nvt.kts.ticketapp.domain.dto.location;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class LocationSchemeSectorsDTO {
-    private LocationScheme locationScheme;
+    private LocationSchemeDTO locationScheme;
     private List<SectorDTO> sectors;
 
-    public LocationSchemeSectorsDTO(LocationScheme locationScheme, List<SectorDTO> sectors) {
-        this.locationScheme = locationScheme;
-        this.sectors = sectors;
+    public LocationSchemeSectorsDTO(List<SectorDTO> sectorDTOS, LocationSchemeDTO locationSchemeDTO) {
+        this.locationScheme = locationSchemeDTO;
+        this.sectors = sectorDTOS;
     }
 }

@@ -51,5 +51,5 @@ public interface SectorService  {
      * Deletes all given sectors from database
      * @param sectorDTOS    -   list of sectors to delete
      */
-    public void delete(List<SectorDTO> sectorDTOS) throws CanNotDeleteSchemeSectors;
+    public List<SectorDTO> delete(List<SectorDTO> sectorDTOS) throws CanNotDeleteSchemeSectors;
 }
