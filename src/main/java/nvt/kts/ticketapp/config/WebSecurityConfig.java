@@ -53,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        // TODO delete this and uncomment code below
         http.authorizeRequests().antMatchers("/").permitAll();
 
 //        http.httpBasic().disable();
@@ -70,8 +71,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring()
-                .antMatchers(HttpMethod.POST, "/**");
+        // TODO delete this and uncomment code below
+        web.ignoring().antMatchers(HttpMethod.POST, "/**");
+        web.ignoring().antMatchers(HttpMethod.GET, "/**");
+        web.ignoring().antMatchers(HttpMethod.PUT, "/**");
+
 //        web.ignoring().antMatchers(HttpMethod.POST, "auth/login");
 //        web.ignoring().antMatchers(HttpMethod.POST, "auth/register");
 //        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico",

@@ -36,6 +36,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,22 +86,24 @@ public class EventController {
      @PostMapping("/reserve")
      private ResponseEntity reserve(HttpServletRequest request, @RequestBody EventDayReservationDTO eventDayReservationDTO) {
 
-//        User user = customUserDetailsService.getUserFromRequest(request);
-         // probaj da prosledis principal umesto request
+        User user = customUserDetailsService.getUserFromRequest(request);
+
          // TODO delete when security is enabled
-        Optional<User> user = userRepository.findOneByUsername("classicdocs");
-
-        if (user.isEmpty()) {
-            return new ResponseEntity<String>("Error", HttpStatus.BAD_REQUEST);
-        }
-
+//        Optional<User> user = userRepository.findOneByUsername("classicdocs");
+//
+//        if (user.isEmpty()) {
+//            return new ResponseEntity<String>("Error", HttpStatus.BAD_REQUEST);
+//        }
 
         List<Ticket> tickets = null;
          try {
-             tickets = eventService.reserve(eventDayReservationDTO, user.get());
+             tickets = eventService.reserve(eventDayReservationDTO, user);
          } catch (EventDayDoesNotExist | LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable ex) {
              ex.printStackTrace();
              return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+         } catch (ObjectOptimisticLockingFailureException e) {
+             e.printStackTrace();
+             return new ResponseEntity<String>("Something went wrong! Please try again.", HttpStatus.BAD_REQUEST);
          }
 
          return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets),HttpStatus.OK);

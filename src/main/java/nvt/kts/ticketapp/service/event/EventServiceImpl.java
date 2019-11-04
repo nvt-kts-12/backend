@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -44,6 +45,7 @@ import java.util.List;
 import static nvt.kts.ticketapp.util.DateUtil.*;
 
 @Service
+@EnableTransactionManagement
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
@@ -144,6 +146,7 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
+
     private void checkDates(Date date, Date reservationExpireDate) throws DateCantBeInThePast, ReservationExpireDateInvalid {
 
         if (dateInPast(date) || dateInPast(reservationExpireDate)) {
@@ -178,8 +181,8 @@ public class EventServiceImpl implements EventService {
     public Event findOne(Long id){return eventRepository.getOne(id);}
 
     @Override
-    @Transactional
-    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable {
+    @Transactional(rollbackOn = Exception.class)
+    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable {
 
         EventDay eventDay = eventDayService.getReservableAndBuyable(eventDayReservationDTO.getEventDayId());
 
@@ -206,6 +209,8 @@ public class EventServiceImpl implements EventService {
         for (SeatDTO seatDTO : eventDayReservationDTO.getSeats()) {
             Long sectorId = seatDTO.getSectorId();
 
+            boolean reservationSuccess = false;
+
             for(LocationSector locationSector : locationSectors) {
                 if (locationSector.getSector().getId() != sectorId) {
                     continue;
@@ -218,10 +223,11 @@ public class EventServiceImpl implements EventService {
                 Ticket ticket = ticketService.getAvailableGrandstandTicketForEventDayAndSector(seatDTO, eventDay);
                 ticket.setUser(user);
                 reservedTickets.add(ticket);
-                return reservedTickets;
-
+                reservationSuccess = true;
             }
-            throw new SectorNotFound(sectorId);
+            if (!reservationSuccess) {
+                throw new SectorNotFound(sectorId);
+            }
         }
 
         return reservedTickets;
@@ -246,16 +252,19 @@ public class EventServiceImpl implements EventService {
                 }
 
                 List<Ticket> availableTickets = ticketService.getAvailableTicketsForEventDayAndSector(eventDay.getId(), sectorId);
-                if (availableTickets.size() >= parterDTO.getNumberOfTickets()) {
-                    // parter reservation possible
-                    for (int i = 0; i < parterDTO.getNumberOfTickets(); i++) {
-                        Ticket ticket = availableTickets.get(i);
-                        ticket.setUser(user);
-                        reservedTickets.add(ticket);
-                    }
-                    return reservedTickets;
 
-                } else throw new NumberOfTicketsException();
+                if (availableTickets.size() < parterDTO.getNumberOfTickets()) {
+                    throw new NumberOfTicketsException();
+                }
+
+                // parter reservation possible
+                for (int i = 0; i < parterDTO.getNumberOfTickets(); i++) {
+                    Ticket ticket = availableTickets.get(i);
+                    ticket.setUser(user);
+                    reservedTickets.add(ticket);
+                }
+                return reservedTickets;
+
             }
             throw new SectorNotFound(sectorId);
         }
