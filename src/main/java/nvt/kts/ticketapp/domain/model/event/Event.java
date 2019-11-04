@@ -6,6 +6,8 @@ import lombok.Setter;
 import nvt.kts.ticketapp.domain.model.AbstractEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import java.util.List;

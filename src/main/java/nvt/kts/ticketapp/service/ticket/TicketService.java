@@ -4,6 +4,7 @@ import nvt.kts.ticketapp.domain.dto.event.SeatDTO;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.location.LocationSector;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
+import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import org.springframework.stereotype.Service;
 
@@ -16,4 +17,8 @@ public interface TicketService {
     Ticket getAvailableGrandstandTicketForEventDayAndSector(SeatDTO seatDTO, EventDay eventDay) throws SeatIsNotAvailable;
 
     List<Ticket> saveAll(List<Ticket> tickets);
+
+    List<Ticket> getReservationsFromUser(User user);
+
+    List<Ticket> getSoldTicketsFromUser(User user);
 }

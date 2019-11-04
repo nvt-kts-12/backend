@@ -4,6 +4,7 @@ import nvt.kts.ticketapp.domain.dto.event.SeatDTO;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.location.LocationSector;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
+import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import org.springframework.stereotype.Service;
@@ -40,5 +41,15 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<Ticket> saveAll(List<Ticket> tickets) {
         return ticketRepository.saveAll(tickets);
+    }
+
+    @Override
+    public List<Ticket> getReservationsFromUser(User user) {
+        return ticketRepository.findByUserIdAndSold(user.getId(), false);
+    }
+
+    @Override
+    public List<Ticket> getSoldTicketsFromUser(User user) {
+        return ticketRepository.findByUserIdAndSold(user.getId(), true);
     }
 }
