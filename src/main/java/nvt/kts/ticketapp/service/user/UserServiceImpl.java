@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.service.user;
 
+import nvt.kts.ticketapp.domain.dto.user.UserEditDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserRegistrationDTO;
 import nvt.kts.ticketapp.domain.model.user.Authority;
 import nvt.kts.ticketapp.domain.model.user.User;
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
         User newUser = new User(userRegistrationDTO.getUsername(),
                 userRegistrationDTO.getPassword(),
                 userRegistrationDTO.getFirstName(),
-                userRegistrationDTO.getFirstName(),
+                userRegistrationDTO.getLastName(),
                 UserRole.REGISTERED,
                 userRegistrationDTO.getEmail());
 
@@ -78,8 +79,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
+    public User findByUsername(String username) throws UserNotFound{
         Optional<User> u = userRepository.findOneByUsername(username);
-        return u.get();
+        if (u.isPresent()) {
+            return u.get();
+        } else {
+            throw new UserNotFound();
+        }
+    }
+
+    @Override
+    public User editUser(UserEditDTO userEditDTO, User user) throws EmailNotValid, FirstNameNotValid, LastNameNotValid {
+
+        if (userEditDTO.getEmail() != null) {
+            if (!userEditDTO.getEmail().matches(EMAIL_REGEX)) {
+                throw new EmailNotValid();
+            }
+            user.setEmail(userEditDTO.getEmail());
+        }
+
+        if (userEditDTO.getFirstName() != null) {
+            if (userEditDTO.getFirstName().matches(WHITESPACES_REGEX)) {
+                throw new FirstNameNotValid();
+            }
+            user.setFirstName(userEditDTO.getFirstName());
+        }
+
+        if (userEditDTO.getLastName() != null) {
+            if (userEditDTO.getLastName().matches(WHITESPACES_REGEX)) {
+                throw new LastNameNotValid();
+            }
+            user.setLastName(userEditDTO.getLastName());
+        }
+
+        userRepository.save(user);
+        return user;
     }
 }
