@@ -3,6 +3,9 @@ package nvt.kts.ticketapp.domain.dto.event;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nvt.kts.ticketapp.domain.model.event.EventDayState;
+
+import java.util.Date;
 
 @NoArgsConstructor
 @Getter
@@ -10,14 +13,16 @@ import lombok.Setter;
 public class EventDayDTO {
 
     private Long id;
-    private String date;
+    private Date date;
     private LocationDTO location;
-    private String reservationExpireDate;
+    private Date reservationExpireDate;
+    private EventDayState eventDayState;
 
-    public EventDayDTO(Long id, String date, LocationDTO location, String reservationExpireDate) {
+    public EventDayDTO(Long id, Date date, LocationDTO location, Date reservationExpireDate,EventDayState eventDayState) {
         this.id = id;
         this.date = date;
         this.location = location;
         this.reservationExpireDate = reservationExpireDate;
+        this.eventDayState = eventDayState;
     }
 }

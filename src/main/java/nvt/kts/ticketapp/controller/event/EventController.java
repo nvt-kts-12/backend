@@ -2,6 +2,8 @@ package nvt.kts.ticketapp.controller.event;
 
 
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
+import nvt.kts.ticketapp.domain.dto.event.EventDayDTO;
+import nvt.kts.ticketapp.domain.dto.event.EventDayUpdateDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
@@ -22,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.Date;
 
 @RestController
 @RequestMapping(path="api/event")
@@ -51,4 +54,22 @@ public class EventController {
 
          return new ResponseEntity<Page<Event>>(eventService.findAll(pageable),HttpStatus.OK);
      }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EventDTO> update(@PathVariable(value = "id") Long eventId,
+                                           @RequestBody EventDTO eventDetails){
+
+        eventService.update(eventId,eventDetails);
+        return new ResponseEntity<EventDTO>(eventDetails, HttpStatus.OK);
+
+    }
+
+
+    @PutMapping
+    public ResponseEntity<EventDayUpdateDTO> updateEventDay(@RequestBody EventDayUpdateDTO eventDayUpdateDTO){
+
+        return new ResponseEntity<EventDayUpdateDTO>(eventService.updateEventDay(eventDayUpdateDTO), HttpStatus.OK);
+    }
+
+
 }

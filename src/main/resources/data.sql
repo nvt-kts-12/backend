@@ -8,3 +8,13 @@ values (2, 0, "50", "50", "0", "0", 50, 5, 10, 1, 1 ),
 (3, 0, "50", "50", "0", "0", 100, 0, 0, 0, 1 ),
 (4, 0, "50", "50", "0", "0", 20, 2, 10, 1, 1 );
 
+
+
+
+-- simanic
+
+insert into location_scheme (id, address, name, deleted) values (2, "Test", "Test", 0 );
+insert into location(id, deleted, scheme_id) values (1, 0, 2);
+insert into event(id, deleted, category, description, name) values (1, 0, 1, "test", "ime");
+insert into event_day(id, deleted, date, reservation_expiration_date, state, event_id, location_id) values
+(1,0,'2010-01-01', '1998-12-30', 0, 1, 1);
