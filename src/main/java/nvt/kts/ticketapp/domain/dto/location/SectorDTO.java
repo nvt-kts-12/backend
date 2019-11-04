@@ -7,6 +7,7 @@ import nvt.kts.ticketapp.domain.model.location.SectorType;
 public class SectorDTO {
 
     private Long id;
+    private boolean deleted;
     private double topLeftX;
     private double topLeftY;
 
