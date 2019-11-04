@@ -1,44 +1,45 @@
 package nvt.kts.ticketapp.service.event;
 
-import nvt.kts.ticketapp.domain.dto.event.EventDayDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventDayReservationDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
-import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
+import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
-import nvt.kts.ticketapp.domain.model.location.Location;
-import nvt.kts.ticketapp.domain.model.location.LocationScheme;
-import nvt.kts.ticketapp.domain.model.location.LocationSector;
-import nvt.kts.ticketapp.domain.model.location.Sector;
+import nvt.kts.ticketapp.domain.model.location.*;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDayDoesNotExist;
+import nvt.kts.ticketapp.exception.event.EventDayDoesNotExistOrStateIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
 import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
 import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
+import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
+import nvt.kts.ticketapp.exception.location.SectorNotFound;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.exception.sector.SectorCapacityOverload;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
+import nvt.kts.ticketapp.exception.sector.SectorWrongType;
+import nvt.kts.ticketapp.exception.ticket.NumberOfTicketsException;
+import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import nvt.kts.ticketapp.repository.event.EventRepository;
 import nvt.kts.ticketapp.repository.user.UserRepository;
 import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.SectorService;
+import nvt.kts.ticketapp.service.ticket.TicketService;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static nvt.kts.ticketapp.util.DateUtil.*;
 
@@ -51,17 +52,19 @@ public class EventServiceImpl implements EventService {
     private final LocationService locationService;
     private final SectorService sectorService;
     private final LocationSectorService locationSectorService;
+    private final TicketService ticketService;
 
     @Autowired
     private UserRepository userRepository;
 
-    public EventServiceImpl(EventRepository eventRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService) {
+    public EventServiceImpl(EventRepository eventRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService, TicketService ticketService) {
         this.eventRepository = eventRepository;
         this.eventDayService = eventDayService;
         this.locationSchemeService = locationSchemeService;
         this.locationService = locationService;
         this.sectorService = sectorService;
         this.locationSectorService = locationSectorService;
+        this.ticketService = ticketService;
     }
 
     @Override
@@ -72,6 +75,8 @@ public class EventServiceImpl implements EventService {
         List<EventDay> eventDays = new ArrayList<>();
         List<Location> locations = new ArrayList<>();
         List<LocationSector> locationSectors = new ArrayList<>();
+        List<Ticket> tickets = new ArrayList<>();
+
 
         if (eventEventDaysDTO.getEventDays().isEmpty()) {
             throw new EventDaysListEmpty();
@@ -108,6 +113,23 @@ public class EventServiceImpl implements EventService {
                 }
                 LocationSector locationSector = new LocationSector(sector, location, locationSectorsDTO.getPrice(), locationSectorsDTO.getCapacity(), locationSectorsDTO.isVip());
                 locationSectors.add(locationSector);
+
+
+                if (locationSector.getSector().getType() == SectorType.PARTER) {
+                    // generate tickets for locationSector Parter
+                    for(int i = 0; i < locationSector.getCapacity(); i++) {
+                        Ticket ticket = new Ticket(false, locationSector.getSector().getId(), 0,0, locationSectorsDTO.getPrice(), eventDay, null, locationSectorsDTO.isVip());
+                        tickets.add(ticket);
+                    }
+                } else {
+                    // generate tickets for locationSector Grandstand
+                    for (int row = 1; row <= locationSector.getSector().getRowNum(); row++) {
+                        for(int col = 1; col <= locationSector.getSector().getColNum(); col++) {
+                            Ticket ticket = new Ticket(false, locationSector.getSector().getId(), row, col, locationSectorsDTO.getPrice(), eventDay, null, locationSectorsDTO.isVip());
+                            tickets.add(ticket);
+                        }
+                    }
+                }
             }
 
         }
@@ -117,6 +139,7 @@ public class EventServiceImpl implements EventService {
         locationService.saveAll(locations);
         locationSectorService.saveAll(locationSectors);
         eventDayService.saveAll(eventDays);
+        ticketService.saveAll(tickets);
 
         return event;
     }
@@ -155,25 +178,91 @@ public class EventServiceImpl implements EventService {
     public Event findOne(Long id){return eventRepository.getOne(id);}
 
     @Override
-    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO) throws Exception {
+    @Transactional
+    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable {
 
-        // TODO get user from context
-        Optional<User> user = userRepository.findOneByUsername("pera");
+        EventDay eventDay = eventDayService.getReservableAndBuyable(eventDayReservationDTO.getEventDayId());
 
-        if (user.isEmpty()) {
-            // exc
-            throw new Exception();
+        Long locationId = eventDay.getLocation().getId();
+
+        List<LocationSector> locationSectors = locationSectorService.get(locationId);
+
+        List<Ticket> reservedParterTickets = reserveParter(eventDayReservationDTO, locationSectors, eventDay, user);
+        List<Ticket> reservedGrandstandTickets = reserveGrandstand(eventDayReservationDTO, locationSectors, eventDay, user);
+
+        List<Ticket> tickets = new ArrayList<>();
+        tickets.addAll(reservedGrandstandTickets);
+        tickets.addAll(reservedParterTickets);
+
+        List<Ticket> savedTickets = ticketService.saveAll(tickets);
+
+        return  tickets;
+    }
+
+    private List<Ticket> reserveGrandstand(EventDayReservationDTO eventDayReservationDTO, List<LocationSector> locationSectors, EventDay eventDay, User user) throws SectorWrongType, SeatIsNotAvailable, SectorNotFound {
+
+        List<Ticket> reservedTickets = new ArrayList<>();
+
+        for (SeatDTO seatDTO : eventDayReservationDTO.getSeats()) {
+            Long sectorId = seatDTO.getSectorId();
+
+            for(LocationSector locationSector : locationSectors) {
+                if (locationSector.getSector().getId() != sectorId) {
+                    continue;
+                }
+                // check if that sector is grandstand
+                if (locationSector.getSector().getType() != SectorType.GRANDSTAND) {
+                    throw new SectorWrongType(sectorId);
+                }
+
+                Ticket ticket = ticketService.getAvailableGrandstandTicketForEventDayAndSector(seatDTO, eventDay);
+                ticket.setUser(user);
+                reservedTickets.add(ticket);
+                return reservedTickets;
+
+            }
+            throw new SectorNotFound(sectorId);
         }
 
-        EventDay eventDay = eventDayService.findOneById(eventDayReservationDTO.getEventDayId());
-
-
-
-
-        return  null;
-
+        return reservedTickets;
 
     }
+
+    private List<Ticket> reserveParter(EventDayReservationDTO eventDayReservationDTO, List<LocationSector> locationSectors, EventDay eventDay, User user) throws SectorWrongType, NumberOfTicketsException, SectorNotFound {
+
+        List<Ticket> reservedTickets = new ArrayList<>();
+
+        for(ParterDTO parterDTO: eventDayReservationDTO.getParters()) {
+            Long sectorId = parterDTO.getSectorId();
+
+            for(LocationSector locationSector : locationSectors) {
+                if (locationSector.getSector().getId() != sectorId) {
+                    continue;
+                }
+
+                // check if that sector is parter
+                if (locationSector.getSector().getType() != SectorType.PARTER) {
+                    throw new SectorWrongType(sectorId);
+                }
+
+                List<Ticket> availableTickets = ticketService.getAvailableTicketsForEventDayAndSector(eventDay.getId(), sectorId);
+                if (availableTickets.size() >= parterDTO.getNumberOfTickets()) {
+                    // parter reservation possible
+                    for (int i = 0; i < parterDTO.getNumberOfTickets(); i++) {
+                        Ticket ticket = availableTickets.get(i);
+                        ticket.setUser(user);
+                        reservedTickets.add(ticket);
+                    }
+                    return reservedTickets;
+
+                } else throw new NumberOfTicketsException();
+            }
+            throw new SectorNotFound(sectorId);
+        }
+
+        return reservedTickets;
+    }
+
 
 
 }

@@ -9,7 +9,6 @@ import java.util.List;
 @NoArgsConstructor
 public class EventDayReservationDTO {
 
-    private Long userId;
     private Long eventDayId;
     private List<ParterDTO> parters;
     private List<SeatDTO> seats;

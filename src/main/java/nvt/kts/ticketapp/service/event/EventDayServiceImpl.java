@@ -1,7 +1,9 @@
 package nvt.kts.ticketapp.service.event;
 
 import nvt.kts.ticketapp.domain.model.event.EventDay;
+import nvt.kts.ticketapp.domain.model.event.EventDayState;
 import nvt.kts.ticketapp.exception.event.EventDayDoesNotExist;
+import nvt.kts.ticketapp.exception.event.EventDayDoesNotExistOrStateIsNotValid;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,17 @@ public class EventDayServiceImpl implements EventDayService {
 
         return eventDay.get();
 
+    }
+
+    @Override
+    public EventDay getReservableAndBuyable(Long eventDayId) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid {
+        Optional<EventDay> eventDay = eventDaysRepository.findOneByIdAndState(eventDayId, EventDayState.RESERVABLE_AND_BUYABLE);
+
+        if (eventDay.isEmpty()) {
+            throw new EventDayDoesNotExistOrStateIsNotValid(eventDayId);
+        }
+
+        return eventDay.get();
     }
 
 }

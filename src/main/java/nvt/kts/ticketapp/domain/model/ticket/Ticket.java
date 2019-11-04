@@ -16,6 +16,9 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Ticket extends AbstractEntity {
 
+    @Version
+    private Long id;
+
     @NotNull
     private boolean sold;
 
@@ -31,6 +34,8 @@ public class Ticket extends AbstractEntity {
     @NotNull
     private double price;
 
+    private boolean vip;
+
     @ManyToOne
     private EventDay eventDay;
 
@@ -39,12 +44,22 @@ public class Ticket extends AbstractEntity {
 
     public Ticket(@NotNull boolean sold,
                   @NotNull Long sectorId, int seatRow, int seatCol,
-                  @NotNull double price, EventDay eventDay, User user) {
+                  @NotNull double price, EventDay eventDay, User user, boolean vip) {
         this.sold = sold;
         this.sectorId = sectorId;
         this.seatRow = seatRow;
         this.seatCol = seatCol;
         this.price = price;
+        this.eventDay = eventDay;
+        this.user = user;
+        this.vip = vip;
+    }
+
+    public Ticket(@NotNull boolean sold, @NotNull Long sectorId, @NotNull double price, boolean vip, EventDay eventDay, User user) {
+        this.sold = sold;
+        this.sectorId = sectorId;
+        this.price = price;
+        this.vip = vip;
         this.eventDay = eventDay;
         this.user = user;
     }

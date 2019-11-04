@@ -2,6 +2,7 @@ package nvt.kts.ticketapp.service.event;
 
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.exception.event.EventDayDoesNotExist;
+import nvt.kts.ticketapp.exception.event.EventDayDoesNotExistOrStateIsNotValid;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -14,4 +15,6 @@ public interface EventDayService {
     List<EventDay> findAllByDate(Date date);
 
     EventDay findOneById(Long eventDayId) throws EventDayDoesNotExist;
+
+    EventDay getReservableAndBuyable(Long eventDayId) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid;
 }

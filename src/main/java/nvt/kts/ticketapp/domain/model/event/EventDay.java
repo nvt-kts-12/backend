@@ -7,10 +7,7 @@ import nvt.kts.ticketapp.domain.model.AbstractEntity;
 import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +28,7 @@ public class EventDay extends AbstractEntity {
     private Date reservationExpirationDate;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private EventDayState state;
 
     @ManyToOne
