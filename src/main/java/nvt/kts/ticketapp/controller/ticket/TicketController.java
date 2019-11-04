@@ -5,7 +5,9 @@ import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.user.UserNotFound;
 import nvt.kts.ticketapp.service.ticket.TicketService;
+import nvt.kts.ticketapp.service.ticket.TicketServiceImpl;
 import nvt.kts.ticketapp.service.user.UserService;
+import nvt.kts.ticketapp.service.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +22,13 @@ import java.util.List;
 @RequestMapping(value = "/api/tickets")
 public class TicketController {
 
-    @Autowired
     private TicketService ticketService;
-
-    @Autowired
     private UserService userService;
+
+    public TicketController(TicketServiceImpl ticketService, UserServiceImpl userService) {
+        this.ticketService = ticketService;
+        this.userService = userService;
+    }
 
     @GetMapping("/reservations")
     private ResponseEntity getReservations(Principal user) {

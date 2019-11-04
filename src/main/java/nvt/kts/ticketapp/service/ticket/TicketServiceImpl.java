@@ -25,11 +25,11 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getReservationsFromUser(User user) {
-        return ticketRepository.findByUserIdAndSold(user.getId(), false);
+        return ticketRepository.findByUserIdAndSoldTrue(user.getId());
     }
 
     @Override
     public List<Ticket> getSoldTicketsFromUser(User user) {
-        return ticketRepository.findByUserIdAndSold(user.getId(), true);
+        return ticketRepository.findByUserIdAndSoldFalse(user.getId());
     }
 }

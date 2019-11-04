@@ -11,12 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-
-    List<Ticket> findAllByEventDayIdAndSectorIdAndUserIdNullAndDeletedFalse(Long eventDayId, Long sectorId);
-
-    // check if seat is available for event day on sectorId
-    Optional<Ticket> findOneByEventDayIdAndSectorIdAndSeatRowAndSeatColAndUserIdNullAndDeletedFalse(Long eventDay, Long sectorId, int row, int col);
-
-    List<Ticket> findByUserIdAndSold(Long userId, boolean sold);
-
+    List<Ticket> findByUserIdAndSoldTrue(Long userId);
+    List<Ticket> findByUserIdAndSoldFalse(Long userId);
 }
