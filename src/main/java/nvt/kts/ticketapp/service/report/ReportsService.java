@@ -1,8 +1,7 @@
 package nvt.kts.ticketapp.service.report;
 
-import nvt.kts.ticketapp.domain.dto.event.EventDayDTO;
 import nvt.kts.ticketapp.domain.dto.report.EventDayReportDTO;
-import nvt.kts.ticketapp.domain.dto.report.EventTicketsReportDTO;
+import nvt.kts.ticketapp.domain.dto.report.EventReportDTO;
 import nvt.kts.ticketapp.exception.event.EventNotFound;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,7 @@ public interface ReportsService {
      * @param id    -   event id
      * @return  Number of tickets and reservations, average price of sold tickets and total income
      */
-    public EventTicketsReportDTO eventReport(Long id) throws EventNotFound;
+    public EventReportDTO eventReport(Long id) throws EventNotFound;
 
     /**
      * Provides report about event days in single event

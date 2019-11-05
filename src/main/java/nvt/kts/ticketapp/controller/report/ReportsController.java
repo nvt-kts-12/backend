@@ -1,7 +1,7 @@
 package nvt.kts.ticketapp.controller.report;
 
 import nvt.kts.ticketapp.domain.dto.report.EventDayReportDTO;
-import nvt.kts.ticketapp.domain.dto.report.EventTicketsReportDTO;
+import nvt.kts.ticketapp.domain.dto.report.EventReportDTO;
 import nvt.kts.ticketapp.exception.event.EventNotFound;
 import nvt.kts.ticketapp.service.report.ReportsService;
 import nvt.kts.ticketapp.service.report.ReportsServiceImpl;
@@ -24,7 +24,7 @@ public class ReportsController {
     @GetMapping("/event/{id}")
     public ResponseEntity eventReport(@PathVariable Long id){
         try {
-            return new ResponseEntity<EventTicketsReportDTO>(reportsService.eventReport(id), HttpStatus.OK);
+            return new ResponseEntity<EventReportDTO>(reportsService.eventReport(id), HttpStatus.OK);
         } catch (EventNotFound eventNotFound) {
             eventNotFound.printStackTrace();
             return new ResponseEntity<String>(eventNotFound.getMessage(), HttpStatus.BAD_REQUEST);

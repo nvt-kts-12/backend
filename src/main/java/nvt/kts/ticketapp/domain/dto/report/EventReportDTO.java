@@ -6,7 +6,7 @@ import nvt.kts.ticketapp.domain.dto.event.EventDTO;
 
 @Data
 @NoArgsConstructor
-public class EventTicketsReportDTO {
+public class EventReportDTO {
 
     private EventDTO eventDTO;
     private int numOfTickets;
@@ -14,7 +14,7 @@ public class EventTicketsReportDTO {
     private double totalIncome;
     private double avgPrice;
 
-    public EventTicketsReportDTO(EventDTO eventDTO, int numOfTickets, int numOfReservations, double totalIncome, double avgPrice) {
+    public EventReportDTO(EventDTO eventDTO, int numOfTickets, int numOfReservations, double totalIncome, double avgPrice) {
         this.eventDTO = eventDTO;
         this.numOfTickets = numOfTickets;
         this.numOfReservations = numOfReservations;

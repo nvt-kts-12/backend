@@ -1,11 +1,9 @@
 package nvt.kts.ticketapp.service.report;
 
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventDayDTO;
-import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
 import nvt.kts.ticketapp.domain.dto.event.PlainEventDayDTO;
 import nvt.kts.ticketapp.domain.dto.report.EventDayReportDTO;
-import nvt.kts.ticketapp.domain.dto.report.EventTicketsReportDTO;
+import nvt.kts.ticketapp.domain.dto.report.EventReportDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.location.Location;
@@ -14,7 +12,6 @@ import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.exception.event.EventNotFound;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.event.EventRepository;
-import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
@@ -43,16 +40,15 @@ public class ReportsServiceImpl implements ReportsService {
 
 
 
-    public EventTicketsReportDTO eventReport(Long id) throws EventNotFound{
+    public EventReportDTO eventReport(Long id) throws EventNotFound{
         Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFound(id));
 
         List<EventDay> eventDays = eventDaysRepository.findAllByEventId(id);
 
-        int numOfTickets = 0;
-        int numOfReservations = 0;
-        double totalIncome = 0.0;
-        double avgPrice = 0.0;
+        int numOfTickets = 0, numOfReservations = 0;
+        double totalIncome = 0.0, avgPrice = 0.0;
 
+        // going through every event day and calculating number of tickets, reservations and total income
         for (EventDay eventDay: eventDays) {
             List<Ticket> tickets = ticketRepository.findByEventDayIdAndSoldTrueAndUserNotNull(eventDay.getId());
             List<Ticket> reservations = ticketRepository.findByEventDayIdAndSoldFalseAndUserNotNull(eventDay.getId());
@@ -66,8 +62,7 @@ public class ReportsServiceImpl implements ReportsService {
         if(numOfTickets != 0)   avgPrice = totalIncome / numOfTickets;
 
         EventDTO eventDTO = ObjectMapperUtils.map(event, EventDTO.class);
-
-        return new EventTicketsReportDTO(eventDTO, numOfTickets, numOfReservations, totalIncome, avgPrice);
+        return new EventReportDTO(eventDTO, numOfTickets, numOfReservations, totalIncome, avgPrice);
     }
 
     public List<EventDayReportDTO> eventDaysReport(Long id) throws EventNotFound {
@@ -75,18 +70,19 @@ public class ReportsServiceImpl implements ReportsService {
         Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFound(id));
         List<EventDay> eventDays = eventDaysRepository.findAllByEventId(id);
 
-        int numOfTickets = 0;
-        int numOfReservations = 0;
-        double totalIncome = 0.0;
-        double avgPrice = 0.0;
+        int numOfTickets, numOfReservations = 0;
+        double totalIncome, avgPrice = 0.0;
 
         List<EventDayReportDTO> reports = new ArrayList<>();
 
+        // going through every event day and creating report for every single day
         for (EventDay eventDay: eventDays) {
             List<Ticket> tickets = ticketRepository.findByEventDayIdAndSoldTrueAndUserNotNull(eventDay.getId());
             List<Ticket> reservations = ticketRepository.findByEventDayIdAndSoldFalseAndUserNotNull(eventDay.getId());
 
+            // map contains sector ids as keys, and number of sold tickets by sector as values
             Map<Long, Integer> soldBySector = calculateTicketsBySector(eventDay, tickets);
+
             numOfTickets = tickets.size();
             numOfReservations = reservations.size();
             totalIncome = sumIncome(tickets);
@@ -104,13 +100,19 @@ public class ReportsServiceImpl implements ReportsService {
         return reports;
     }
 
-
+    /**
+     * Calculates number of tickets sold by single locationSector
+     * @param eventDay  -   day whose sectors we are going through
+     * @param tickets   -   list of tickts for that day of event
+     * @return          -   map of sector id : number of tickets for that sector
+     */
     private Map<Long, Integer> calculateTicketsBySector(EventDay eventDay, List<Ticket> tickets){
-        Location location = eventDay.getLocation();
+        List<LocationSector> locationSectors = locationSectorRepository.findAllByLocationIdAndDeletedFalse(eventDay.getLocation().getId());
 
-        List<LocationSector> locationSectors = locationSectorRepository.findAllByLocationIdAndDeletedFalse(location.getId());
+        // map that is going to be returned
         Map<Long, Integer> sectorId_tickets = new HashMap<>();
 
+        // map initialising
         for (LocationSector sector: locationSectors) {
             sectorId_tickets.put(sector.getId(), 0);
         }
@@ -124,6 +126,11 @@ public class ReportsServiceImpl implements ReportsService {
         return sectorId_tickets;
     }
 
+    /**
+     * Calculates total sum of prices in ticket collection
+     * @param tickets   -   list of tickets with prices
+     * @return  -   total sum
+     */
     private double sumIncome(List<Ticket> tickets){
         int retVal = 0;
         for (Ticket ticket: tickets) {

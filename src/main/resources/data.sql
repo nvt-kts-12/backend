@@ -9,7 +9,7 @@ values (2, 0, "50", "50", "0", "0", 50, 5, 10, 1, 1 ),
 (4, 0, "50", "50", "0", "0", 20, 2, 10, 1, 1 );
 
 
-
+-- Janko, testing the report system. Feel free to comment out
 insert into users (id, first_name, last_name, password, user_role, username, email, last_password_reset_date) values
             (1, "Janko", "Ljubic", "sifra1234Abc", 0, "janko_lj", "", "2019-01-01"),
             (2, "Marko", "Ljubic", "sifra1234Abc", 0, "marko_lj", "", "2019-01-01"),
