@@ -122,7 +122,6 @@ public class EventController {
 
     @PutMapping
     public ResponseEntity updateEventDay(@RequestBody EventDayUpdateDTO eventDayUpdateDTO){
-
         try {
             return new ResponseEntity<EventDayUpdateDTO>(eventService.updateEventDay(eventDayUpdateDTO), HttpStatus.OK);
         } catch (EventdayNotFound | DateFormatIsNotValid ex) {

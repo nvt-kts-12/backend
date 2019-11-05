@@ -1,4 +1,6 @@
 package nvt.kts.ticketapp.repository.ticket;
+import nvt.kts.ticketapp.domain.dto.ticket.TicketDTO;
+import nvt.kts.ticketapp.domain.dto.ticket.TicketsDTO;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -21,4 +23,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByEventDayIdAndSoldTrueAndUserNotNull(Long id);
 
     List<Ticket> findByEventDayIdAndSoldFalseAndUserNotNull(Long id);
+
+    //Optional<TicketDTO> findOneById(Long id);
 }
