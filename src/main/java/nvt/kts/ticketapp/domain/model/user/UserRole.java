@@ -1,12 +1,6 @@
 package nvt.kts.ticketapp.domain.model.user;
 
-import org.springframework.security.core.GrantedAuthority;
-
-public enum UserRole implements GrantedAuthority {
+public enum UserRole  {
     ADMIN, REGISTERED;
 
-    @Override
-    public String getAuthority() {
-        return name();
-    }
 }

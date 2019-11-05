@@ -44,14 +44,11 @@ public class EventDayServiceImpl implements EventDayService {
     }
 
     @Override
-    public EventDay getReservableAndBuyable(Long eventDayId) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid {
-        Optional<EventDay> eventDay = eventDaysRepository.findOneByIdAndState(eventDayId, EventDayState.RESERVABLE_AND_BUYABLE);
+    public EventDay getReservableAndBuyable(Long eventDayId) throws EventDayDoesNotExistOrStateIsNotValid {
 
-        if (eventDay.isEmpty()) {
-            throw new EventDayDoesNotExistOrStateIsNotValid(eventDayId);
-        }
+        return eventDaysRepository.findOneByIdAndState(eventDayId, EventDayState.RESERVABLE_AND_BUYABLE)
+                .orElseThrow(() -> new EventDayDoesNotExistOrStateIsNotValid(eventDayId));
 
-        return eventDay.get();
     }
 
     @Override
