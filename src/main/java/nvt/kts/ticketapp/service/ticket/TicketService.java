@@ -8,6 +8,7 @@ import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface TicketService {
@@ -16,4 +17,6 @@ public interface TicketService {
     Ticket getAvailableGrandstandTicketForEventDayAndSector(SeatDTO seatDTO, EventDay eventDay) throws SeatIsNotAvailable;
 
     List<Ticket> saveAll(List<Ticket> tickets);
+
+    List<Ticket> getAvailableTickets(Long id);
 }

@@ -54,4 +54,10 @@ public class EventDayServiceImpl implements EventDayService {
         return eventDay.get();
     }
 
+    @Override
+    public EventDay save(EventDay eventDay) {
+
+        return eventDaysRepository.save(eventDay);
+    }
+
 }

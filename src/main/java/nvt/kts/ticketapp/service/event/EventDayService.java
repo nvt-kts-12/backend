@@ -17,4 +17,6 @@ public interface EventDayService {
     EventDay findOneById(Long eventDayId) throws EventDayDoesNotExist;
 
     EventDay getReservableAndBuyable(Long eventDayId) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid;
+
+    EventDay save(EventDay eventDay);
 }

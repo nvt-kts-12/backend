@@ -15,4 +15,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     // check if seat is available for event day on sectorId
     Optional<Ticket> findOneByEventDayIdAndSectorIdAndSeatRowAndSeatColAndUserIdNullAndDeletedFalse(Long eventDay, Long sectorId, int row, int col);
+
+    List<Ticket> findAllByEventDayIdAndUserIdNullAndDeletedFalse(Long eventDayId);
 }

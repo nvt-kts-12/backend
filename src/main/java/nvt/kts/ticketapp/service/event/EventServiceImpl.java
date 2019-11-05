@@ -41,6 +41,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static nvt.kts.ticketapp.util.DateUtil.*;
 
@@ -199,6 +200,8 @@ public class EventServiceImpl implements EventService {
 
         List<Ticket> savedTickets = ticketService.saveAll(tickets);
 
+        EventDay eventDay1 = checkIfEventDayIsSoldOut(eventDay);
+
         return  tickets;
     }
 
@@ -273,5 +276,17 @@ public class EventServiceImpl implements EventService {
     }
 
 
+    private EventDay checkIfEventDayIsSoldOut(EventDay eventDay) {
+
+        List<Ticket> tickets = ticketService.getAvailableTickets(eventDay.getId());
+
+        if (!tickets.isEmpty()) {
+            return eventDay;
+        }
+
+        eventDay.setState(EventDayState.SOLD_OUT);
+        return  eventDayService.save(eventDay);
+
+    }
 
 }

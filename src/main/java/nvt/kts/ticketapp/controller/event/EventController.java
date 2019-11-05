@@ -86,18 +86,18 @@ public class EventController {
      @PostMapping("/reserve")
      private ResponseEntity reserve(HttpServletRequest request, @RequestBody EventDayReservationDTO eventDayReservationDTO) {
 
-        User user = customUserDetailsService.getUserFromRequest(request);
+//        User user = customUserDetailsService.getUserFromRequest(request);
 
          // TODO delete when security is enabled
-//        Optional<User> user = userRepository.findOneByUsername("classicdocs");
-//
-//        if (user.isEmpty()) {
-//            return new ResponseEntity<String>("Error", HttpStatus.BAD_REQUEST);
-//        }
+        Optional<User> user = userRepository.findOneByUsername("classicdocs");
+
+        if (user.isEmpty()) {
+            return new ResponseEntity<String>("Error", HttpStatus.BAD_REQUEST);
+        }
 
         List<Ticket> tickets = null;
          try {
-             tickets = eventService.reserve(eventDayReservationDTO, user);
+             tickets = eventService.reserve(eventDayReservationDTO, user.get());
          } catch (EventDayDoesNotExist | LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable ex) {
              ex.printStackTrace();
              return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);

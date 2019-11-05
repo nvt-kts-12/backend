@@ -41,4 +41,11 @@ public class TicketServiceImpl implements TicketService {
     public List<Ticket> saveAll(List<Ticket> tickets) {
         return ticketRepository.saveAll(tickets);
     }
+
+    @Override
+    public List<Ticket> getAvailableTickets(Long eventDayId) {
+
+        return ticketRepository.findAllByEventDayIdAndUserIdNullAndDeletedFalse(eventDayId);
+
+    }
 }
