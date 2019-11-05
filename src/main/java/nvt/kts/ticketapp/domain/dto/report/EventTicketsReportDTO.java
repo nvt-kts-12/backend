@@ -14,4 +14,11 @@ public class EventTicketsReportDTO {
     private double totalIncome;
     private double avgPrice;
 
+    public EventTicketsReportDTO(EventDTO eventDTO, int numOfTickets, int numOfReservations, double totalIncome, double avgPrice) {
+        this.eventDTO = eventDTO;
+        this.numOfTickets = numOfTickets;
+        this.numOfReservations = numOfReservations;
+        this.totalIncome = totalIncome;
+        this.avgPrice = avgPrice;
+    }
 }
