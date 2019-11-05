@@ -21,4 +21,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByEventDayIdAndSoldTrueAndUserNotNull(Long id);
 
     List<Ticket> findByEventDayIdAndSoldFalseAndUserNotNull(Long id);
+
+    Optional<Ticket> findOneByIdAndSoldFalse(Long id);
 }

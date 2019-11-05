@@ -18,6 +18,7 @@ import nvt.kts.ticketapp.exception.sector.SectorCapacityOverload;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
 import nvt.kts.ticketapp.exception.sector.SectorWrongType;
 import nvt.kts.ticketapp.exception.ticket.NumberOfTicketsException;
+import nvt.kts.ticketapp.exception.ticket.ReservationIsNotPossible;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,7 @@ public interface EventService  {
     Event findOne(Long eventId);
     EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound;
 
-    List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable;
+    List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible;
 
     EventDayUpdateDTO updateEventDay(EventDayUpdateDTO eventDayDetails)throws EventdayNotFound,DateFormatIsNotValid;
 }
