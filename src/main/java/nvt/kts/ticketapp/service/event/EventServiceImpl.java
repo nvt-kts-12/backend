@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static nvt.kts.ticketapp.config.Constants.DATE_FORMAT;
+import static nvt.kts.ticketapp.config.Constants.DATE_TIME_FORMAT;
 import static nvt.kts.ticketapp.util.DateUtil.*;
 
 @Service
@@ -79,8 +81,8 @@ public class EventServiceImpl implements EventService {
         // create eventDays
         for (EventDayDTO eventDayDTO: eventEventDaysDTO.getEventDays()) {
 
-            Date date = parseDate(eventDayDTO.getDate());
-            Date reservationExpireDate = parseDate(eventDayDTO.getReservationExpireDate());
+            Date date = parseDate(eventDayDTO.getDate(),DATE_TIME_FORMAT);
+            Date reservationExpireDate = parseDate(eventDayDTO.getReservationExpireDate(),DATE_TIME_FORMAT);
 
             // check if dates in past or reservationExpireDate is before event date
             checkDates(date, reservationExpireDate);
@@ -164,8 +166,8 @@ public class EventServiceImpl implements EventService {
         EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(eventDayDetails.getId()).
                 orElseThrow(()-> new EventdayNotFound(eventDayDetails.getId()));
 
-        Date date = parseDate(eventDayDetails.getDate());
-        Date reservationExpireDate = parseDate(eventDayDetails.getReservationExpirationDate());
+        Date date = parseDate(eventDayDetails.getDate(),DATE_FORMAT);
+        Date reservationExpireDate = parseDate(eventDayDetails.getReservationExpirationDate(),DATE_FORMAT);
 
         eventDay.setDate(date);
         eventDay.setState(eventDayDetails.getEventDayState());
