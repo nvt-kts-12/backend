@@ -1,8 +1,6 @@
 package nvt.kts.ticketapp.service.event;
 
-import nvt.kts.ticketapp.domain.dto.event.EventDayDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
-import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
+import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
@@ -13,46 +11,59 @@ import nvt.kts.ticketapp.domain.model.location.Sector;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
+import nvt.kts.ticketapp.exception.event.EventNotFound;
+import nvt.kts.ticketapp.exception.event.EventdayNotFound;
 import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
 import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.exception.sector.SectorCapacityOverload;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
+import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.event.EventRepository;
 import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.SectorService;
+import nvt.kts.ticketapp.util.DateUtil;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static nvt.kts.ticketapp.config.Constants.DATE_FORMAT;
+import static nvt.kts.ticketapp.config.Constants.DATE_TIME_FORMAT;
 import static nvt.kts.ticketapp.util.DateUtil.*;
 
 @Service
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final EventDaysRepository eventDaysRepository;
     private final EventDayService eventDayService;
     private final LocationSchemeService locationSchemeService;
     private final LocationService locationService;
     private final SectorService sectorService;
     private final LocationSectorService locationSectorService;
+    private DateUtil dateUtil;
 
-    public EventServiceImpl(EventRepository eventRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService) {
+    public EventServiceImpl(EventRepository eventRepository,EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService) {
         this.eventRepository = eventRepository;
+        this.eventDaysRepository = eventDaysRepository;
         this.eventDayService = eventDayService;
         this.locationSchemeService = locationSchemeService;
         this.locationService = locationService;
         this.sectorService = sectorService;
         this.locationSectorService = locationSectorService;
     }
+
 
     @Override
     public Event save(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, ParseException, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid {
@@ -70,8 +81,8 @@ public class EventServiceImpl implements EventService {
         // create eventDays
         for (EventDayDTO eventDayDTO: eventEventDaysDTO.getEventDays()) {
 
-            Date date = parseDate(eventDayDTO.getDate());
-            Date reservationExpireDate = parseDate(eventDayDTO.getReservationExpireDate());
+            Date date = parseDate(eventDayDTO.getDate(),DATE_TIME_FORMAT);
+            Date reservationExpireDate = parseDate(eventDayDTO.getReservationExpireDate(),DATE_TIME_FORMAT);
 
             // check if dates in past or reservationExpireDate is before event date
             checkDates(date, reservationExpireDate);
@@ -135,6 +146,40 @@ public class EventServiceImpl implements EventService {
             }
         }
     }
+
+    public EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound{
+
+        Event event = eventRepository.findByIdAndDeletedFalse(eventId).orElseThrow(() -> new EventNotFound(eventId));
+
+        event.setName(eventDetails.getName());
+        event.setCategory(eventDetails.getCategory());
+        event.setDescription(eventDetails.getDescription());
+
+
+        Event updatedEvent = eventRepository.save(event);
+        return ObjectMapperUtils.map(updatedEvent, EventDTO.class);
+    }
+
+
+    public EventDayUpdateDTO updateEventDay(EventDayUpdateDTO eventDayDetails) throws EventdayNotFound,DateFormatIsNotValid{
+
+        EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(eventDayDetails.getId()).
+                orElseThrow(()-> new EventdayNotFound(eventDayDetails.getId()));
+
+        Date date = parseDate(eventDayDetails.getDate(),DATE_FORMAT);
+        Date reservationExpireDate = parseDate(eventDayDetails.getReservationExpirationDate(),DATE_FORMAT);
+
+        eventDay.setDate(date);
+        eventDay.setState(eventDayDetails.getEventDayState());
+        eventDay.setReservationExpirationDate(reservationExpireDate);
+
+
+       return ObjectMapperUtils.map(eventDaysRepository.save(eventDay), EventDayUpdateDTO.class);
+
+    }
+
+
+
 
     @Override
     public Page<Event> findAll(Pageable pageable){
