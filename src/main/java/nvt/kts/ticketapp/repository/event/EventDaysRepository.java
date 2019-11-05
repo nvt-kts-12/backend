@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface EventDaysRepository extends JpaRepository<EventDay, Long> {
     List<EventDay> findAllByDate(Date date);
 
-    @Query("select e from EventDay e where e.id=?1 and e.state =?2")
-    Optional<EventDay> findOneByIdAndState(Long eventDayId, EventDayState state);
+    @Query("select e from EventDay e where e.id=?1 and e.state =?2 and ?3 < date")
+    Optional<EventDay> findOneByIdAndStateAndDateBefore(Long eventDayId, EventDayState state, Date date);
 
     List<EventDay> findAllByEventId(Long id);
 

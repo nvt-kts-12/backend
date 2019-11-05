@@ -23,6 +23,7 @@ import nvt.kts.ticketapp.exception.sector.SectorCapacityOverload;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
 import nvt.kts.ticketapp.exception.sector.SectorWrongType;
 import nvt.kts.ticketapp.exception.ticket.NumberOfTicketsException;
+import nvt.kts.ticketapp.exception.ticket.ReservationIsNotPossible;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import nvt.kts.ticketapp.repository.user.UserRepository;
 import nvt.kts.ticketapp.service.event.EventService;
@@ -40,6 +41,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -83,7 +85,7 @@ public class EventController {
      }
 
      @PostMapping("/reserve")
-     private ResponseEntity reserve(HttpServletRequest request, @RequestBody EventDayReservationDTO eventDayReservationDTO) {
+     private ResponseEntity reserve(HttpServletRequest request, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
 
 //        User user = customUserDetailsService.getUserFromRequest(request);
 
@@ -97,7 +99,7 @@ public class EventController {
         List<Ticket> tickets = null;
          try {
              tickets = eventService.reserve(eventDayReservationDTO, user.get());
-         } catch (EventDayDoesNotExist | LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable ex) {
+         } catch (EventDayDoesNotExist | LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible ex) {
              ex.printStackTrace();
              return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
          } catch (ObjectOptimisticLockingFailureException e) {

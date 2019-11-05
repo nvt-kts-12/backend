@@ -31,7 +31,7 @@ public class DateUtil {
         return date1formatted.compareTo(date2formatted) == 0;
     }
 
-    private static Date setTimeToMidnight(Date date) {
+    public static Date setTimeToMidnight(Date date) {
         Calendar calendar = Calendar.getInstance();
 
         calendar.setTime( date );
