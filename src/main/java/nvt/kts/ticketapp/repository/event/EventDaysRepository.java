@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface EventDaysRepository extends JpaRepository<EventDay, Long> {
     List<EventDay> findAllByDate(Date date);
+    List<EventDay> findAllByEventId(Long id);
 }
