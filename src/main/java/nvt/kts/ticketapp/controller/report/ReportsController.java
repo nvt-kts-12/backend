@@ -28,4 +28,9 @@ public class ReportsController {
         }
     }
 
+    @GetMapping("/eventDays/{id}")
+    public ResponseEntity eventDaysReport(@PathVariable Long id){
+
+    }
+
 }

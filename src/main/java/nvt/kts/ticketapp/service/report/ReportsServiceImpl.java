@@ -1,6 +1,8 @@
 package nvt.kts.ticketapp.service.report;
 
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
+import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
+import nvt.kts.ticketapp.domain.dto.report.EventDayReportDTO;
 import nvt.kts.ticketapp.domain.dto.report.EventTicketsReportDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
@@ -12,8 +14,9 @@ import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReportsServiceImpl implements ReportsService {
@@ -28,6 +31,8 @@ public class ReportsServiceImpl implements ReportsService {
         this.eventDaysRepository = eventDaysRepository;
         this.ticketRepository = ticketRepository;
     }
+
+
 
     public EventTicketsReportDTO eventReport(Long id) throws EventNotFound{
         Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFound(id));
@@ -54,6 +59,24 @@ public class ReportsServiceImpl implements ReportsService {
         EventDTO eventDTO = ObjectMapperUtils.map(event, EventDTO.class);
 
         return new EventTicketsReportDTO(eventDTO, numOfTickets, numOfReservations, totalIncome, avgPrice);
+    }
+
+    public EventDayReportDTO eventDaysReport(Long id) throws EventNotFound {
+
+        Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFound(id));
+        List<EventDay> eventDays = eventDaysRepository.findAllByEventId(id);
+
+        int numOfTickets = 0;
+        int numOfReservations = 0;
+        double totalIncome = 0.0;
+        double avgPrice = 0.0;
+        Map<LocationSectorsDTO, Integer> soldBySector = new HashMap<>();
+
+        for (EventDay eventDay: eventDays) {
+            
+        }
+
+        return null;
     }
 
 
