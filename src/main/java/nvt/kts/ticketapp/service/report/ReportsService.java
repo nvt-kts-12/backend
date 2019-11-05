@@ -2,7 +2,9 @@ package nvt.kts.ticketapp.service.report;
 
 import nvt.kts.ticketapp.domain.dto.report.EventDayReportDTO;
 import nvt.kts.ticketapp.domain.dto.report.EventReportDTO;
+import nvt.kts.ticketapp.domain.dto.report.LocationReportDTO;
 import nvt.kts.ticketapp.exception.event.EventNotFound;
+import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,4 +27,7 @@ public interface ReportsService {
      * @throws EventNotFound
      */
     public List<EventDayReportDTO> eventDaysReport(Long id) throws EventNotFound;
+
+
+    public LocationReportDTO locationReport(Long id) throws LocationNotFound;
 }
