@@ -13,14 +13,10 @@ public class EventDayUpdateDTO {
 
     private Long id;
 
-    private Date date;
-    private Date reservationExpirationDate;
+    private String date;
+    private String reservationExpirationDate;
     private EventDayState eventDayState;
 
-    public EventDayUpdateDTO(Long id, Date date, Date reservationExpirationDate, EventDayState eventDayState) {
-        this.id = id;
-        this.date = date;
-        this.reservationExpirationDate = reservationExpirationDate;
-        this.eventDayState = eventDayState;
+
     }
-}
+

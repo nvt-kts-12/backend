@@ -11,6 +11,8 @@ import nvt.kts.ticketapp.domain.model.location.Sector;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
+import nvt.kts.ticketapp.exception.event.EventNotFound;
+import nvt.kts.ticketapp.exception.event.EventdayNotFound;
 import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
 import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
@@ -77,8 +79,8 @@ public class EventServiceImpl implements EventService {
         // create eventDays
         for (EventDayDTO eventDayDTO: eventEventDaysDTO.getEventDays()) {
 
-            Date date = eventDayDTO.getDate();
-            Date reservationExpireDate = eventDayDTO.getReservationExpireDate();
+            Date date = parseDate(eventDayDTO.getDate());
+            Date reservationExpireDate = parseDate(eventDayDTO.getReservationExpireDate());
 
             // check if dates in past or reservationExpireDate is before event date
             checkDates(date, reservationExpireDate);
@@ -143,31 +145,34 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    public EventDTO update(Long eventId,EventDTO eventDetails){
+    public EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound{
 
-        Event event = eventRepository.getOne(eventId);
+        Event event = eventRepository.findByIdAndDeletedFalse(eventId).orElseThrow(() -> new EventNotFound(eventId));
+
         event.setName(eventDetails.getName());
         event.setCategory(eventDetails.getCategory());
         event.setDescription(eventDetails.getDescription());
 
 
         Event updatedEvent = eventRepository.save(event);
-        return eventDetails;
+        return ObjectMapperUtils.map(updatedEvent, EventDTO.class);
     }
 
 
-    public EventDayUpdateDTO updateEventDay(EventDayUpdateDTO eventDayDetails){
+    public EventDayUpdateDTO updateEventDay(EventDayUpdateDTO eventDayDetails) throws EventdayNotFound,DateFormatIsNotValid{
 
-        EventDay eventDay = eventDaysRepository.getOne(eventDayDetails.getId());
+        EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(eventDayDetails.getId()).
+                orElseThrow(()-> new EventdayNotFound(eventDayDetails.getId()));
 
-        eventDay.setDate(eventDayDetails.getDate());
+        Date date = parseDate(eventDayDetails.getDate());
+        Date reservationExpireDate = parseDate(eventDayDetails.getReservationExpirationDate());
+
+        eventDay.setDate(date);
         eventDay.setState(eventDayDetails.getEventDayState());
-        eventDay.setReservationExpirationDate(eventDayDetails.getReservationExpirationDate());
+        eventDay.setReservationExpirationDate(reservationExpireDate);
 
 
-        EventDay updatedEventDay = eventDaysRepository.save(eventDay);
-
-        return eventDayDetails;
+       return ObjectMapperUtils.map(eventDaysRepository.save(eventDay), EventDayUpdateDTO.class);
 
     }
 

@@ -9,14 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EventDaysRepository extends JpaRepository<EventDay, Long> {
     List<EventDay> findAllByDate(Date date);
-
-    @Query("select day from EventDay d where d.event.id = :id")
-    List<EventDay>findAllByEventId(@Param("id") Long eventId);
-
-    @Query("select day from EventDay d where d.event.id =:id and d.date= :date")
-    EventDay findByEventIdAndDate(@Param("date") @DateTimeFormat(pattern="yyyy-MM-dd") Date fromDate, @Param("id") Long eventDayId);
+   Optional<EventDay> findByIdAndDeletedFalse(Long evendDayId);
 }

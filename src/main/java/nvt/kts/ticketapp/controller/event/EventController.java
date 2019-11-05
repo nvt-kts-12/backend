@@ -9,6 +9,8 @@ import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
+import nvt.kts.ticketapp.exception.event.EventNotFound;
+import nvt.kts.ticketapp.exception.event.EventdayNotFound;
 import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.exception.sector.SectorCapacityOverload;
@@ -56,19 +58,29 @@ public class EventController {
      }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventDTO> update(@PathVariable(value = "id") Long eventId,
+    public ResponseEntity update(@PathVariable(value = "id") Long eventId,
                                            @RequestBody EventDTO eventDetails){
-
-        eventService.update(eventId,eventDetails);
-        return new ResponseEntity<EventDTO>(eventDetails, HttpStatus.OK);
+        EventDTO eventDTO = null;
+        try {
+            eventDTO = eventService.update(eventId,eventDetails);
+            return new ResponseEntity<EventDTO>(eventDTO, HttpStatus.OK);
+        } catch (EventNotFound eventNotFound) {
+            eventNotFound.printStackTrace();
+            return new ResponseEntity<String>(eventNotFound.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
     }
 
 
     @PutMapping
-    public ResponseEntity<EventDayUpdateDTO> updateEventDay(@RequestBody EventDayUpdateDTO eventDayUpdateDTO){
+    public ResponseEntity updateEventDay(@RequestBody EventDayUpdateDTO eventDayUpdateDTO){
 
-        return new ResponseEntity<EventDayUpdateDTO>(eventService.updateEventDay(eventDayUpdateDTO), HttpStatus.OK);
+        try {
+            return new ResponseEntity<EventDayUpdateDTO>(eventService.updateEventDay(eventDayUpdateDTO), HttpStatus.OK);
+        } catch (EventdayNotFound | DateFormatIsNotValid ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 
