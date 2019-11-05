@@ -55,20 +55,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/").permitAll();
 
-        /* http.httpBasic().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-                .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated().and()
-                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
-        http.csrf().disable();
-        */
+//        http.httpBasic().disable();
+//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//                .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
+//                .authorizeRequests()
+//                .antMatchers("/api/auth/**").permitAll()
+//                .anyRequest().authenticated().and()
+//                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
+//        http.csrf().disable();
     }
 
     @Override
     public void configure(WebSecurity web) {
-
         web.ignoring().antMatchers(HttpMethod.POST,"/**");
         web.ignoring().antMatchers(HttpMethod.GET,"/**");
         web.ignoring().antMatchers(HttpMethod.PUT,"/**");
@@ -76,7 +74,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        web.ignoring().antMatchers(HttpMethod.POST, "auth/login");
 //        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js");
 //
-
     }
-
 }

@@ -14,5 +14,9 @@ import java.util.Optional;
 @Repository
 public interface EventDaysRepository extends JpaRepository<EventDay, Long> {
     List<EventDay> findAllByDate(Date date);
-   Optional<EventDay> findByIdAndDeletedFalse(Long evendDayId);
+
+    List<EventDay> findAllByEventId(Long id);
+
+    Optional<EventDay> findByIdAndDeletedFalse(Long evendDayId);
+
 }
