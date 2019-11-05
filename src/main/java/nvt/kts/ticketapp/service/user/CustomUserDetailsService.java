@@ -2,6 +2,7 @@ package nvt.kts.ticketapp.service.user;
 
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.repository.user.UserRepository;
+import nvt.kts.ticketapp.security.TokenUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Service
@@ -30,6 +32,18 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private TokenUtils tokenUtils;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    public User getUserFromRequest(HttpServletRequest request) {
+        String token = tokenUtils.getToken(request);
+        String username = tokenUtils.getUsernameFromToken(token);
+        return (User) this.userDetailsService.loadUserByUsername(username);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

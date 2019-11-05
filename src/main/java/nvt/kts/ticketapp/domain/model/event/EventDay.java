@@ -30,6 +30,7 @@ public class EventDay extends AbstractEntity {
     private Date reservationExpirationDate;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private EventDayState state;
 
     @ManyToOne

@@ -32,5 +32,6 @@ public class TicketDTO {
         eventDayForTicketDTO.setDate(ticket.getEventDay().getDate());
         eventDayForTicketDTO.setReservationExpireDate(ticket.getEventDay().getReservationExpirationDate());
         eventDayForTicketDTO.setLocation(ticket.getEventDay().getLocation().getScheme().getName());
+        this.eventDay = eventDayForTicketDTO;
     }
 }
