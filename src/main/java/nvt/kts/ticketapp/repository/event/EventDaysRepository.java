@@ -16,4 +16,9 @@ public interface EventDaysRepository extends JpaRepository<EventDay, Long> {
 
     @Query("select e from EventDay e where e.id=?1 and e.state =?2")
     Optional<EventDay> findOneByIdAndState(Long eventDayId, EventDayState state);
+
+    List<EventDay> findAllByEventId(Long id);
+
+    Optional<EventDay> findByIdAndDeletedFalse(Long evendDayId);
+
 }

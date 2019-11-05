@@ -10,16 +10,18 @@ import static nvt.kts.ticketapp.config.Constants.DATE_TIME_FORMAT;
 
 public class DateUtil {
 
-    public static Date parseDate(String date) throws DateFormatIsNotValid {
+    public static Date parseDate(String date, String format) throws DateFormatIsNotValid {
 
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT);
-         try {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        try {
             return sdf.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
             throw new DateFormatIsNotValid();
         }
     }
+
+
 
     public static boolean datesEqual(Date date1, Date date2) throws ParseException {
 

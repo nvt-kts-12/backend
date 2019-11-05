@@ -3,7 +3,6 @@ package nvt.kts.ticketapp.domain.dto.ticket;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventDayDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventDayForTicketDTO;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;

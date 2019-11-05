@@ -1,16 +1,15 @@
 package nvt.kts.ticketapp.service.event;
 
 import nvt.kts.ticketapp.domain.dto.event.EventDayReservationDTO;
+import nvt.kts.ticketapp.domain.dto.event.EventDTO;
+import nvt.kts.ticketapp.domain.dto.event.EventDayUpdateDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
-import nvt.kts.ticketapp.exception.event.EventDayDoesNotExist;
-import nvt.kts.ticketapp.exception.event.EventDayDoesNotExistOrStateIsNotValid;
-import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
-import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
+import nvt.kts.ticketapp.exception.event.*;
 import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
 import nvt.kts.ticketapp.exception.location.SectorNotFound;
@@ -34,6 +33,10 @@ public interface EventService  {
     Event save(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, ParseException, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid;
     Page<Event> findAll(Pageable pageable);
     Event findOne(Long eventId);
+    EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound;
 
     List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable;
+
+    EventDayUpdateDTO updateEventDay(EventDayUpdateDTO eventDayDetails)throws EventdayNotFound,DateFormatIsNotValid;
 }
+

@@ -1,19 +1,20 @@
 package nvt.kts.ticketapp.controller.event;
 
-
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
+import nvt.kts.ticketapp.domain.dto.event.EventDayUpdateDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventDayReservationDTO;
 import nvt.kts.ticketapp.domain.dto.ticket.TicketsDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
-import nvt.kts.ticketapp.domain.model.user.UserRole;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDayDoesNotExist;
 import nvt.kts.ticketapp.exception.event.EventDayDoesNotExistOrStateIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
+import nvt.kts.ticketapp.exception.event.EventNotFound;
+import nvt.kts.ticketapp.exception.event.EventdayNotFound;
 import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
 import nvt.kts.ticketapp.exception.location.SectorNotFound;
@@ -24,7 +25,6 @@ import nvt.kts.ticketapp.exception.sector.SectorWrongType;
 import nvt.kts.ticketapp.exception.ticket.NumberOfTicketsException;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import nvt.kts.ticketapp.repository.user.UserRepository;
-import nvt.kts.ticketapp.security.TokenUtils;
 import nvt.kts.ticketapp.service.event.EventService;
 import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
 import nvt.kts.ticketapp.service.location.LocationService;
@@ -37,7 +37,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -108,4 +107,27 @@ public class EventController {
 
          return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets),HttpStatus.OK);
      }
+    @PutMapping("/{id}")
+    public ResponseEntity update(@PathVariable(value = "id") Long eventId, @RequestBody EventDTO eventDetails){
+        EventDTO eventDTO = null;
+        try {
+            eventDTO = eventService.update(eventId,eventDetails);
+            return new ResponseEntity<EventDTO>(eventDTO, HttpStatus.OK);
+        } catch (EventNotFound eventNotFound) {
+            eventNotFound.printStackTrace();
+            return new ResponseEntity<String>(eventNotFound.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @PutMapping
+    public ResponseEntity updateEventDay(@RequestBody EventDayUpdateDTO eventDayUpdateDTO){
+
+        try {
+            return new ResponseEntity<EventDayUpdateDTO>(eventService.updateEventDay(eventDayUpdateDTO), HttpStatus.OK);
+        } catch (EventdayNotFound | DateFormatIsNotValid ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

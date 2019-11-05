@@ -19,12 +19,14 @@ import java.util.List;
 public class EventDay extends AbstractEntity {
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     private Date date;
 
     @OneToOne
     private Location location;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     private Date reservationExpirationDate;
 
     @NotNull
