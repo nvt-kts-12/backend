@@ -1,10 +1,7 @@
 package nvt.kts.ticketapp.controller.event;
 
 
-import nvt.kts.ticketapp.domain.dto.event.EventDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventDayDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventDayUpdateDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
+import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
@@ -20,6 +17,7 @@ import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping(path="api/event")
@@ -52,9 +51,9 @@ public class EventController {
      }
 
      @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-     private ResponseEntity<Page<Event>> show (Pageable pageable){
-
-         return new ResponseEntity<Page<Event>>(eventService.findAll(pageable),HttpStatus.OK);
+     private ResponseEntity<Page<Event>> show (Pageable pageable, @RequestParam(required=false) String searchQuery
+             , @RequestParam(required=false) String dateFilter, @RequestParam(required=false) String typeFilter){
+         return new ResponseEntity<Page<Event>>(eventService.findAll(pageable, searchQuery, dateFilter, typeFilter),HttpStatus.OK);
      }
 
     @PutMapping("/{id}")

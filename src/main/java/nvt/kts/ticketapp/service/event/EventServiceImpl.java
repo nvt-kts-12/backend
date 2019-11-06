@@ -27,12 +27,17 @@ import nvt.kts.ticketapp.service.sector.SectorService;
 import nvt.kts.ticketapp.util.DateUtil;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.swing.text.html.parser.Entity;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,8 +58,9 @@ public class EventServiceImpl implements EventService {
     private final SectorService sectorService;
     private final LocationSectorService locationSectorService;
     private DateUtil dateUtil;
+    private EntityManager em;
 
-    public EventServiceImpl(EventRepository eventRepository,EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService) {
+    public EventServiceImpl(EventRepository eventRepository,EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService, EntityManager em) {
         this.eventRepository = eventRepository;
         this.eventDaysRepository = eventDaysRepository;
         this.eventDayService = eventDayService;
@@ -62,6 +68,7 @@ public class EventServiceImpl implements EventService {
         this.locationService = locationService;
         this.sectorService = sectorService;
         this.locationSectorService = locationSectorService;
+        this.em = em;
     }
 
 
@@ -182,8 +189,43 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public Page<Event> findAll(Pageable pageable){
+    public Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter) {
+
+        String queryString = "select e from Event e where ";
+
+        boolean andNeeded = false;
+
+        if (searchQuery != null) {
+            String queryAddition = "e.name like '" + searchQuery + "'";
+            queryString += queryAddition;
+            andNeeded = true;
+        }
+
+        if (dateFilter != null) {
+            if (andNeeded) {
+                queryString += " and ";
+            }
+            String queryAddition = "e.id in (select ed.event from EventDay ed where ed.date like '" + dateFilter + "')";
+            queryString += queryAddition;
+            andNeeded = true;
+        }
+
+        if (typeFilter != null) {
+            if (andNeeded) {
+                queryString += " and ";
+            }
+            String queryAddition = "e.category like '" + typeFilter + "'";
+            queryString += queryAddition;
+        }
+
+        if (searchQuery == null && dateFilter == null && typeFilter == null) {
             return eventRepository.findAll(pageable);
+        } else {
+            TypedQuery<Event> query = em.createQuery(queryString, Event.class)
+                    .setMaxResults(pageable.getPageSize())
+                    .setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+            return new PageImpl<>(query.getResultList());
+        }
     }
 
     @Override

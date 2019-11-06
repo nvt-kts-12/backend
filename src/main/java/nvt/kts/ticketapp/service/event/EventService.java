@@ -24,13 +24,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 
 @Service
 public interface EventService  {
 
     Event save(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, ParseException, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid;
-    Page<Event> findAll(Pageable pageable);
+    Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter);
     Event findOne(Long eventId);
     EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound;
 
