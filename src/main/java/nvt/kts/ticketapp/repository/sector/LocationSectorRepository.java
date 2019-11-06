@@ -8,7 +8,8 @@ import java.util.List;
 
 @Repository
 public interface LocationSectorRepository extends JpaRepository<LocationSector, Long> {
-    List<LocationSector> findAllBySectorId(Long id);
 
     List<LocationSector> findAllByLocationIdAndDeletedFalse(Long id);
+    List<LocationSector> findAllBySectorId(Long id);
+
 }
