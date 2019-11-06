@@ -18,6 +18,7 @@ public interface EventDaysRepository extends JpaRepository<EventDay, Long> {
     Optional<EventDay> findOneByIdAndStateAndDateBefore(Long eventDayId, EventDayState state, Date date);
 
     List<EventDay> findAllByEventId(Long id);
+    List<EventDay> findAllByLocationId(Long id);
 
     Optional<EventDay> findByIdAndDeletedFalse(Long evendDayId);
 
