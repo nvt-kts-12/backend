@@ -80,9 +80,11 @@ public class EventController {
      }
 
      @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-     private ResponseEntity<Page<Event>> show (Pageable pageable, @RequestParam(required=false) String searchQuery
-             , @RequestParam(required=false) String dateFilter, @RequestParam(required=false) String typeFilter,
-                                               @RequestParam(required=false) String locationFilter){
+     private ResponseEntity<Page<Event>> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
+                                               @RequestParam(required=false) String dateFilter,
+                                               @RequestParam(required=false) String typeFilter,
+                                               @RequestParam(required=false) String locationFilter) {
+
          return new ResponseEntity<Page<Event>>(eventService.findAll(pageable, searchQuery,
                  dateFilter, typeFilter, locationFilter),HttpStatus.OK);
      }
