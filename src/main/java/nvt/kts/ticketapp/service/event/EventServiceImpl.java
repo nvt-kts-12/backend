@@ -83,7 +83,11 @@ public class EventServiceImpl implements EventService {
     private UserRepository userRepository;
 
 
-    public EventServiceImpl(EventRepository eventRepository,EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService, TicketService ticketService) {
+    public EventServiceImpl(EventRepository eventRepository,EventDaysRepository eventDaysRepository,
+                            EventDayService eventDayService, LocationSchemeService locationSchemeService,
+                            LocationService locationService, SectorService sectorService,
+                            LocationSectorService locationSectorService,
+                            TicketService ticketService, EntityManager em) {
 
         this.eventRepository = eventRepository;
         this.eventDaysRepository = eventDaysRepository;
@@ -232,43 +236,69 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter) {
+    public Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter,
+                               String locationFilter) {
 
+        if (searchQuery == null && dateFilter == null && typeFilter == null && locationFilter == null) {
+            return eventRepository.findAll(pageable);
+        } else {
+            return executeCustomQuery(pageable, searchQuery, dateFilter, typeFilter, locationFilter);
+        }
+    }
+
+    private Page<Event> executeCustomQuery(Pageable pageable, String searchQuery,String dateFilter,String typeFilter,
+                                           String locationFilter) {
         String queryString = "select e from Event e where ";
 
         boolean andNeeded = false;
 
         if (searchQuery != null) {
-            String queryAddition = "e.name like '" + searchQuery + "'";
+            searchQuery = removeSingleQuotationMarks(searchQuery);
+            String queryAddition = "e.name like '%" + searchQuery + "%'";
             queryString += queryAddition;
             andNeeded = true;
         }
 
         if (dateFilter != null) {
-            if (andNeeded) {
-                queryString += " and ";
-            }
+            dateFilter = removeSingleQuotationMarks(dateFilter);
+            queryString = addAndIfNeeded(queryString, andNeeded);
             String queryAddition = "e.id in (select ed.event from EventDay ed where ed.date like '" + dateFilter + "')";
             queryString += queryAddition;
             andNeeded = true;
         }
 
         if (typeFilter != null) {
-            if (andNeeded) {
-                queryString += " and ";
-            }
+            typeFilter = removeSingleQuotationMarks(typeFilter);
+            queryString = addAndIfNeeded(queryString, andNeeded);
             String queryAddition = "e.category like '" + typeFilter + "'";
+            queryString += queryAddition;
+            andNeeded = true;
+        }
+
+        if(locationFilter != null) {
+            locationFilter = removeSingleQuotationMarks(locationFilter);
+            queryString = addAndIfNeeded(queryString, andNeeded);
+            String queryAddition = "e.id in (select ed.event from EventDay ed where ed.location in " +
+                    "(select l.id from Location l where l.scheme in (select ls.id from LocationScheme " +
+                    "ls where ls.name like '%" + locationFilter + "%')))";
             queryString += queryAddition;
         }
 
-        if (searchQuery == null && dateFilter == null && typeFilter == null) {
-            return eventRepository.findAll(pageable);
-        } else {
-            TypedQuery<Event> query = em.createQuery(queryString, Event.class)
-                    .setMaxResults(pageable.getPageSize())
-                    .setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-            return new PageImpl<>(query.getResultList());
+        TypedQuery<Event> query = em.createQuery(queryString, Event.class)
+                .setMaxResults(pageable.getPageSize())
+                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+        return new PageImpl<>(query.getResultList());
+    }
+
+    private String addAndIfNeeded(String queryString, boolean andNeeded) {
+        if (andNeeded) {
+            queryString += " and ";
         }
+        return queryString;
+    }
+
+    private String removeSingleQuotationMarks(String filterParam) {
+        return filterParam.replace("'", "");
     }
 
     @Override
