@@ -1,17 +1,23 @@
 package nvt.kts.ticketapp.service.report;
 
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
+import nvt.kts.ticketapp.domain.dto.event.LocationDTO;
 import nvt.kts.ticketapp.domain.dto.event.PlainEventDayDTO;
+import nvt.kts.ticketapp.domain.dto.location.PlainLocationDTO;
 import nvt.kts.ticketapp.domain.dto.report.EventDayReportDTO;
 import nvt.kts.ticketapp.domain.dto.report.EventReportDTO;
+import nvt.kts.ticketapp.domain.dto.report.LocationReportDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
+import nvt.kts.ticketapp.domain.model.event.EventCategory;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.location.LocationSector;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.exception.event.EventNotFound;
+import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.event.EventRepository;
+import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
@@ -29,13 +35,16 @@ public class ReportsServiceImpl implements ReportsService {
     private EventDaysRepository eventDaysRepository;
     private TicketRepository ticketRepository;
     private LocationSectorRepository locationSectorRepository;
+    private LocationRepository locationRepository;
 
     public ReportsServiceImpl(EventRepository eventRepository, EventDaysRepository eventDaysRepository,
-                              TicketRepository ticketRepository, LocationSectorRepository locationSectorRepository){
+                              TicketRepository ticketRepository, LocationSectorRepository locationSectorRepository,
+                              LocationRepository locationRepository){
         this.eventRepository = eventRepository;
         this.eventDaysRepository = eventDaysRepository;
         this.ticketRepository = ticketRepository;
         this.locationSectorRepository = locationSectorRepository;
+        this.locationRepository = locationRepository;
     }
 
 
@@ -100,6 +109,67 @@ public class ReportsServiceImpl implements ReportsService {
         return reports;
     }
 
+    public LocationReportDTO locationReport(Long id) throws LocationNotFound{
+
+        Location location = locationRepository.findById(id).orElseThrow(() -> new LocationNotFound(id));
+        PlainLocationDTO locationDTO = ObjectMapperUtils.map(location, PlainLocationDTO.class);
+
+        List<EventDay> eventDays = eventDaysRepository.findAllByLocationId(id);
+
+        double totalIncome = 0.0;
+        Map<EventCategory, Double> incomeByCategory = new HashMap<>();
+        Map<EventCategory, Integer> numOfEventDaysByCategory = new HashMap<>();
+
+        // going through every event day and calculating incomes and events on this location
+        for (EventDay eventDay: eventDays) {
+            List<Ticket> tickets = ticketRepository.findByEventDayIdAndSoldTrueAndUserNotNull(eventDay.getId());
+            double incomeForEventDay = sumIncome(tickets);
+            totalIncome += incomeForEventDay;
+
+            // increase or initialise income for event category
+            incomeByCategory = mapIncome(incomeByCategory, eventDay.getEvent().getCategory(), incomeForEventDay);
+
+            // increase or initialise number of event days for event category
+            numOfEventDaysByCategory = mapDay(numOfEventDaysByCategory, eventDay.getEvent().getCategory());
+
+        }
+        return new LocationReportDTO(locationDTO, totalIncome, incomeByCategory, numOfEventDaysByCategory);
+    }
+
+    /**
+     *  increases or initialises income for event category
+     * @param incomeByCategory  -   map of categories and incomes
+     * @param category          -   category of an event whose income we are calculating
+     * @param incomeForEventDay -   income to be mapped
+     * @return
+     */
+    private Map<EventCategory, Double> mapIncome(Map<EventCategory, Double> incomeByCategory, EventCategory category,
+                                                 double incomeForEventDay){
+        if(incomeByCategory.containsKey(category)){
+            double currentIncome = incomeByCategory.get(category);
+            incomeByCategory.put(category, currentIncome + incomeForEventDay);
+        }else{
+            incomeByCategory.put(category, incomeForEventDay);
+        }
+        return incomeByCategory;
+    }
+
+    /**
+     * increases or initialises number of event days by event category
+     * @param numOfEventDaysByCategory  -   map of categories and number of event days
+     * @param category                  -   category of an event whose event day we are calculationg
+     * @return
+     */
+    private Map<EventCategory, Integer> mapDay(Map<EventCategory, Integer> numOfEventDaysByCategory, EventCategory category){
+        if(numOfEventDaysByCategory.containsKey(category)){
+            int currentNumOfDays = numOfEventDaysByCategory.get(category);
+            numOfEventDaysByCategory.put(category, currentNumOfDays + 1);
+        }else{
+            numOfEventDaysByCategory.put(category, 1);
+        }
+        return numOfEventDaysByCategory;
+    }
+
     /**
      * Calculates number of tickets sold by single locationSector
      * @param eventDay  -   day whose sectors we are going through
@@ -132,7 +202,7 @@ public class ReportsServiceImpl implements ReportsService {
      * @return  -   total sum
      */
     private double sumIncome(List<Ticket> tickets){
-        int retVal = 0;
+        double retVal = 0.0;
         for (Ticket ticket: tickets) {
             retVal += ticket.getPrice();
         }
