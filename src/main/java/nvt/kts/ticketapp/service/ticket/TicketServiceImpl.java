@@ -102,8 +102,6 @@ public class TicketServiceImpl implements TicketService {
 
         if(ticket.isSold() == false && ticketUser.getId() != null){
             ticket.setUser(null);
-
-            eventDaysRepository.save(ticketEventDay);
         }
         else
         {
@@ -112,6 +110,7 @@ public class TicketServiceImpl implements TicketService {
 
         if(ticketEventDay.getState() == EventDayState.SOLD_OUT){
             ticketEventDay.setState(EventDayState.RESERVABLE_AND_BUYABLE);
+            eventDaysRepository.save(ticketEventDay);
         }
 
         ticketRepository.save(ticket);
