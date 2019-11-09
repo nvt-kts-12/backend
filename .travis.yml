@@ -25,4 +25,4 @@ before_script:
 
 script:
   - ./mvnw clean install -DskipTests=false -B
-  - ./mvnw sonar:sonar -Dsonar.projectKey=$SONAR_KEY -Dsonar.organization=nvt-kts-12 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.password=""
+  - ./mvnw sonar:sonar -Dsonar.projectKey=$SONAR_KEY -Dsonar.organization=nvt-kts-12 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.password=
