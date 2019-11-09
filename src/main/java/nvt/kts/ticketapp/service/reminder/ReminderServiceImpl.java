@@ -29,16 +29,12 @@ public class ReminderServiceImpl implements ReminderService {
     }
 
     @Override
-    public boolean sendReminders() {
-        boolean reservationsRemindersSent = checkReservations();
-        boolean soldTicketsRemindersSent = checkSoldTickets();
-
-        return reservationsRemindersSent || soldTicketsRemindersSent;
+    public void sendReminders() {
+        checkReservations();
+        checkSoldTickets();
     }
 
-    private boolean checkSoldTickets() {
-
-        boolean remindersSent = false;
+    private void checkSoldTickets() {
 
         List<Ticket> soldTickets = ticketRepository.findAllBySoldTrueAndUserNotNull();
 
@@ -53,16 +49,11 @@ public class ReminderServiceImpl implements ReminderService {
 
             if (diff == DAYS_DIFFERENCE) {
                 soldTicketsReminderService.sendReminderForSoldTicket(t.getUser().getEmail(), t);
-                remindersSent = true;
             }
         }
-
-        return remindersSent;
     }
 
-    private boolean checkReservations() {
-
-        boolean remindersSent = false;
+    private void checkReservations() {
 
         List<Ticket> reservations = ticketRepository.findAllBySoldFalseAndUserNotNull();
         Date today = new Date();
@@ -75,10 +66,7 @@ public class ReminderServiceImpl implements ReminderService {
 
             if (diff == DAYS_DIFFERENCE) {
                 reservationsReminderService.sendReminderForExpiringReservation(t.getUser().getEmail(), t);
-                remindersSent = true;
             }
         }
-
-        return remindersSent;
     }
 }
