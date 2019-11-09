@@ -92,6 +92,7 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.findOneById(id);
     }
 
+    //cancel
     @Override
     public TicketDTO cancelReservation(Long ticketId) throws TicketDoesNotExist, ReservationCanNotBeCancelled {
 
