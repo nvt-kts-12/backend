@@ -27,7 +27,6 @@ import nvt.kts.ticketapp.exception.ticket.ReservationIsNotPossible;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.event.EventRepository;
-import nvt.kts.ticketapp.repository.user.UserRepository;
 import nvt.kts.ticketapp.service.common.email.ticket.TicketEmailService;
 import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
@@ -35,7 +34,6 @@ import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.SectorService;
 import nvt.kts.ticketapp.service.ticket.TicketService;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,7 +41,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -55,6 +52,7 @@ import static nvt.kts.ticketapp.util.DateUtil.*;
 @EnableTransactionManagement
 public class EventServiceImpl implements EventService {
 
+    private final TicketEmailService ticketEmailService;
     private final EventRepository eventRepository;
     private final EventDaysRepository eventDaysRepository;
     private final EventDayService eventDayService;
@@ -64,14 +62,8 @@ public class EventServiceImpl implements EventService {
     private final LocationSectorService locationSectorService;
     private final TicketService ticketService;
 
-    @Autowired
-    private TicketEmailService ticketEmailService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-
-    public EventServiceImpl(EventRepository eventRepository,EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService, TicketService ticketService) {
+    public EventServiceImpl(TicketEmailService ticketEmailService, EventRepository eventRepository, EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService, TicketService ticketService) {
+        this.ticketEmailService = ticketEmailService;
         this.eventRepository = eventRepository;
         this.eventDaysRepository = eventDaysRepository;
         this.eventDayService = eventDayService;
@@ -81,7 +73,6 @@ public class EventServiceImpl implements EventService {
         this.locationSectorService = locationSectorService;
         this.ticketService = ticketService;
     }
-
 
     @Override
     public Event save(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, ParseException, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid {
@@ -200,10 +191,10 @@ public class EventServiceImpl implements EventService {
     }
 
 
-    public EventDayUpdateDTO updateEventDay(EventDayUpdateDTO eventDayDetails) throws EventdayNotFound,DateFormatIsNotValid{
+    public EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails) throws EventdayNotFound,DateFormatIsNotValid{
 
-        EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(eventDayDetails.getId()).
-                orElseThrow(()-> new EventdayNotFound(eventDayDetails.getId()));
+        EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(id).
+                orElseThrow(()-> new EventdayNotFound(id));
 
         Date date = parseDate(eventDayDetails.getDate(),DATE_FORMAT);
         Date reservationExpireDate = parseDate(eventDayDetails.getReservationExpirationDate(),DATE_FORMAT);

@@ -38,6 +38,6 @@ public interface EventService  {
 
     List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible;
 
-    EventDayUpdateDTO updateEventDay(EventDayUpdateDTO eventDayDetails)throws EventdayNotFound,DateFormatIsNotValid;
+    EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails)throws EventdayNotFound,DateFormatIsNotValid;
 }
 

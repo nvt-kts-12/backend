@@ -7,17 +7,24 @@ import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.ticket.TicketNotFoundOrAlreadyBought;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
+import nvt.kts.ticketapp.service.common.email.ticket.TicketEmailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
+    private final TicketEmailService ticketEmailService;
 
-    public TicketServiceImpl(TicketRepository ticketRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository, TicketEmailService ticketEmailService) {
         this.ticketRepository = ticketRepository;
+        this.ticketEmailService = ticketEmailService;
     }
 
     @Override
@@ -62,8 +69,13 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket buyTicket(Long id) throws TicketNotFoundOrAlreadyBought {
         Ticket ticket = ticketRepository.findOneByIdAndSoldFalse(id).orElseThrow(() -> new TicketNotFoundOrAlreadyBought(id));
-
         ticket.setSold(true);
+
+        List<Ticket> tickets = new ArrayList<>();
+        tickets.add(ticket);
+
+        ticketEmailService.sendEmailForPurchasedTickets(ticket.getUser().getEmail(), tickets);
+
         return ticketRepository.save(ticket);
     }
 }
