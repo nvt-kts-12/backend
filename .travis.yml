@@ -13,8 +13,7 @@ services:
 addons:
   sonarcloud:
     organization: "nvt-kts-12"
-    token:
-      secure: $SONAR_TOKEN # encrypted value of your token
+    token: $SONAR_TOKEN # encrypted value of your token
 
 before_install:
   - chmod +x mvnw
