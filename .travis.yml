@@ -25,6 +25,4 @@ before_script:
 
 script:
   - ./mvnw clean install -DskipTests=false -B
-  - ./mvnw sonar:sonar -Dsonar.projectKey=nvt-kts-12_backend -Dsonar.organization=nvt-kts-12 -Dsonar.host.url=https://sonarcloud.io
-
-#    -Dsonar.login=$SONAR_TOKEN
+  - ./mvnw sonar:sonar -Dsonar.projectKey=nvt-kts-12_backend -Dsonar.organization=nvt-kts-12 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=AEGP6SAFiBzBv7wwWDoebLaVNylDVz0Ph208oJRTgLQwTRKz2Vcdl46fQk03kL8BZEOlUXS46m9UO1qjsPzMtCcGzDYGnB88Iav+zp3H3O2Q9UyAlm1iqDOnsbe3mqPqlbzBTzO6hQ5Q+Ywmi3cZav3EL01ZeTX9KXXBC1xtzfhOIhJTD6hpSZsQBy0dveYmgmVEyHCnIDgGDuWJRc3JrPC3+TUTHEikR7EJNIizPQq28TeF2C00BRnsJd3K8fzgMey67/J/0MrLQh/E3zvCYULqsGn42FvnK1/w48J/rdpCvuq2n1tGMozEPCW48QdUM4lQh0PnOkEgfil/cHMMbRDgfVgwgFGd+O06SYeCht76WbU8x1WYldnrWWA+ytzGFAgPbOxJ5GpxA5xMZSJBZNiXjR5RbcWraLbrO+e1dcyhiTeqHPS8qrGrm3yTxLhIGe/j6Wg7nqvgfrUBnEKqQx9Rh4SnsKnbQHZbzHlSKn3I7FHbDjRwya7f8NR9b17FkGBixkaxOou482Yy1ea04NddpwyIgXM+htjc8nCyuEf0NmtyBwev/UiSjGGc2GqKu7BnoYoQxchVJqXt+rzRToOu7OZ+34UhAK9vn+5WjBBAy3MlH3zMIWBXR25b8tL5G3uXAUS1a34yWfSEfSf4aXgoZbSR2Pdn8pXrtP+xnsg=
