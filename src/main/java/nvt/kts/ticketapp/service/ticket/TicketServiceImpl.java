@@ -102,7 +102,6 @@ public class TicketServiceImpl implements TicketService {
         if(ticket.isSold() == false && ticketUser.getId() != null){
             ticket.setUser(null);
 
-            ticketRepository.save(ticket);
             eventDaysRepository.save(ticketEventDay);
         }
         else
@@ -114,7 +113,7 @@ public class TicketServiceImpl implements TicketService {
             ticketEventDay.setState(EventDayState.RESERVABLE_AND_BUYABLE);
         }
 
-
+        ticketRepository.save(ticket);
 
         return ObjectMapperUtils.map(ticket, TicketDTO.class);
     }
