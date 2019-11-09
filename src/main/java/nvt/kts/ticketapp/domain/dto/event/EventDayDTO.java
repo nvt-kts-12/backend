@@ -19,4 +19,5 @@ public class EventDayDTO {
     private EventDayState eventDayState;
 
 
+
 }

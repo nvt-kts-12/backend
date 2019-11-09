@@ -24,14 +24,14 @@ insert into event (id, deleted, category, description, name) values
             (1, 0, 0, "opis dogadjaja", "naziv dogadjaja"),
             (2, 0, 1, "opis dogadjaja2", "naziv dogadjaja2");
 insert into event_day(id, deleted, date, reservation_expiration_date, state, event_id, location_id) values
-            (1, 0, "2019-02-02", "2019-01-30", 0, 1, 1),
+            (1, 0, "2019-02-02", "2019-01-30", "CANCELLED", 1, 1),
             (2, 0, "2019-02-04", "2019-01-30", 0, 1, 1),
             (3, 0, "2019-02-04", "2019-01-30", 0, 2, 1),
             (4, 0, "2019-02-04", "2019-01-30", 0, 2, 1),
             (5, 0, "2019-02-04", "2019-01-30", 0, 2, 1),
             (6, 0, "2019-02-04", "2019-01-30", 0, 2, 1);
 insert into ticket(id, deleted, price, seat_col, seat_row, sector_id, sold, vip, event_day_id, user_id) values
-            (1, 0, 1421, 0, 0, 1, 1, 0, 1, 1),
+            (1, 0, 1421, 0, 0, 1, 0, 0, 1, 1),
             (2, 0, 1421, 0, 0, 1, 1, 0, 1, 2),
             (3, 0, 50, 1, 1, 2, 1, 0, 1, 1),
             (4, 0, 50, 1, 1, 2, 1, 0, 2, 1),
@@ -45,10 +45,3 @@ insert into ticket(id, deleted, price, seat_col, seat_row, sector_id, sold, vip,
             (11, 0, 802, 1, 4, 4, 0, 0, 6, 3);
 
 -- simanic
-
-insert into location_scheme (id, address, name, deleted) values (2, "Test", "Test", 0 );
-insert into location(id, deleted, scheme_id) values (1, 0, 2);
-insert into event(id, deleted, category, description, name) values (1, 0, 1, "test", "ime");
-insert into event_day(id, deleted, date, reservation_expiration_date, state, event_id, location_id) values
-(1,0,'2010-01-01', '1998-12-30', 0, 1, 1);
-
