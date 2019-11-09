@@ -65,7 +65,7 @@ public class TicketController {
         }
     }
 
-        @PutMapping("/{id}")
+        @PutMapping("/cancel/{id}")
         private ResponseEntity cancelReservation(@PathVariable Long id) {
             try {
                 return new ResponseEntity<TicketDTO>(ticketService.cancelReservation(id), HttpStatus.OK);
