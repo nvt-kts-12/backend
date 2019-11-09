@@ -13,8 +13,7 @@ services:
 addons:
   sonarcloud:
     organization: "nvt-kts-12"
-    token:
-      secure: $SONAR_TOKEN # encrypted value of your token
+    token: $SONAR_TOKEN # encrypted value of your token
 
 before_install:
   - chmod +x mvnw
@@ -25,4 +24,4 @@ before_script:
 
 script:
   - ./mvnw clean install -DskipTests=false -B
-  - ./mvnw sonar:sonar -Dsonar.projectKey=$SONAR_KEY -Dsonar.organization=nvt-kts-12 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+  - ./mvnw sonar:sonar -Dsonar.projectKey=nvt-kts-12_backend -Dsonar.organization=nvt-kts-12 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
