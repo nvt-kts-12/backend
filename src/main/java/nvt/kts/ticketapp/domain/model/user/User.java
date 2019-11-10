@@ -34,8 +34,8 @@ public class User extends AbstractUser implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private List<Authority> authorities;
 
-    public User(@NotNull String username, @NotNull String password, @NotNull String firstName, @NotNull String lastName, @NotNull UserRole userRole, @NotNull String email) {
-        super(username, password, firstName, lastName, userRole);
+    public User(@NotNull String username, @NotNull String password, @NotNull String firstName, @NotNull String lastName, @NotNull String email) {
+        super(username, password, firstName, lastName);
         this.email = email;
     }
 

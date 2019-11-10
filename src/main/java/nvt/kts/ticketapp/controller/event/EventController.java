@@ -56,11 +56,6 @@ public class EventController {
 
     private LocationService locationService;
 
-    // TODO delete when security is enabled
-    @Autowired
-    private UserRepository userRepository;
-
-
     public EventController(EventService eventService, CustomUserDetailsService customUserDetailsService) {
         this.eventService = eventService;
         this.customUserDetailsService = customUserDetailsService;
@@ -79,7 +74,7 @@ public class EventController {
          return new ResponseEntity<EventDTO>(ObjectMapperUtils.map(event, EventDTO.class), HttpStatus.OK);
      }
 
-     @GetMapping("show-events")
+     @GetMapping("/show-events")
      private ResponseEntity<Page<Event>> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
                                                @RequestParam(required=false) String dateFilter,
                                                @RequestParam(required=false) String typeFilter,
@@ -92,18 +87,11 @@ public class EventController {
      @PostMapping("/reserve")
      private ResponseEntity reserve(HttpServletRequest request, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
 
-//        User user = customUserDetailsService.getUserFromRequest(request);
-
-         // TODO delete when security is enabled
-        Optional<User> user = userRepository.findOneByUsername("classicdocs");
-
-        if (user.isEmpty()) {
-            return new ResponseEntity<String>("Error", HttpStatus.BAD_REQUEST);
-        }
+        User user = customUserDetailsService.getUserFromRequest(request);
 
         List<Ticket> tickets = null;
          try {
-             tickets = eventService.reserve(eventDayReservationDTO, user.get());
+             tickets = eventService.reserve(eventDayReservationDTO, user);
          } catch (EventDayDoesNotExist | LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible ex) {
              ex.printStackTrace();
              return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);

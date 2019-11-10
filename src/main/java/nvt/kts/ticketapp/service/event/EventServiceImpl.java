@@ -99,8 +99,8 @@ public class EventServiceImpl implements EventService {
         // create eventDays
         for (EventDayDTO eventDayDTO: eventEventDaysDTO.getEventDays()) {
 
-            Date date = parseDate(eventDayDTO.getDate(),DATE_TIME_FORMAT);
-            Date reservationExpireDate = parseDate(eventDayDTO.getReservationExpireDate(),DATE_TIME_FORMAT);
+            Date date = parseDate(eventDayDTO.getDate(),DATE_FORMAT);
+            Date reservationExpireDate = parseDate(eventDayDTO.getReservationExpireDate(),DATE_FORMAT);
 
             // check if dates in past or reservationExpireDate is before event date
             checkDates(date, reservationExpireDate);

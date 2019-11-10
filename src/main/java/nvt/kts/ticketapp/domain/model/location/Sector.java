@@ -6,9 +6,7 @@ import lombok.Setter;
 import nvt.kts.ticketapp.domain.model.AbstractEntity;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -39,6 +37,7 @@ public class Sector extends AbstractEntity {
     private int colNum;
 
     @NotNull
+    @Enumerated(value = EnumType.STRING)
     private SectorType type;
 
     @ManyToOne

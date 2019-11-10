@@ -33,7 +33,7 @@ public class ReportsController {
         }
     }
 
-    @GetMapping("/eventDays/{id}")
+    @GetMapping("/eventDay/{id}")
     public ResponseEntity eventDaysReport(@PathVariable Long id){
         try {
             return new ResponseEntity<List<EventDayReportDTO>>(reportsService.eventDaysReport(id), HttpStatus.OK);
