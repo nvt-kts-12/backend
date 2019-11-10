@@ -54,30 +54,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         // TODO delete this and uncomment code below
-        http.authorizeRequests().antMatchers("/").permitAll();
+//        http.authorizeRequests().antMatchers("/").permitAll();
 
-//        http.httpBasic().disable();
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//                .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-//                .authorizeRequests()
-//                .antMatchers("/api/auth/**").permitAll()
-//                .antMatchers("/api/event/show-events").permitAll()
-//                .anyRequest().authenticated().and()
-//                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
-//        http.csrf().disable();
+        http.httpBasic().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
+                .authorizeRequests()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/event/show-events").permitAll()
+                .anyRequest().authenticated().and()
+                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
+        http.csrf().disable();
 
     }
 
     @Override
     public void configure(WebSecurity web) {
         // TODO delete this and uncomment code below
-        web.ignoring().antMatchers(HttpMethod.POST, "/**");
-        web.ignoring().antMatchers(HttpMethod.GET, "/**");
-        web.ignoring().antMatchers(HttpMethod.PUT, "/**");
+//        web.ignoring().antMatchers(HttpMethod.POST, "/**");
+//        web.ignoring().antMatchers(HttpMethod.GET, "/**");
+//        web.ignoring().antMatchers(HttpMethod.PUT, "/**");
 
-//        web.ignoring().antMatchers(HttpMethod.POST, "auth/login");
-//        web.ignoring().antMatchers(HttpMethod.POST, "auth/register");
-//        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico",
-//                "/**/*.html", "/**/*.css", "/**/*.js");
+        web.ignoring().antMatchers(HttpMethod.POST, "auth/login");
+        web.ignoring().antMatchers(HttpMethod.POST, "auth/register");
+        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico",
+                "/**/*.html", "/**/*.css", "/**/*.js");
     }
 }
