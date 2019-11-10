@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.controller.auth;
 
+import nvt.kts.ticketapp.domain.dto.ticket.TicketsDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserEditDTO;
 import nvt.kts.ticketapp.domain.model.user.User;
@@ -7,7 +8,10 @@ import nvt.kts.ticketapp.exception.user.EmailNotValid;
 import nvt.kts.ticketapp.exception.user.FirstNameNotValid;
 import nvt.kts.ticketapp.exception.user.LastNameNotValid;
 import nvt.kts.ticketapp.exception.user.UserNotFound;
+import nvt.kts.ticketapp.service.ticket.TicketService;
+import nvt.kts.ticketapp.service.ticket.TicketServiceImpl;
 import nvt.kts.ticketapp.service.user.UserService;
+import nvt.kts.ticketapp.service.user.UserServiceImpl;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +26,13 @@ import java.security.Principal;
 @RequestMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final TicketService ticketService;
+
+    public UserController(UserServiceImpl userService, TicketServiceImpl ticketService) {
+        this.userService = userService;
+        this.ticketService = ticketService;
+    }
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('REGISTERED')")
@@ -46,6 +55,28 @@ public class UserController {
         } catch (UserNotFound | EmailNotValid | FirstNameNotValid | LastNameNotValid ex) {
             ex.printStackTrace();
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/reservations")
+    private ResponseEntity getReservations(Principal user) {
+        try {
+            User u = userService.findByUsername(user.getName());
+            return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getReservationsFromUser(u)), HttpStatus.OK);
+        } catch (UserNotFound unf) {
+            unf.printStackTrace();
+            return new ResponseEntity<String>(unf.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/bought")
+    private ResponseEntity getBoughtTickets(Principal user) {
+        try {
+            User u = userService.findByUsername(user.getName());
+            return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getBoughtTicketsFromUser(u)), HttpStatus.OK);
+        } catch (UserNotFound unf) {
+            unf.printStackTrace();
+            return new ResponseEntity<String>(unf.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

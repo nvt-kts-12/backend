@@ -25,33 +25,9 @@ import java.util.List;
 public class TicketController {
 
     private TicketService ticketService;
-    private UserService userService;
 
     public TicketController(TicketServiceImpl ticketService, UserServiceImpl userService) {
         this.ticketService = ticketService;
-        this.userService = userService;
-    }
-
-    @GetMapping("/reservations")
-    private ResponseEntity getReservations(Principal user) {
-        try {
-            User u = userService.findByUsername(user.getName());
-            return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getReservationsFromUser(u)), HttpStatus.OK);
-        } catch (UserNotFound unf) {
-            unf.printStackTrace();
-            return new ResponseEntity<String>(unf.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/sold")
-    private ResponseEntity getSoldTickets(Principal user) {
-        try {
-            User u = userService.findByUsername(user.getName());
-            return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getSoldTicketsFromUser(u)), HttpStatus.OK);
-        } catch (UserNotFound unf) {
-            unf.printStackTrace();
-            return new ResponseEntity<String>(unf.getMessage(), HttpStatus.BAD_REQUEST);
-        }
     }
 
     @PutMapping("/buy/{id}")

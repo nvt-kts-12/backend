@@ -70,7 +70,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<Ticket> getSoldTicketsFromUser(User user) {
+    public List<Ticket> getBoughtTicketsFromUser(User user) {
         return ticketRepository.findByUserIdAndSoldFalse(user.getId());
     }
 

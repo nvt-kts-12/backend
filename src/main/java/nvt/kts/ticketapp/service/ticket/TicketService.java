@@ -25,7 +25,7 @@ public interface TicketService {
 
     List<Ticket> getReservationsFromUser(User user);
 
-    List<Ticket> getSoldTicketsFromUser(User user);
+    List<Ticket> getBoughtTicketsFromUser(User user);
 
     Ticket buyTicket(Long id) throws TicketNotFoundOrAlreadyBought;
 
