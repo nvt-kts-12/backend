@@ -17,6 +17,7 @@ public class RemindersConfiguration {
         this.reminderService = reminderService;
     }
 
+    //this method is executed every day at 11:00:00
     @Scheduled(cron = "0 0 11 * * ?")
     public void sendReminders() throws InterruptedException {
         reminderService.sendReminders();
