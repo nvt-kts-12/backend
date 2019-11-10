@@ -54,7 +54,7 @@ public class TicketController {
         }
     }
 
-    @PostMapping("/buy/{id}")
+    @PutMapping("/buy/{id}")
     public ResponseEntity buyTicket(@PathVariable Long id) {
         try {
             Ticket ticket = ticketService.buyTicket(id);
@@ -65,14 +65,14 @@ public class TicketController {
         }
     }
 
-        @PutMapping("/cancel/{id}")
-        private ResponseEntity cancelReservation(@PathVariable Long id) {
-            try {
-                return new ResponseEntity<TicketDTO>(ticketService.cancelReservation(id), HttpStatus.OK);
-            } catch (TicketDoesNotExist | ReservationCanNotBeCancelled ticketDoesNotExist) {
-                ticketDoesNotExist.printStackTrace();
-                return new ResponseEntity<String>(ticketDoesNotExist.getMessage(), HttpStatus.BAD_REQUEST);
-            }
-
+    @PutMapping("/cancel/{id}")
+    private ResponseEntity cancelReservation(@PathVariable Long id) {
+        try {
+            return new ResponseEntity<TicketDTO>(ticketService.cancelReservation(id), HttpStatus.OK);
+        } catch (TicketDoesNotExist | ReservationCanNotBeCancelled ticketDoesNotExist) {
+            ticketDoesNotExist.printStackTrace();
+            return new ResponseEntity<String>(ticketDoesNotExist.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
     }
+}
