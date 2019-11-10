@@ -79,7 +79,7 @@ public class EventController {
          return new ResponseEntity<EventDTO>(ObjectMapperUtils.map(event, EventDTO.class), HttpStatus.OK);
      }
 
-     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+     @GetMapping("show-events")
      private ResponseEntity<Page<Event>> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
                                                @RequestParam(required=false) String dateFilter,
                                                @RequestParam(required=false) String typeFilter,

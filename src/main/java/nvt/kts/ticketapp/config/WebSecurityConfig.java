@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 //                .authorizeRequests()
 //                .antMatchers("/api/auth/**").permitAll()
-//                .antMatchers("/h2-console/**").permitAll()
+//                .antMatchers("/api/event/show-events").permitAll()
 //                .anyRequest().authenticated().and()
 //                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
 //        http.csrf().disable();
