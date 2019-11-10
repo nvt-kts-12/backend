@@ -12,8 +12,7 @@ import javax.validation.constraints.NotNull;
 public class Admin extends AbstractUser{
 
     public Admin(@NotNull String username, @NotNull String password,
-                 @NotNull String firstName, @NotNull String lastName,
-                 @NotNull UserRole userRole) {
-        super(username, password, firstName, lastName, userRole);
+                 @NotNull String firstName, @NotNull String lastName) {
+        super(username, password, firstName, lastName);
     }
 }

@@ -37,15 +37,11 @@ public abstract class AbstractUser {
     @NotNull
     private String lastName;
 
-    @NotNull
-    private UserRole userRole;
-
-    public AbstractUser(@NotNull String username, @NotNull String password, @NotNull String firstName, @NotNull String lastName, @NotNull UserRole userRole) {
+    public AbstractUser(@NotNull String username, @NotNull String password, @NotNull String firstName, @NotNull String lastName) {
         this.username = username;
         this.password = this.encodePassword(password);
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userRole = userRole;
     }
 
     private String encodePassword(String password) {

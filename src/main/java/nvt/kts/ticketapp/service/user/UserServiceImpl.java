@@ -4,15 +4,12 @@ import nvt.kts.ticketapp.domain.dto.user.UserEditDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserRegistrationDTO;
 import nvt.kts.ticketapp.domain.model.user.Authority;
 import nvt.kts.ticketapp.domain.model.user.User;
-import nvt.kts.ticketapp.domain.model.user.UserRole;
 import nvt.kts.ticketapp.exception.user.*;
 import nvt.kts.ticketapp.repository.user.AuthorityRepository;
 import nvt.kts.ticketapp.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +65,6 @@ public class UserServiceImpl implements UserService {
                 userRegistrationDTO.getPassword(),
                 userRegistrationDTO.getFirstName(),
                 userRegistrationDTO.getLastName(),
-                UserRole.REGISTERED,
                 userRegistrationDTO.getEmail());
 
         List<Authority> authorities = new ArrayList<Authority>();
