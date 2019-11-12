@@ -64,7 +64,8 @@ public class EventController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-     private ResponseEntity save (@RequestBody EventEventDaysDTO eventEventDaysDTO){
+     private ResponseEntity save (@RequestBody @Valid  EventEventDaysDTO eventEventDaysDTO){
+
          Event event = null;
          try {
              event = eventService.save(eventEventDaysDTO);
@@ -107,7 +108,7 @@ public class EventController {
      }
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity update(@PathVariable(value = "id") Long eventId, @RequestBody EventDTO eventDetails){
+    public ResponseEntity update(@PathVariable(value = "id") Long eventId, @RequestBody @Valid  EventDTO eventDetails){
         EventDTO eventDTO = null;
         try {
             eventDTO = eventService.update(eventId,eventDetails);
@@ -121,7 +122,7 @@ public class EventController {
 
     @PutMapping("/eventDay/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity updateEventDay(@PathVariable Long id, @RequestBody EventDayUpdateDTO eventDayUpdateDTO){
+    public ResponseEntity updateEventDay(@PathVariable Long id, @RequestBody @Valid  EventDayUpdateDTO eventDayUpdateDTO){
 
         try {
             return new ResponseEntity<EventDayUpdateDTO>(eventService.updateEventDay(id, eventDayUpdateDTO), HttpStatus.OK);
