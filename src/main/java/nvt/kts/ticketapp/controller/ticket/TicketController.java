@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.controller.ticket;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.ticket.TicketDTO;
 import nvt.kts.ticketapp.domain.dto.ticket.TicketsDTO;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -38,6 +40,9 @@ public class TicketController {
         } catch (TicketNotFoundOrAlreadyBought ex) {
             ex.printStackTrace();
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IOException| WriterException e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("Could not generate QR code", HttpStatus.EXPECTATION_FAILED);
         }
     }
 

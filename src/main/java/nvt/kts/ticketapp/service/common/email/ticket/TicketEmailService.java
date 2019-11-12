@@ -1,9 +1,17 @@
 package nvt.kts.ticketapp.service.common.email.ticket;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.service.common.email.EmailClient;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.List;
 
 @Service
@@ -17,8 +25,9 @@ public class TicketEmailService  {
         this.emailClient = emailClient;
     }
 
-    public void sendEmailForPurchasedTickets(String emailTo, List<Ticket> tickets) {
+    public void sendEmailForPurchasedTickets(String emailTo, List<Ticket> tickets) throws IOException, WriterException {
 
+        generateQrCode(tickets.get(0).getUser().getUsername());
         String content = generateContent(tickets);
 
         emailClient.sendMimeEmail(
@@ -50,8 +59,20 @@ public class TicketEmailService  {
             }
             msg+= "</div><br>";
         }
+        msg += "<p> Scan this QR code to acces your tickets on our site:</p> <br>";
+        msg += "<img src='cid:qr_code' width='500px' height='500px'>";
         msg += "</body></html>";
 
         return msg;
+    }
+
+    private void generateQrCode(String username) throws WriterException, IOException {
+
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(username, BarcodeFormat.QR_CODE, 15, 15);
+
+        Path path = FileSystems.getDefault().getPath("src/main/resources/qr_code.png");
+        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+
     }
 }
