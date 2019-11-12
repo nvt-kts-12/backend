@@ -5,14 +5,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nvt.kts.ticketapp.domain.model.event.EventCategory;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+
 @NoArgsConstructor
 @Getter
 @Setter
 public class EventDTO {
 
+    @NotNull
+    @PositiveOrZero
     private Long id;
+    @NotNull
     private String description;
+    @NotNull
     private String name;
+    @NotNull
     private EventCategory category;
 
     public EventDTO(Long id, String description, String name, EventCategory category) {
