@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
@@ -45,7 +46,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity register(@RequestBody UserRegistrationDTO userRegistrationDTO) {
+    public ResponseEntity register(@RequestBody @Valid UserRegistrationDTO userRegistrationDTO) {
         User user = null;
         try {
             user = userService.create(userRegistrationDTO);
