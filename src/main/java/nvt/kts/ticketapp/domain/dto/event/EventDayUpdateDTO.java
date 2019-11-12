@@ -12,8 +12,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class EventDayUpdateDTO {
 
-    @NotNull
-    @PositiveOrZero
     private Long id;
     @NotNull
     private String date;
@@ -23,5 +21,5 @@ public class EventDayUpdateDTO {
     private EventDayState eventDayState;
 
 
-    }
+}
 
