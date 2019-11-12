@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "33b6e5cf-96e5-4cb9-93d9-89ec01461564",
+		"_postman_id": "a063928f-0438-4a06-a7a6-d808db699a25",
 		"name": "NVT-KTS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -656,6 +656,46 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Reservations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8088/api/user/reservations",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"api",
+								"user",
+								"reservations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bought tickets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8088/api/user/bought",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"api",
+								"user",
+								"bought"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -666,7 +706,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJiYWNrZW5kIiwic3ViIjoidXNlcm5hbWUiLCJhdWQiOiJ3ZWIiLCJpYXQiOjE1NzMzOTc3NjYsImV4cCI6MTU3MzM5ODA2Nn0.VTj7xa_O91pNyf-_LwC4hWA6Kk9AMO7gjtTf000nnh92VAHCFoDbuBwlM9VoIcMQZOzlCJ-4MxUaBzLLn8FodQ",
+				"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJiYWNrZW5kIiwic3ViIjoidXNlcm5hbWUiLCJhdWQiOiJ3ZWIiLCJpYXQiOjE1NzM1OTYzNzUsImV4cCI6MTU3MzU5NjY3NX0.KUHSSfkI24GU-VxV8rqVp9fHd8lNHQcw7QrbX9Krxz4mNW3GfU0gfA2JdhISqFhjbgGJTKHiiAH_RNlqzXvN0w",
 				"type": "string"
 			}
 		]
