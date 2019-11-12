@@ -25,6 +25,8 @@ import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
+import static nvt.kts.ticketapp.config.Constants.QR_CODE_PATH;
+
 @Service
 public class EmailClient {
 
@@ -40,7 +42,7 @@ public class EmailClient {
 
             messageHelper.setText(content, true);
 
-            FileSystemResource file = new FileSystemResource(new File("src/main/resources/qr_code.png"));
+            FileSystemResource file = new FileSystemResource(new File(QR_CODE_PATH));
             messageHelper.addInline("qr_code", file);
 
             messageHelper.setFrom(emailFrom);

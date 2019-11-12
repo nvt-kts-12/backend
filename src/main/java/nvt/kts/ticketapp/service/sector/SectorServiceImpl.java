@@ -63,7 +63,7 @@ public class SectorServiceImpl implements SectorService {
         for (Sector sector: sectors) {
             List<LocationSector> locationSectors = locationSectorRepository.findAllBySectorId(sector.getId());
             if(!locationSectors.isEmpty()){
-                throw new CanNotDeleteSchemeSectors(sector.getLocationScheme().getId());
+                throw new CanNotDeleteSchemeSectors();
             }
             sector.setDeleted(true);
         }

@@ -14,6 +14,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
 
+import static nvt.kts.ticketapp.config.Constants.QR_CODE_PATH;
+
 @Service
 public class TicketEmailService  {
 
@@ -71,7 +73,7 @@ public class TicketEmailService  {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(username, BarcodeFormat.QR_CODE, 15, 15);
 
-        Path path = FileSystems.getDefault().getPath("src/main/resources/qr_code.png");
+        Path path = FileSystems.getDefault().getPath(QR_CODE_PATH);
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
 
     }
