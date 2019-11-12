@@ -46,7 +46,7 @@ public class EmailClient {
             messageHelper.addInline("qr_code", file);
 
             messageHelper.setFrom(emailFrom);
-            messageHelper.setTo("jankobree@hotmail.com");
+            messageHelper.setTo(emailFrom);
             messageHelper.setSubject(subject);
 
         };
