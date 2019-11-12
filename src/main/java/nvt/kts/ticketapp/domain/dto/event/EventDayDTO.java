@@ -14,8 +14,6 @@ import java.util.Date;
 @Data
 public class EventDayDTO {
 
-    @NotNull
-    @PositiveOrZero
     private Long id;
     @NotNull
     private String date;
