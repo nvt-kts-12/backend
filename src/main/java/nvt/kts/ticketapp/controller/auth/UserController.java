@@ -26,8 +26,8 @@ import java.security.Principal;
 @RequestMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
-    private final UserService userService;
-    private final TicketService ticketService;
+    private UserService userService;
+    private TicketService ticketService;
 
     public UserController(UserServiceImpl userService, TicketServiceImpl ticketService) {
         this.userService = userService;
@@ -59,7 +59,8 @@ public class UserController {
     }
 
     @GetMapping("/reservations")
-    private ResponseEntity getReservations(Principal user) {
+    @PreAuthorize("hasRole('REGISTERED')")
+    public ResponseEntity getReservations(Principal user) {
         try {
             User u = userService.findByUsername(user.getName());
             return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getReservationsFromUser(u)), HttpStatus.OK);
@@ -70,7 +71,8 @@ public class UserController {
     }
 
     @GetMapping("/bought")
-    private ResponseEntity getBoughtTickets(Principal user) {
+    @PreAuthorize("hasRole('REGISTERED')")
+    public ResponseEntity getBoughtTickets(Principal user) {
         try {
             User u = userService.findByUsername(user.getName());
             return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getBoughtTicketsFromUser(u)), HttpStatus.OK);

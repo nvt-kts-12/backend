@@ -39,6 +39,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,7 +63,9 @@ public class EventController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
      private ResponseEntity save (@RequestBody @Valid  EventEventDaysDTO eventEventDaysDTO){
+
          Event event = null;
          try {
              event = eventService.save(eventEventDaysDTO);
@@ -85,6 +88,7 @@ public class EventController {
      }
 
      @PostMapping("/reserve")
+     @PreAuthorize("hasRole('REGISTERED')")
      private ResponseEntity reserve(HttpServletRequest request, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
 
         User user = customUserDetailsService.getUserFromRequest(request);
@@ -103,6 +107,7 @@ public class EventController {
          return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets),HttpStatus.OK);
      }
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity update(@PathVariable(value = "id") Long eventId, @RequestBody @Valid  EventDTO eventDetails){
         EventDTO eventDTO = null;
         try {
@@ -116,6 +121,7 @@ public class EventController {
     }
 
     @PutMapping("/eventDay/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity updateEventDay(@PathVariable Long id, @RequestBody @Valid  EventDayUpdateDTO eventDayUpdateDTO){
 
         try {
