@@ -15,6 +15,7 @@ import nvt.kts.ticketapp.service.sector.SectorServiceImpl;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class LocationSchemeSectorController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public void save(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO){
         try {
             sectorService.saveAll(locationSchemeSectorsDTO.getSectors(),
@@ -52,6 +54,7 @@ public class LocationSchemeSectorController {
     }
 
     @DeleteMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity delete(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO){
         try {
             List<SectorDTO> sectorDTOS = sectorService.delete(locationSchemeSectorsDTO.getSectors());

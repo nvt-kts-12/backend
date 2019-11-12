@@ -9,6 +9,7 @@ import nvt.kts.ticketapp.service.report.ReportsService;
 import nvt.kts.ticketapp.service.report.ReportsServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class ReportsController {
     }
 
     @GetMapping("/event/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity eventReport(@PathVariable Long id){
         try {
             return new ResponseEntity<EventReportDTO>(reportsService.eventReport(id), HttpStatus.OK);
@@ -34,6 +36,7 @@ public class ReportsController {
     }
 
     @GetMapping("/eventDay/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity eventDaysReport(@PathVariable Long id){
         try {
             return new ResponseEntity<List<EventDayReportDTO>>(reportsService.eventDaysReport(id), HttpStatus.OK);
@@ -44,6 +47,7 @@ public class ReportsController {
     }
 
     @GetMapping("/location/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity locationReport(@PathVariable Long id){
         try {
             return new ResponseEntity<LocationReportDTO>(reportsService.locationReport(id), HttpStatus.OK);
@@ -52,5 +56,4 @@ public class ReportsController {
             return new ResponseEntity<String>(locationNotFound.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
 }
