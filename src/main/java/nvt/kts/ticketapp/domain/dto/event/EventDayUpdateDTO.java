@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Date;
 
 @Data
@@ -12,6 +13,7 @@ import java.util.Date;
 public class EventDayUpdateDTO {
 
     @NotNull
+    @PositiveOrZero
     private Long id;
     @NotNull
     private String date;
