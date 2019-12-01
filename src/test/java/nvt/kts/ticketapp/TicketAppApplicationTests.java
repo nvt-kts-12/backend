@@ -1,13 +1,22 @@
 package nvt.kts.ticketapp;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import nvt.kts.ticketapp.controller.auth.AuthenticationControllerUnitSuite;
+import nvt.kts.ticketapp.service.user.UserServiceUnitSuite;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-@SpringBootTest
-class TicketAppApplicationTests {
+
+@RunWith(Suite.class)
+@SuiteClasses({
+		AuthenticationControllerUnitSuite.class,
+		UserServiceUnitSuite.class
+})
+public class TicketAppApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 
 }

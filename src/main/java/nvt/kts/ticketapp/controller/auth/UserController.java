@@ -29,10 +29,11 @@ public class UserController {
     private UserService userService;
     private TicketService ticketService;
 
-    public UserController(UserServiceImpl userService, TicketServiceImpl ticketService) {
+    public UserController(UserService userService, TicketService ticketService) {
         this.userService = userService;
         this.ticketService = ticketService;
     }
+
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('REGISTERED')")

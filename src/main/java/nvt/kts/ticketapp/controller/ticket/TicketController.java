@@ -27,7 +27,7 @@ public class TicketController {
 
     private TicketService ticketService;
 
-    public TicketController(TicketServiceImpl ticketService, UserServiceImpl userService) {
+    public TicketController(TicketServiceImpl ticketService) {
         this.ticketService = ticketService;
     }
 

@@ -2,9 +2,11 @@ package nvt.kts.ticketapp.service.user;
 
 import nvt.kts.ticketapp.domain.dto.user.UserEditDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserRegistrationDTO;
+import nvt.kts.ticketapp.domain.model.user.Admin;
 import nvt.kts.ticketapp.domain.model.user.Authority;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.user.*;
+import nvt.kts.ticketapp.repository.user.AdminRepository;
 import nvt.kts.ticketapp.repository.user.AuthorityRepository;
 import nvt.kts.ticketapp.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +22,21 @@ import static nvt.kts.ticketapp.config.Constants.*;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-
-    @Autowired
+    private AdminRepository adminRepository;
     private AuthorityRepository authorityRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, AdminRepository adminRepository, AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
+        this.adminRepository = adminRepository;
+        this.authorityRepository = authorityRepository;
     }
 
     @Override
-    public User create(UserRegistrationDTO userRegistrationDTO) throws UsernameAlreadyExist, UsernameNotValid, PasswordNotValid, EmailNotValid, FirstNameNotValid, LastNameNotValid, EmailAlreadyExist {
+    public User create(UserRegistrationDTO userRegistrationDTO) throws UsernameAlreadyExist, UsernameNotValid, PasswordNotValid, EmailNotValid, EmailAlreadyExist, AuthorityDoesNotExist {
         Optional<User> userFound = userRepository.findOneByUsername(userRegistrationDTO.getUsername());
+        Optional<Admin> adminFound = adminRepository.findOneByUsername(userRegistrationDTO.getUsername());
 
-        if (userFound.isPresent()) {
+        if (userFound.isPresent() || adminFound.isPresent()) {
             throw new UsernameAlreadyExist();
         }
 
@@ -54,13 +58,6 @@ public class UserServiceImpl implements UserService {
             throw new EmailNotValid();
         }
 
-        if (userRegistrationDTO.getFirstName().equals("")) {
-            throw new FirstNameNotValid();
-        }
-
-        if (userRegistrationDTO.getLastName().equals("")) {
-            throw new LastNameNotValid();
-        }
         User newUser = new User(userRegistrationDTO.getUsername(),
                 userRegistrationDTO.getPassword(),
                 userRegistrationDTO.getFirstName(),
@@ -68,7 +65,12 @@ public class UserServiceImpl implements UserService {
                 userRegistrationDTO.getEmail());
 
         List<Authority> authorities = new ArrayList<Authority>();
-        authorities.add(authorityRepository.findOneById(1L));
+
+        Optional<Authority> authority = authorityRepository.findOneById(1L);
+        if (!authority.isPresent()) {
+            throw new AuthorityDoesNotExist(1L);
+        }
+        authorities.add(authority.get());
         newUser.setAuthorities(authorities);
 
         return userRepository.save(newUser);
