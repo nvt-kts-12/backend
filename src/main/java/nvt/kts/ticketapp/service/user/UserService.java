@@ -12,5 +12,5 @@ import java.util.List;
 public interface UserService {
     User create(UserRegistrationDTO userRegistrationDTO) throws UsernameAlreadyExist, UsernameNotValid, PasswordNotValid, EmailNotValid, FirstNameNotValid, LastNameNotValid, EmailAlreadyExist;
     User findByUsername(String username) throws UserNotFound;
-    User editUser(UserEditDTO userEditDTO, User user) throws UserNotFound, EmailNotValid, FirstNameNotValid, LastNameNotValid;
+    User editUser(UserEditDTO userEditDTO, String username) throws UserNotFound, EmailNotValid, FirstNameNotValid, LastNameNotValid;
 }
