@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.service.event;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
@@ -47,6 +48,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -294,7 +296,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible {
+    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException {
 
         EventDay eventDay = eventDayService.getReservableAndBuyableAndDateBefore(eventDayReservationDTO.getEventDayId(), setTimeToMidnight(new Date()));
 
@@ -409,7 +411,7 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    private void sendMailsForPurchasedTickets(List<Ticket> tickets) {
+    private void sendMailsForPurchasedTickets(List<Ticket> tickets) throws IOException, WriterException {
 
         List<Ticket> purchasedTickets = new ArrayList<>();
         for(Ticket ticket : tickets) {

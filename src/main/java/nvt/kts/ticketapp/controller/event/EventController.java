@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.controller.event;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventDayUpdateDTO;
@@ -44,6 +45,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -103,6 +105,9 @@ public class EventController {
          } catch (ObjectOptimisticLockingFailureException e) {
              e.printStackTrace();
              return new ResponseEntity<String>("Something went wrong! Please try again.", HttpStatus.BAD_REQUEST);
+         } catch (IOException| WriterException e) {
+             e.printStackTrace();
+             return new ResponseEntity<String>("Could not generate QR code", HttpStatus.EXPECTATION_FAILED);
          }
 
          return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets),HttpStatus.OK);
