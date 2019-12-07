@@ -36,6 +36,7 @@ import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.SectorService;
 import nvt.kts.ticketapp.service.ticket.TicketService;
+import nvt.kts.ticketapp.util.DateUtil;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -88,7 +89,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event create(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid {
+    public Event create(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid, ParseException {
 
         Event event = ObjectMapperUtils.map(eventEventDaysDTO.getEvent(), Event.class);
 
@@ -178,13 +179,13 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    private void checkAvailabilityOfLocationOnDate(Long locationSchemeId, Date date) throws LocationNotAvailableThatDate {
+    private void checkAvailabilityOfLocationOnDate(Long locationSchemeId, Date date) throws LocationNotAvailableThatDate, ParseException {
 
-        List<EventDay> eventDays = eventDaysRepository.findAllByDate(date);
+        List<EventDay> eventDays = eventDaysRepository.findAllByLocationId(locationSchemeId);
 
         if (!eventDays.isEmpty()) {
             for (EventDay eventDay: eventDays) {
-                if (eventDay.getLocation().getScheme().getId() == locationSchemeId) {
+                if(DateUtil.datesEqual(eventDay.getDate(), date)) {
                     throw new LocationNotAvailableThatDate();
                 }
             }

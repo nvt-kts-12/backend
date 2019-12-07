@@ -32,7 +32,7 @@ import java.util.List;
 @Service
 public interface EventService  {
 
-    Event create(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid;
+    Event create(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid, ParseException;
     Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter, String locationFilter);
     Event findOne(Long eventId);
     EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound;

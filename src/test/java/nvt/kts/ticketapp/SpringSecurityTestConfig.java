@@ -6,8 +6,9 @@ import nvt.kts.ticketapp.security.auth.TokenBasedAuthentication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +21,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
-@Profile("test-conf")
+@EnableWebSecurity
+@Profile({"test-conf"})
 public class SpringSecurityTestConfig {
 
     @Bean
@@ -31,9 +34,10 @@ public class SpringSecurityTestConfig {
     public UserDetailsService userDetailsService() {
 
         User user = new User("username", "password", Collections.singletonList(new Authority("ROLE_REGISTERED")));
-        return new InMemoryUserDetailsManager(Collections.singletonList(
-                user
-        ));
+
+        User admin = new User("admin", "password", Collections.singletonList(new Authority("ROLE_ADMIN")));
+
+        return new InMemoryUserDetailsManager(Arrays.asList(user, admin));
     }
 
     @Bean

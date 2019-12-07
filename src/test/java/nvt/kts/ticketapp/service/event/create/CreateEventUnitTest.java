@@ -23,6 +23,7 @@ import nvt.kts.ticketapp.service.event.EventService;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.sector.SectorService;
+import nvt.kts.ticketapp.util.DateUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -182,12 +183,12 @@ public class CreateEventUnitTest{
     }
 
     @Test
-    public void save_oneEventDay_success() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty {
+    public void save_oneEventDay_success() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
 
-        Event createdEvent = eventService.save(eventEventDaysDTO);
+        Event createdEvent = eventService.create(eventEventDaysDTO);
 
         assertNotNull(createdEvent);
         assertEquals(createdEvent.getName(), eventDTO.getName());
@@ -206,12 +207,12 @@ public class CreateEventUnitTest{
     }
 
     @Test
-    public void save_twoEventDays_success() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty {
+    public void save_twoEventDays_success() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateTwoEventDaysDTO(eventDTO);
 
-        Event createdEvent = eventService.save(eventEventDaysDTO);
+        Event createdEvent = eventService.create(eventEventDaysDTO);
 
         assertNotNull(createdEvent);
         assertEquals(createdEvent.getName(), eventDTO.getName());
@@ -230,7 +231,7 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = LocationSchemeDoesNotExist.class)
-    public void save_oneEventDay_LocationSchemeDoesNotExist() throws LocationSchemeDoesNotExist, SectorDoesNotExist, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, LocationNotAvailableThatDate, DateCantBeInThePast {
+    public void save_oneEventDay_LocationSchemeDoesNotExist() throws LocationSchemeDoesNotExist, SectorDoesNotExist, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, LocationNotAvailableThatDate, DateCantBeInThePast, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
@@ -241,8 +242,8 @@ public class CreateEventUnitTest{
         Mockito.when(locationSchemeServiceMocked.getScheme(locationSchemeId)).thenThrow(new LocationSchemeDoesNotExist(locationSchemeId));
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
 
             Mockito.verify(locationSchemeServiceMocked).getScheme(locationSchemeId);
@@ -259,7 +260,7 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = LocationSchemeDoesNotExist.class)
-    public void save_twoEventDays_LocationSchemeDoesNotExist() throws LocationSchemeDoesNotExist, SectorDoesNotExist, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, LocationNotAvailableThatDate, DateCantBeInThePast {
+    public void save_twoEventDays_LocationSchemeDoesNotExist() throws LocationSchemeDoesNotExist, SectorDoesNotExist, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, LocationNotAvailableThatDate, DateCantBeInThePast, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateTwoEventDaysDTO(eventDTO);
@@ -271,8 +272,8 @@ public class CreateEventUnitTest{
         Mockito.when(locationSchemeServiceMocked.getScheme(locationSchemeId)).thenThrow(new LocationSchemeDoesNotExist(locationSchemeId));
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
 
             Mockito.verify(locationSchemeServiceMocked, Mockito.times(1)).getScheme(locationScheme.getId());
@@ -290,7 +291,7 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = SectorDoesNotExist.class)
-    public void save_oneEventDay_SectorDoesNotExist() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty {
+    public void save_oneEventDay_SectorDoesNotExist() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
@@ -301,8 +302,8 @@ public class CreateEventUnitTest{
         Mockito.when(sectorServiceMocked.getSector(sectorId)).thenThrow(new SectorDoesNotExist());
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
 
             Mockito.verify(locationSchemeServiceMocked).getScheme(locationScheme.getId());
@@ -319,7 +320,7 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = SectorDoesNotExist.class)
-    public void save_oneEventDay_SectorDoesNotExist_2() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty {
+    public void save_oneEventDay_SectorDoesNotExist_2() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
@@ -330,8 +331,8 @@ public class CreateEventUnitTest{
         Mockito.when(sectorServiceMocked.getSector(sectorId)).thenThrow(new SectorDoesNotExist());
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
 
             Mockito.verify(locationSchemeServiceMocked).getScheme(locationScheme.getId());
@@ -348,7 +349,7 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = DateCantBeInThePast.class)
-    public void save_oneEventDay_DateCantBeInThePast() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty {
+    public void save_oneEventDay_DateCantBeInThePast() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
@@ -356,8 +357,8 @@ public class CreateEventUnitTest{
         eventEventDaysDTO.getEventDays().get(0).setDate("2018-11-20");
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
 
             Mockito.verify(locationSchemeServiceMocked, Mockito.times(0)).getScheme(locationScheme.getId());
@@ -374,21 +375,22 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = LocationNotAvailableThatDate.class)
-    public void save_oneEventDay_LocationNotAvailableThatDate() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty {
+    public void save_oneEventDay_LocationNotAvailableThatDate() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
 
         List<EventDay> eventDays = new ArrayList<>();
         EventDay eventDay = new EventDay();
+        eventDay.setDate(DateUtil.parseDate("2020-01-18", "yyyy-MM-dd"));
         eventDay.setLocation(location);
         eventDays.add(eventDay);
 
-        Mockito.when(eventDaysRepositoryMocked.findAllByDate(Mockito.any(Date.class))).thenReturn(eventDays);
+        Mockito.when(eventDaysRepositoryMocked.findAllByLocationId(location.getId())).thenReturn(eventDays);
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
 
             Mockito.verify(locationSchemeServiceMocked).getScheme(locationScheme.getId());
@@ -405,7 +407,7 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = SectorCapacityOverload.class)
-    public void save_oneEventDay_SectorCapacityOverload() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty {
+    public void save_oneEventDay_SectorCapacityOverload() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
@@ -413,8 +415,8 @@ public class CreateEventUnitTest{
         eventEventDaysDTO.getEventDays().get(0).getLocation().getLocationSectors().get(0).setCapacity(6);
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
 
             Mockito.verify(locationSchemeServiceMocked,Mockito.times(1)).getScheme(locationScheme.getId());
@@ -431,7 +433,7 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = ReservationExpireDateInvalid.class)
-    public void save_oneEventDay_ReservationExpireDateInvalid() throws LocationSchemeDoesNotExist, SectorDoesNotExist, ReservationExpireDateInvalid, LocationNotAvailableThatDate, EventDaysListEmpty, DateFormatIsNotValid, SectorCapacityOverload, DateCantBeInThePast {
+    public void save_oneEventDay_ReservationExpireDateInvalid() throws LocationSchemeDoesNotExist, SectorDoesNotExist, ReservationExpireDateInvalid, LocationNotAvailableThatDate, EventDaysListEmpty, DateFormatIsNotValid, SectorCapacityOverload, DateCantBeInThePast, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
@@ -439,8 +441,8 @@ public class CreateEventUnitTest{
         eventEventDaysDTO.getEventDays().get(0).setReservationExpireDate("2020-01-19");
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
             Mockito.verify(locationSchemeServiceMocked,Mockito.times(0)).getScheme(locationScheme.getId());
             Mockito.verify(sectorServiceMocked, Mockito.times(0)).getSector(sector1.getId());
@@ -456,7 +458,7 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = DateFormatIsNotValid.class)
-    public void save_oneEventDay_DateFormatIsNotValid() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty {
+    public void save_oneEventDay_DateFormatIsNotValid() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
@@ -464,8 +466,8 @@ public class CreateEventUnitTest{
         eventEventDaysDTO.getEventDays().get(0).setDate("20-11-2021");
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
 
             Mockito.verify(locationSchemeServiceMocked,Mockito.times(0)).getScheme(locationScheme.getId());
@@ -482,7 +484,7 @@ public class CreateEventUnitTest{
     }
 
     @Test(expected = EventDaysListEmpty.class)
-    public void save_oneEventDay_EventDaysListEmpty() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty {
+    public void save_oneEventDay_EventDaysListEmpty() throws LocationSchemeDoesNotExist, SectorDoesNotExist, DateCantBeInThePast, LocationNotAvailableThatDate, SectorCapacityOverload, ReservationExpireDateInvalid, DateFormatIsNotValid, EventDaysListEmpty, ParseException {
 
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
@@ -490,8 +492,8 @@ public class CreateEventUnitTest{
         eventEventDaysDTO.setEventDays(new ArrayList<>());
 
         try {
-            Event createdEvent = eventService.save(eventEventDaysDTO);
-        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+            Event createdEvent = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
             ex.printStackTrace();
 
             Mockito.verify(locationSchemeServiceMocked,Mockito.times(0)).getScheme(locationScheme.getId());
