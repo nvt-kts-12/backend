@@ -56,4 +56,7 @@ public class EventDayServiceImpl implements EventDayService {
         return eventDaysRepository.save(eventDay);
     }
 
+    @Override
+    public List<EventDay> findAll(){return eventDaysRepository.findAll();}
+
 }

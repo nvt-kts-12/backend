@@ -161,6 +161,10 @@ public class EventServiceImpl implements EventService {
     }
 
 
+    @Override
+    public List<Event> findAllEvents(){return eventRepository.findAll();}
+
+
     private void checkDates(Date date, Date reservationExpireDate) throws DateCantBeInThePast, ReservationExpireDateInvalid {
 
         if (dateInPast(date) || dateInPast(reservationExpireDate)) {
@@ -173,7 +177,7 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    private void checkAvailabilityOfLocationOnDate(Long locationSchemeId, Date date) throws ParseException, LocationNotAvailableThatDate {
+    public void checkAvailabilityOfLocationOnDate(Long locationSchemeId, Date date) throws ParseException, LocationNotAvailableThatDate {
 
         List<EventDay> eventDays = eventDayService.findAllByDate(date);
 
@@ -390,7 +394,7 @@ public class EventServiceImpl implements EventService {
     }
 
 
-    private EventDay checkIfEventDayIsSoldOut(EventDay eventDay) {
+    public EventDay checkIfEventDayIsSoldOut(EventDay eventDay) {
 
         List<Ticket> tickets = ticketService.getAvailableTickets(eventDay.getId());
 

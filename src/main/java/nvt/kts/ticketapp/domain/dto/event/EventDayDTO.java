@@ -25,4 +25,11 @@ public class EventDayDTO {
     private EventDayState eventDayState;
 
 
+    public EventDayDTO(Long id, @NotNull String date, @NotNull LocationDTO location, @NotNull String reservationExpireDate, @NotNull EventDayState eventDayState) {
+        this.id = id;
+        this.date = date;
+        this.location = location;
+        this.reservationExpireDate = reservationExpireDate;
+        this.eventDayState = eventDayState;
+    }
 }

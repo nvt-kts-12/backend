@@ -12,6 +12,8 @@ import java.util.List;
 public interface EventDayService {
     void saveAll(List<EventDay> eventDays);
 
+    List<EventDay> findAll();
+
     List<EventDay> findAllByDate(Date date);
 
     EventDay findOneById(Long eventDayId) throws EventDayDoesNotExist;

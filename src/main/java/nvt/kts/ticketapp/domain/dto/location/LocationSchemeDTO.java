@@ -22,4 +22,11 @@ public class LocationSchemeDTO {
     private String name;
 
     private String address;
+
+    public LocationSchemeDTO(@NotNull @PositiveOrZero Long id, boolean deleted, @NotNull @NotEmpty(message = "Location scheme name can't be empty.") String name, String address) {
+        this.id = id;
+        this.deleted = deleted;
+        this.name = name;
+        this.address = address;
+    }
 }

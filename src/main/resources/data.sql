@@ -1,5 +1,5 @@
-insert into authority (id, deleted, name) values (1, false, "ROLE_REGISTERED");
-insert into authority (id, deleted, name) values (2, false, "ROLE_ADMIN");
+--insert into authority (id, deleted, name) values (1, false, "ROLE_REGISTERED");
+--insert into authority (id, deleted, name) values (2, false, "ROLE_ADMIN");
 
 insert into admins (id, first_name, last_name, password, username) values
 (1, "Admin", "Admin", "$2y$12$Cg76kI/v91EAqOjRWSrr/utljtY604voeDEJ1ldYq46iWTo7Mo1wO", "admin" );
