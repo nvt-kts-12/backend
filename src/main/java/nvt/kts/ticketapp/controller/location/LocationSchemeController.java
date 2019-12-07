@@ -20,7 +20,7 @@ public class LocationSchemeController {
 
     private LocationSchemeService locationSchemeService;
 
-    public LocationSchemeController(LocationSchemeServiceImpl locationSchemeService){
+    public LocationSchemeController(LocationSchemeService locationSchemeService) {
         this.locationSchemeService = locationSchemeService;
     }
 

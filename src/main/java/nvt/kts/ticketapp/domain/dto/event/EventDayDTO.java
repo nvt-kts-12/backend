@@ -21,8 +21,19 @@ public class EventDayDTO {
     private LocationDTO location;
     @NotNull
     private String reservationExpireDate;
-    @NotNull
+
     private EventDayState eventDayState;
 
+    public EventDayDTO(@NotNull String date, @NotNull LocationDTO location, @NotNull String reservationExpireDate, EventDayState eventDayState) {
+        this.date = date;
+        this.location = location;
+        this.reservationExpireDate = reservationExpireDate;
+        this.eventDayState = eventDayState;
+    }
 
+    public EventDayDTO(@NotNull String date, @NotNull LocationDTO location, @NotNull String reservationExpireDate) {
+        this.date = date;
+        this.location = location;
+        this.reservationExpireDate = reservationExpireDate;
+    }
 }

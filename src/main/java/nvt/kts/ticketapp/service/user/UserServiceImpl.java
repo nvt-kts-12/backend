@@ -66,10 +66,13 @@ public class UserServiceImpl implements UserService {
 
         List<Authority> authorities = new ArrayList<Authority>();
 
-        Optional<Authority> authority = authorityRepository.findOneById(1L);
+        Optional<Authority> authority = authorityRepository.findOneByName("ROLE_REGISTERED");
         if (!authority.isPresent()) {
-            throw new AuthorityDoesNotExist(1L);
+            throw new AuthorityDoesNotExist("ROLE_REGISTERED");
         }
+
+        userRepository.save(newUser);
+
         authorities.add(authority.get());
         newUser.setAuthorities(authorities);
 

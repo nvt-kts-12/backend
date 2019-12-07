@@ -13,6 +13,7 @@ public class DateUtil {
     public static Date parseDate(String date, String format) throws DateFormatIsNotValid {
 
         SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setLenient(false);
         try {
             return sdf.parse(date);
         } catch (ParseException e) {

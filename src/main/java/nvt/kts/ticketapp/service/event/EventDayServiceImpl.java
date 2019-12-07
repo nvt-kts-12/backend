@@ -25,10 +25,10 @@ public class EventDayServiceImpl implements EventDayService {
         eventDaysRepository.saveAll(eventDays);
     }
 
-    @Override
-    public List<EventDay> findAllByDate(Date date) {
-        return eventDaysRepository.findAllByDate(date);
-    }
+//    @Override
+//    public List<EventDay> findAllByDate(Date date) {
+//        return eventDaysRepository.findAllByDate(date);
+//    }
 
     @Override
     public EventDay findOneById(Long eventDayId) throws EventDayDoesNotExist {
