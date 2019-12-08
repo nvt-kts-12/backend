@@ -1,9 +1,11 @@
 package nvt.kts.ticketapp.security.auth;
 
 import nvt.kts.ticketapp.security.TokenUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -12,16 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
+    @Autowired
     private TokenUtils tokenUtils;
 
+    @Autowired
     private UserDetailsService userDetailsService;
-
-    public TokenAuthenticationFilter(TokenUtils tokenHelper, UserDetailsService userDetailsService) {
-        this.tokenUtils = tokenHelper;
-        this.userDetailsService = userDetailsService;
-    }
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

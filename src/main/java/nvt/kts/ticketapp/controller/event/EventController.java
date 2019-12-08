@@ -57,6 +57,7 @@ public class EventController {
     private EventService eventService;
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
     private LocationService locationService;
 
     public EventController(EventService eventService, CustomUserDetailsService customUserDetailsService) {
@@ -66,12 +67,12 @@ public class EventController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-     private ResponseEntity save (@RequestBody @Valid  EventEventDaysDTO eventEventDaysDTO){
+    public ResponseEntity save (@RequestBody @Valid  EventEventDaysDTO eventEventDaysDTO){
 
          Event event = null;
          try {
-             event = eventService.save(eventEventDaysDTO);
-         } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | ParseException | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+             event = eventService.create(eventEventDaysDTO);
+         } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
              ex.printStackTrace();
              return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
          }
@@ -79,8 +80,8 @@ public class EventController {
          return new ResponseEntity<EventDTO>(ObjectMapperUtils.map(event, EventDTO.class), HttpStatus.OK);
      }
 
-     @GetMapping("/show-events")
-     private ResponseEntity<Page<Event>> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
+    @GetMapping("/show-events")
+    public ResponseEntity<Page<Event>> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
                                                @RequestParam(required=false) String dateFilter,
                                                @RequestParam(required=false) String typeFilter,
                                                @RequestParam(required=false) String locationFilter) {
@@ -89,9 +90,9 @@ public class EventController {
                  dateFilter, typeFilter, locationFilter),HttpStatus.OK);
      }
 
-     @PostMapping("/reserve")
-     @PreAuthorize("hasRole('REGISTERED')")
-     private ResponseEntity reserve(HttpServletRequest request, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
+    @PostMapping("/reserve")
+    @PreAuthorize("hasRole('REGISTERED')")
+    public ResponseEntity reserve(HttpServletRequest request, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
 
         User user = customUserDetailsService.getUserFromRequest(request);
 

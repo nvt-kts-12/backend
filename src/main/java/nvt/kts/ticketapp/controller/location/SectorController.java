@@ -20,7 +20,7 @@ public class SectorController {
 
     private SectorService sectorService;
 
-    public SectorController(SectorServiceImpl sectorService){
+    public SectorController(SectorService sectorService){
         this.sectorService = sectorService;
     }
 

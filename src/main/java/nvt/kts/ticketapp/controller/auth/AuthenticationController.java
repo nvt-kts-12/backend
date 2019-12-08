@@ -30,6 +30,7 @@ import java.io.IOException;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -41,16 +42,13 @@ public class AuthenticationController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    public AuthenticationController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping(path = "/register")
     public ResponseEntity register(@RequestBody @Valid UserRegistrationDTO userRegistrationDTO) {
         User user = null;
         try {
             user = userService.create(userRegistrationDTO);
-        } catch (UsernameAlreadyExist | UsernameNotValid | PasswordNotValid | EmailNotValid | FirstNameNotValid | LastNameNotValid | EmailAlreadyExist ex) {
+        } catch (UsernameAlreadyExist | UsernameNotValid | PasswordNotValid | EmailNotValid | EmailAlreadyExist | AuthorityDoesNotExist ex) {
             ex.printStackTrace();
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 

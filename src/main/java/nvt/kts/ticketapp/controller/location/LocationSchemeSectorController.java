@@ -33,7 +33,7 @@ public class LocationSchemeSectorController {
     private LocationSchemeService locationSchemeService;
     private SectorService sectorService;
 
-    public LocationSchemeSectorController(LocationSchemeServiceImpl locationSchemeService, SectorServiceImpl sectorService){
+    public LocationSchemeSectorController(LocationSchemeService locationSchemeService, SectorService sectorService){
         this.locationSchemeService = locationSchemeService;
         this.sectorService = sectorService;
     }
