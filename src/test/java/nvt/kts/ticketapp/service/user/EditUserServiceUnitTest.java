@@ -21,7 +21,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserServiceUnitTest {
+public class EditUserServiceUnitTest {
 
     @Autowired
     private UserService userService;
