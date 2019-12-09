@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping("/edit-profile")
-//    @PreAuthorize("hasRole('REGISTERED')")
+    @PreAuthorize("hasRole('REGISTERED')")
     public ResponseEntity edit(Principal user, @RequestBody UserEditDTO userEditDTO) {
         try {
             User editedUser = userService.editUser(userEditDTO, user.getName());
