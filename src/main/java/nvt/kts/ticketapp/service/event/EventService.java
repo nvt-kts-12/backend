@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.service.event;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.EventDayReservationDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventDayUpdateDTO;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -32,12 +34,12 @@ import java.util.List;
 @Service
 public interface EventService  {
 
-    Event save(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, ParseException, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid;
+    Event create(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid, ParseException;
     Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter, String locationFilter);
     Event findOne(Long eventId);
     EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound;
 
-    List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible;
+    List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException;
 
     EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails)throws EventdayNotFound,DateFormatIsNotValid;
 }

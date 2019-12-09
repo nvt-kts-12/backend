@@ -6,13 +6,18 @@ import lombok.NoArgsConstructor;
 import nvt.kts.ticketapp.domain.dto.location.PlainLocationDTO;
 import nvt.kts.ticketapp.domain.model.event.EventCategory;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Map;
 
 @Data
 @NoArgsConstructor
 public class LocationReportDTO {
 
+    @NotNull
     private PlainLocationDTO locationDTO;
+    @NotNull
+    @PositiveOrZero
     private double totalIncome;
     private Map<EventCategory, Double> incomeByCategory;
     private Map<EventCategory, Integer> numOfEventDaysByCategory;

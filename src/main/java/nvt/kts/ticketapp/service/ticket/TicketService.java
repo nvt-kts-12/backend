@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.service.ticket;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.SeatDTO;
 import nvt.kts.ticketapp.domain.dto.ticket.TicketDTO;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
@@ -10,6 +11,8 @@ import nvt.kts.ticketapp.exception.ticket.TicketDoesNotExist;
 import nvt.kts.ticketapp.exception.ticket.TicketNotFoundOrAlreadyBought;
 import org.springframework.stereotype.Service;
 import nvt.kts.ticketapp.domain.model.user.User;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +30,7 @@ public interface TicketService {
 
     List<Ticket> getBoughtTicketsFromUser(User user);
 
-    Ticket buyTicket(Long id) throws TicketNotFoundOrAlreadyBought;
+    Ticket buyTicket(Long id) throws TicketNotFoundOrAlreadyBought, IOException, WriterException;
 
     Optional<Ticket> getTicketById(Long id)  throws TicketDoesNotExist;
 
