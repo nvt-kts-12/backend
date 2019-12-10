@@ -38,7 +38,7 @@ public interface EventService  {
     Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter, String locationFilter);
     Event findOne(Long eventId);
     EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound;
-
+    List<Event> findAllEvents();
     List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException;
 
     EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails)throws EventdayNotFound,DateFormatIsNotValid;

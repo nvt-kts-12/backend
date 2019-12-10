@@ -51,7 +51,6 @@ public class UpdateEventIntegrationTest {
     public void updateEvent_success() throws EventNotFound {
         EventDTO updatedEvent = eventService.update(event.getId(),eventDetails);
         assertNotNull(updatedEvent);
-        assertNotNull(updatedEvent);
         assertThat(updatedEvent.getDescription()).isEqualTo(eventDetails.getDescription());
         assertThat(updatedEvent.getName()).isEqualTo(eventDetails.getName());
         assertThat((updatedEvent.getCategory())).isEqualTo(eventDetails.getCategory());
@@ -60,7 +59,6 @@ public class UpdateEventIntegrationTest {
     @Test(expected = EventNotFound.class)
     public void updateEvent_EventNotFound() throws EventNotFound {
         EventDTO updatedEvent = eventService.update(event_not_in_database.getId(),eventDetails);
-
     }
 
 }

@@ -4,7 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventDayForTicketDTO;
+import nvt.kts.ticketapp.domain.model.event.EventDayState;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
+import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 
 @Data
@@ -20,6 +22,8 @@ public class TicketDTO {
     private boolean sold;
     private EventDTO event;
     private EventDayForTicketDTO eventDay;
+    private EventDayState eventDayState;
+    private User user;
 
     public TicketDTO(Ticket ticket) {
         this.id = ticket.getId();
@@ -35,5 +39,7 @@ public class TicketDTO {
         eventDayForTicketDTO.setReservationExpireDate(ticket.getEventDay().getReservationExpirationDate());
         eventDayForTicketDTO.setLocation(ticket.getEventDay().getLocation().getScheme().getName());
         this.eventDay = eventDayForTicketDTO;
+        this.eventDayState =ticket.getEventDay().getState();
+        this.user = ticket.getUser();
     }
 }
