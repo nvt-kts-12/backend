@@ -90,30 +90,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User editUser(UserEditDTO userEditDTO, User user) throws EmailNotValid, FirstNameNotValid, LastNameNotValid {
+    public User editUser(UserEditDTO userEditDTO, String username) throws UserNotFound, EmailNotValid, FirstNameNotValid, LastNameNotValid {
 
-        if (userEditDTO.getEmail() != null) {
-            if (!userEditDTO.getEmail().matches(EMAIL_REGEX)) {
-                throw new EmailNotValid();
+        Optional<User> userOptional = userRepository.findOneByUsername(username);
+
+        if(!userOptional.isPresent()) {
+            throw new UserNotFound();
+        } else {
+            User user = userOptional.get();
+            if (userEditDTO.getEmail() != null) {
+                if (!userEditDTO.getEmail().matches(EMAIL_REGEX)) {
+                    throw new EmailNotValid();
+                }
+                user.setEmail(userEditDTO.getEmail());
             }
-            user.setEmail(userEditDTO.getEmail());
-        }
 
-        if (userEditDTO.getFirstName() != null) {
-            if (userEditDTO.getFirstName().matches(WHITESPACES_REGEX)) {
-                throw new FirstNameNotValid();
+            if (userEditDTO.getFirstName() != null) {
+                if (userEditDTO.getFirstName().matches(WHITESPACES_REGEX)) {
+                    throw new FirstNameNotValid();
+                }
+                user.setFirstName(userEditDTO.getFirstName());
             }
-            user.setFirstName(userEditDTO.getFirstName());
-        }
 
-        if (userEditDTO.getLastName() != null) {
-            if (userEditDTO.getLastName().matches(WHITESPACES_REGEX)) {
-                throw new LastNameNotValid();
+            if (userEditDTO.getLastName() != null) {
+                if (userEditDTO.getLastName().matches(WHITESPACES_REGEX)) {
+                    throw new LastNameNotValid();
+                }
+                user.setLastName(userEditDTO.getLastName());
             }
-            user.setLastName(userEditDTO.getLastName());
-        }
 
-        userRepository.save(user);
-        return user;
+            userRepository.save(user);
+            return user;
+        }
     }
 }

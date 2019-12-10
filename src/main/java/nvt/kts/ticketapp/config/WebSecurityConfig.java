@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         // TODO delete this and uncomment code below
-//        http.authorizeRequests().antMatchers("/").permitAll();
+        //http.authorizeRequests().antMatchers("/").permitAll();
 
         http.httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -67,11 +67,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated().and();
         http.apply(securityConfigurer);
         http.csrf().disable();
+
     }
 
     @Override
     public void configure(WebSecurity web) {
-        // TODO delete this and uncomment code below
+//        TODO delete this and uncomment code below
 //        web.ignoring().antMatchers(HttpMethod.POST, "/**");
 //        web.ignoring().antMatchers(HttpMethod.GET, "/**");
 //        web.ignoring().antMatchers(HttpMethod.PUT, "/**");

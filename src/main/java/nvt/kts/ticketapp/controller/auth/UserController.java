@@ -51,7 +51,7 @@ public class UserController {
     @PreAuthorize("hasRole('REGISTERED')")
     public ResponseEntity edit(Principal user, @RequestBody UserEditDTO userEditDTO) {
         try {
-            User editedUser = userService.editUser(userEditDTO, userService.findByUsername(user.getName()));
+            User editedUser = userService.editUser(userEditDTO, user.getName());
             return new ResponseEntity<UserDTO>(ObjectMapperUtils.map(editedUser, UserDTO.class), HttpStatus.OK);
         } catch (UserNotFound | EmailNotValid | FirstNameNotValid | LastNameNotValid ex) {
             ex.printStackTrace();
