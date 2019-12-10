@@ -25,7 +25,7 @@ public class ReportsController {
     }
 
     @GetMapping("/event/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity eventReport(@PathVariable Long id){
         try {
             return new ResponseEntity<EventReportDTO>(reportsService.eventReport(id), HttpStatus.OK);
@@ -36,7 +36,7 @@ public class ReportsController {
     }
 
     @GetMapping("/eventDay/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity eventDaysReport(@PathVariable Long id){
         try {
             return new ResponseEntity<List<EventDayReportDTO>>(reportsService.eventDaysReport(id), HttpStatus.OK);
@@ -47,7 +47,7 @@ public class ReportsController {
     }
 
     @GetMapping("/location/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity locationReport(@PathVariable Long id){
         try {
             return new ResponseEntity<LocationReportDTO>(reportsService.locationReport(id), HttpStatus.OK);
