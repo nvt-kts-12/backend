@@ -295,6 +295,10 @@ public class EventServiceImpl implements EventService {
     public Event findOne(Long id){return eventRepository.getOne(id);}
 
     @Override
+    public List<Event> findAllEvents(){return eventRepository.findAll();}
+
+
+    @Override
     @Transactional(rollbackOn = Exception.class)
     public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException {
 
