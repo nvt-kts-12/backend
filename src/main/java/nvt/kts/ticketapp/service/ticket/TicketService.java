@@ -26,9 +26,9 @@ public interface TicketService {
 
     List<Ticket> getAvailableTickets(Long id);
 
-    List<Ticket> getReservationsFromUser(User user);
+    List<Ticket> getReservationsFromUser(Long userId);
 
-    List<Ticket> getBoughtTicketsFromUser(User user);
+    List<Ticket> getBoughtTicketsFromUser(Long userId);
 
     Ticket buyTicket(Long id) throws TicketNotFoundOrAlreadyBought, IOException, WriterException;
 
