@@ -32,14 +32,14 @@ public class LocationSchemeSectorController {
     private LocationSchemeService locationSchemeService;
     private SectorService sectorService;
 
-    public LocationSchemeSectorController(LocationSchemeServiceImpl locationSchemeService, SectorServiceImpl sectorService){
+    public LocationSchemeSectorController(LocationSchemeServiceImpl locationSchemeService, SectorServiceImpl sectorService) {
         this.locationSchemeService = locationSchemeService;
         this.sectorService = sectorService;
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public void save(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO){
+//    @PreAuthorize("hasRole('ADMIN')")
+    public void save(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO) {
         try {
             sectorService.saveAll(locationSchemeSectorsDTO.getSectors(),
                     locationSchemeService.save(ObjectMapperUtils.map(locationSchemeSectorsDTO.getLocationScheme(), LocationScheme.class)));
@@ -49,13 +49,13 @@ public class LocationSchemeSectorController {
     }
 
     @GetMapping("/{schemeId}")
-    public List<SectorDTO> getByScheme(@PathVariable Long schemeId){
-        return sectorService.getByScheme(schemeId);
+    public ResponseEntity getByScheme(@PathVariable Long schemeId) {
+        return new ResponseEntity<List<SectorDTO>>(sectorService.getByScheme(schemeId), HttpStatus.OK);
     }
 
     @DeleteMapping()
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity delete(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO){
+//    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity delete(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO) {
         try {
             List<SectorDTO> sectorDTOS = sectorService.delete(locationSchemeSectorsDTO.getSectors());
             LocationSchemeDTO locationSchemeDTO = locationSchemeService.delete(locationSchemeSectorsDTO.getLocationScheme().getId());

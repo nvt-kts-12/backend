@@ -11,4 +11,10 @@ public class LocationSchemeDTO {
     private boolean deleted;
     private String name;
     private String address;
+
+    public LocationSchemeDTO(boolean deleted, String name, String address) {
+        this.deleted = deleted;
+        this.name = name;
+        this.address = address;
+    }
 }

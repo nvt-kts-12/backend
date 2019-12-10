@@ -53,6 +53,11 @@ public class SaveLocationSchemeUnitTest {
         locationSchemeService = new LocationSchemeServiceImpl(locationSchemeRepository, locationRepository);
     }
 
+    /**
+     * Test saving new location scheme
+     *
+     * @throws LocationSchemeAlreadyExists
+     */
     @Test
     public void saveNewScheme_Positive() throws LocationSchemeAlreadyExists {
         LocationScheme nonExistentScheme = new LocationScheme(NONEXISTENT_SCHEME_NAME, "Address 2");
