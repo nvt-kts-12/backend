@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.controller.auth;
+package nvt.kts.ticketapp.controller.auth.authenticationController.register;
 
 import nvt.kts.ticketapp.domain.dto.user.UserDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserRegistrationDTO;
@@ -18,14 +18,18 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.annotation.PostConstruct;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RegistrationUnitTest {
+public class RegisterUnitTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -75,12 +79,12 @@ public class RegistrationUnitTest {
     @Test
     public void register_AuthorityDoesNotExist() throws  EmailNotValid, AuthorityDoesNotExist, EmailAlreadyExist, UsernameNotValid, UsernameAlreadyExist, PasswordNotValid {
 
-        Mockito.when(userServiceMocked.create(Mockito.any(UserRegistrationDTO.class))).thenThrow(new AuthorityDoesNotExist(3L));
+        Mockito.when(userServiceMocked.create(Mockito.any(UserRegistrationDTO.class))).thenThrow(new AuthorityDoesNotExist("ROLE_REG"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/register", userRegistrationDTO, String.class );
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Authority with id 3 doesn't exist", response.getBody());
+        assertEquals("Authority ROLE_REG doesn't exist", response.getBody());
         Mockito.verify(userServiceMocked).create(Mockito.any(UserRegistrationDTO.class));
     }
 

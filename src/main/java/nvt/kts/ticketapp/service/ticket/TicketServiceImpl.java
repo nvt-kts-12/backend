@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.service.ticket;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.SeatDTO;
 import nvt.kts.ticketapp.domain.dto.ticket.TicketDTO;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
@@ -17,6 +18,7 @@ import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,17 +67,17 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<Ticket> getReservationsFromUser(User user) {
-        return ticketRepository.findByUserIdAndSoldTrue(user.getId());
+    public List<Ticket> getReservationsFromUser(Long userId) {
+        return ticketRepository.findByUserIdAndSoldFalse(userId);
     }
 
     @Override
-    public List<Ticket> getBoughtTicketsFromUser(User user) {
-        return ticketRepository.findByUserIdAndSoldFalse(user.getId());
+    public List<Ticket> getBoughtTicketsFromUser(Long userId) {
+        return ticketRepository.findByUserIdAndSoldTrue(userId);
     }
 
     @Override
-    public Ticket buyTicket(Long id) throws TicketNotFoundOrAlreadyBought {
+    public Ticket buyTicket(Long id) throws TicketNotFoundOrAlreadyBought, IOException, WriterException {
         Ticket ticket = ticketRepository.findOneByIdAndSoldFalse(id).orElseThrow(() -> new TicketNotFoundOrAlreadyBought(id));
         ticket.setSold(true);
 
@@ -92,7 +94,6 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.findOneById(id);
     }
 
-    //cancel
     @Override
     public TicketDTO cancelReservation(Long ticketId) throws TicketDoesNotExist, ReservationCanNotBeCancelled {
 

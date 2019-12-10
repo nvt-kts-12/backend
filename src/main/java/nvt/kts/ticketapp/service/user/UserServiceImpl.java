@@ -66,10 +66,13 @@ public class UserServiceImpl implements UserService {
 
         List<Authority> authorities = new ArrayList<Authority>();
 
-        Optional<Authority> authority = authorityRepository.findOneById(1L);
+        Optional<Authority> authority = authorityRepository.findOneByName("ROLE_REGISTERED");
         if (!authority.isPresent()) {
-            throw new AuthorityDoesNotExist(1L);
+            throw new AuthorityDoesNotExist("ROLE_REGISTERED");
         }
+
+        userRepository.save(newUser);
+
         authorities.add(authority.get());
         newUser.setAuthorities(authorities);
 
@@ -87,30 +90,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User editUser(UserEditDTO userEditDTO, User user) throws EmailNotValid, FirstNameNotValid, LastNameNotValid {
+    public User editUser(UserEditDTO userEditDTO, String username) throws UserNotFound, EmailNotValid, FirstNameNotValid, LastNameNotValid {
 
-        if (userEditDTO.getEmail() != null) {
-            if (!userEditDTO.getEmail().matches(EMAIL_REGEX)) {
-                throw new EmailNotValid();
+        Optional<User> userOptional = userRepository.findOneByUsername(username);
+
+        if(!userOptional.isPresent()) {
+            throw new UserNotFound();
+        } else {
+            User user = userOptional.get();
+            if (userEditDTO.getEmail() != null) {
+                if (!userEditDTO.getEmail().matches(EMAIL_REGEX)) {
+                    throw new EmailNotValid();
+                }
+                user.setEmail(userEditDTO.getEmail());
             }
-            user.setEmail(userEditDTO.getEmail());
-        }
 
-        if (userEditDTO.getFirstName() != null) {
-            if (userEditDTO.getFirstName().matches(WHITESPACES_REGEX)) {
-                throw new FirstNameNotValid();
+            if (userEditDTO.getFirstName() != null) {
+                if (userEditDTO.getFirstName().matches(WHITESPACES_REGEX)) {
+                    throw new FirstNameNotValid();
+                }
+                user.setFirstName(userEditDTO.getFirstName());
             }
-            user.setFirstName(userEditDTO.getFirstName());
-        }
 
-        if (userEditDTO.getLastName() != null) {
-            if (userEditDTO.getLastName().matches(WHITESPACES_REGEX)) {
-                throw new LastNameNotValid();
+            if (userEditDTO.getLastName() != null) {
+                if (userEditDTO.getLastName().matches(WHITESPACES_REGEX)) {
+                    throw new LastNameNotValid();
+                }
+                user.setLastName(userEditDTO.getLastName());
             }
-            user.setLastName(userEditDTO.getLastName());
-        }
 
-        userRepository.save(user);
-        return user;
+            userRepository.save(user);
+            return user;
+        }
     }
 }

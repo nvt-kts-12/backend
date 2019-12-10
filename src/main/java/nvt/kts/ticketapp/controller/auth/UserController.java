@@ -51,7 +51,7 @@ public class UserController {
     @PreAuthorize("hasRole('REGISTERED')")
     public ResponseEntity edit(Principal user, @RequestBody UserEditDTO userEditDTO) {
         try {
-            User editedUser = userService.editUser(userEditDTO, userService.findByUsername(user.getName()));
+            User editedUser = userService.editUser(userEditDTO, user.getName());
             return new ResponseEntity<UserDTO>(ObjectMapperUtils.map(editedUser, UserDTO.class), HttpStatus.OK);
         } catch (UserNotFound | EmailNotValid | FirstNameNotValid | LastNameNotValid ex) {
             ex.printStackTrace();
@@ -64,7 +64,7 @@ public class UserController {
     public ResponseEntity getReservations(Principal user) {
         try {
             User u = userService.findByUsername(user.getName());
-            return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getReservationsFromUser(u)), HttpStatus.OK);
+            return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getReservationsFromUser(u.getId())), HttpStatus.OK);
         } catch (UserNotFound unf) {
             unf.printStackTrace();
             return new ResponseEntity<String>(unf.getMessage(), HttpStatus.BAD_REQUEST);
@@ -76,7 +76,7 @@ public class UserController {
     public ResponseEntity getBoughtTickets(Principal user) {
         try {
             User u = userService.findByUsername(user.getName());
-            return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getBoughtTicketsFromUser(u)), HttpStatus.OK);
+            return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getBoughtTicketsFromUser(u.getId())), HttpStatus.OK);
         } catch (UserNotFound unf) {
             unf.printStackTrace();
             return new ResponseEntity<String>(unf.getMessage(), HttpStatus.BAD_REQUEST);

@@ -1,11 +1,13 @@
 package nvt.kts.ticketapp.service.reminder;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.service.common.email.ticket.ReservationsReminderService;
 import nvt.kts.ticketapp.service.common.email.ticket.SoldTicketsReminderService;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,12 +31,12 @@ public class ReminderServiceImpl implements ReminderService {
     }
 
     @Override
-    public void sendReminders() {
+    public void sendReminders() throws IOException, WriterException {
         checkReservations();
         checkSoldTickets();
     }
 
-    private void checkSoldTickets() {
+    private void checkSoldTickets() throws IOException, WriterException {
 
         List<Ticket> soldTickets = ticketRepository.findAllBySoldTrueAndUserNotNull();
 
@@ -53,7 +55,7 @@ public class ReminderServiceImpl implements ReminderService {
         }
     }
 
-    private void checkReservations() {
+    private void checkReservations() throws IOException, WriterException {
 
         List<Ticket> reservations = ticketRepository.findAllBySoldFalseAndUserNotNull();
         Date today = new Date();

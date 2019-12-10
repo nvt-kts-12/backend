@@ -7,6 +7,7 @@ import lombok.Setter;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import org.joda.time.DateTime;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;

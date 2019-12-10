@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -38,8 +39,8 @@ public class LocationSchemeSectorController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
-    public void save(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void save(@RequestBody @Valid LocationSchemeSectorsDTO locationSchemeSectorsDTO){
         try {
             sectorService.saveAll(locationSchemeSectorsDTO.getSectors(),
                     locationSchemeService.save(ObjectMapperUtils.map(locationSchemeSectorsDTO.getLocationScheme(), LocationScheme.class)));
@@ -54,8 +55,8 @@ public class LocationSchemeSectorController {
     }
 
     @DeleteMapping()
-//    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity delete(@RequestBody LocationSchemeSectorsDTO locationSchemeSectorsDTO) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity delete(@RequestBody @Valid LocationSchemeSectorsDTO locationSchemeSectorsDTO){
         try {
             List<SectorDTO> sectorDTOS = sectorService.delete(locationSchemeSectorsDTO.getSectors());
             LocationSchemeDTO locationSchemeDTO = locationSchemeService.delete(locationSchemeSectorsDTO.getLocationScheme().getId());

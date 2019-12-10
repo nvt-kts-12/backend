@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface AuthorityRepository  extends JpaRepository<Authority, Long> {
     Optional<Authority> findOneById(Long id);
+
+    Optional<Authority> findOneByName(String role_registered);
 }
