@@ -24,6 +24,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -36,6 +37,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test, test-conf")
 public class DeleteLocationSchemeSectorControllerUnitTest {
 
     @LocalServerPort
@@ -114,7 +116,7 @@ public class DeleteLocationSchemeSectorControllerUnitTest {
         LocationSchemeSectorsDTO locationSchemeSectorsDTO = new LocationSchemeSectorsDTO(sectorsToDelete, locationScheme);
 
         ResponseEntity<LocationSchemeSectorsDTO> response =
-                testRestTemplate.exchange(URL_PREFIX, HttpMethod.DELETE,
+                testRestTemplate.withBasicAuth("admin", "password").exchange(URL_PREFIX, HttpMethod.DELETE,
                         new HttpEntity<LocationSchemeSectorsDTO>(locationSchemeSectorsDTO), LocationSchemeSectorsDTO.class);
 
 
@@ -146,7 +148,7 @@ public class DeleteLocationSchemeSectorControllerUnitTest {
         LocationSchemeSectorsDTO locationSchemeSectorsDTO = new LocationSchemeSectorsDTO(sectorsToDelete, locationScheme);
 
         ResponseEntity<LocationSchemeSectorsDTO> response =
-                testRestTemplate.exchange(URL_PREFIX, HttpMethod.DELETE,
+                testRestTemplate.withBasicAuth("admin", "password").exchange(URL_PREFIX, HttpMethod.DELETE,
                         new HttpEntity<LocationSchemeSectorsDTO>(locationSchemeSectorsDTO), LocationSchemeSectorsDTO.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -174,7 +176,7 @@ public class DeleteLocationSchemeSectorControllerUnitTest {
         LocationSchemeSectorsDTO locationSchemeSectorsDTO = new LocationSchemeSectorsDTO(sectorsToDelete, locationScheme);
 
         ResponseEntity<LocationSchemeSectorsDTO> response =
-                testRestTemplate.exchange(URL_PREFIX, HttpMethod.DELETE,
+                testRestTemplate.withBasicAuth("admin", "password").exchange(URL_PREFIX, HttpMethod.DELETE,
                         new HttpEntity<LocationSchemeSectorsDTO>(locationSchemeSectorsDTO), LocationSchemeSectorsDTO.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -199,7 +201,7 @@ public class DeleteLocationSchemeSectorControllerUnitTest {
         LocationSchemeSectorsDTO locationSchemeSectorsDTO = new LocationSchemeSectorsDTO(sectorsToDelete, locationScheme);
 
         ResponseEntity<LocationSchemeSectorsDTO> response =
-                testRestTemplate.exchange(URL_PREFIX, HttpMethod.DELETE,
+                testRestTemplate.withBasicAuth("admin", "password").exchange(URL_PREFIX, HttpMethod.DELETE,
                         new HttpEntity<LocationSchemeSectorsDTO>(locationSchemeSectorsDTO), LocationSchemeSectorsDTO.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

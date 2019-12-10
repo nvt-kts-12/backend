@@ -28,8 +28,6 @@ public class SectorRepositoryTest {
     @Autowired
     private SectorRepository sectorRepository;
 
-//    private final Long EXISTING_SECTOR_ID = 1L;
-//    private final Long EXISTING_SCHEME_ID = 2L;
 
     Sector existingSector;
     LocationScheme existingLocationScheme;

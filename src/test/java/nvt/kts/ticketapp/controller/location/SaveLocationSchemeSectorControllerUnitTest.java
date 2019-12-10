@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test, test-conf")
 public class SaveLocationSchemeSectorControllerUnitTest {
 
     @LocalServerPort
@@ -75,7 +77,7 @@ public class SaveLocationSchemeSectorControllerUnitTest {
         List<SectorDTO> sectors = Arrays.asList(sector, sector2, sector3);
 
         LocationSchemeSectorsDTO locationSchemeSectorsDTO = new LocationSchemeSectorsDTO(sectors, locationScheme);
-        testRestTemplate.postForEntity(URL_PREFIX, locationSchemeSectorsDTO, LocationSchemeSectorsDTO.class);
+        testRestTemplate.withBasicAuth("admin", "password").postForEntity(URL_PREFIX, locationSchemeSectorsDTO, LocationSchemeSectorsDTO.class);
 
         verify(sectorService, times(1)).saveAll(anyList(), any(LocationScheme.class));
         verify(locationSchemeService, times(1)).save(any(LocationScheme.class));
@@ -103,7 +105,7 @@ public class SaveLocationSchemeSectorControllerUnitTest {
         LocationSchemeSectorsDTO locationSchemeSectorsDTO = new LocationSchemeSectorsDTO(sectors, locationScheme);
         when(locationSchemeService.save(any(LocationScheme.class)))
                 .thenThrow(LocationSchemeAlreadyExists.class);
-        testRestTemplate.postForEntity(URL_PREFIX, locationSchemeSectorsDTO, LocationSchemeSectorsDTO.class);
+        testRestTemplate.withBasicAuth("admin", "password").postForEntity(URL_PREFIX, locationSchemeSectorsDTO, LocationSchemeSectorsDTO.class);
 
         verify(locationSchemeService, times(1)).save(any(LocationScheme.class));
     }

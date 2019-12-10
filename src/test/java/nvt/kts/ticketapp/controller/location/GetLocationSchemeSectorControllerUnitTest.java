@@ -18,6 +18,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test, test-conf")
 public class GetLocationSchemeSectorControllerUnitTest {
 
 
@@ -71,7 +73,7 @@ public class GetLocationSchemeSectorControllerUnitTest {
      */
     @Test
     public void getByScheme_Positive() {
-        ResponseEntity<List<SectorDTO>> response = testRestTemplate.exchange(URL_PREFIX + "/1",
+        ResponseEntity<List<SectorDTO>> response = testRestTemplate.withBasicAuth("username", "password").exchange(URL_PREFIX + "/1",
                 HttpMethod.GET, null, new ParameterizedTypeReference<List<SectorDTO>>() {
                 });
 
