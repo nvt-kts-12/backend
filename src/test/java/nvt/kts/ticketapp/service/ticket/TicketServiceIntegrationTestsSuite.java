@@ -7,6 +7,7 @@ import nvt.kts.ticketapp.service.event.update.UpdateEventUnitTest;
 import nvt.kts.ticketapp.service.ticket.buy.BuyTicketIntegrationTest;
 import nvt.kts.ticketapp.service.ticket.cancelReservation.CancelReservationIntegrationTest;
 import nvt.kts.ticketapp.service.ticket.cancelReservation.CancelReservationUnitTest;
+import nvt.kts.ticketapp.service.ticket.show.bought.ShowBoughtIntegrationTest;
 import nvt.kts.ticketapp.service.ticket.show.reservations.ShowReservationsIntegrationTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -15,7 +16,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         BuyTicketIntegrationTest.class,
         CancelReservationIntegrationTest.class,
-        ShowReservationsIntegrationTest.class
+        ShowReservationsIntegrationTest.class,
+        ShowBoughtIntegrationTest.class
 })
 public class TicketServiceIntegrationTestsSuite {
 }
