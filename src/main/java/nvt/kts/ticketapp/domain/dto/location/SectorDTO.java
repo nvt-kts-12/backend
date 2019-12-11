@@ -41,8 +41,6 @@ public class SectorDTO {
 
     private SectorType type;
 
-    public SectorDTO() {}
-
     public SectorDTO(boolean deleted, double topLeftX, double topLeftY, double bottomRightX,
                      double bottomRightY, int capacity, int rowNum, int colNum, SectorType type) {
         this.deleted = deleted;
