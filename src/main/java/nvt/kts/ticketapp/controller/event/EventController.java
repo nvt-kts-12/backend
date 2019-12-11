@@ -81,14 +81,15 @@ public class EventController {
      }
 
     @GetMapping("/show-events")
-    public ResponseEntity<Page<Event>> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
+    public ResponseEntity<EventsDTO> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
                                                @RequestParam(required=false) String dateFilter,
                                                @RequestParam(required=false) String typeFilter,
                                                @RequestParam(required=false) String locationFilter) {
 
-         return new ResponseEntity<Page<Event>>(eventService.findAll(pageable, searchQuery,
+         return new ResponseEntity<EventsDTO>(eventService.findAll(pageable, searchQuery,
                  dateFilter, typeFilter, locationFilter),HttpStatus.OK);
      }
+
 
     @PostMapping("/reserve")
     @PreAuthorize("hasRole('REGISTERED')")
