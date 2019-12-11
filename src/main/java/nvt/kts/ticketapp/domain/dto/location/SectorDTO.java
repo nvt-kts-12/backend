@@ -9,8 +9,6 @@ import javax.validation.constraints.PositiveOrZero;
 @Data
 public class SectorDTO {
 
-    @NotNull
-    @PositiveOrZero
     private Long id;
     private boolean deleted;
 
