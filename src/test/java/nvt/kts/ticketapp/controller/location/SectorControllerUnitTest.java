@@ -18,6 +18,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test, test-conf")
 public class SectorControllerUnitTest {
 
     @LocalServerPort
@@ -65,7 +67,8 @@ public class SectorControllerUnitTest {
      */
     @Test
     public void getAll() {
-        ResponseEntity<List<SectorDTO>> response = testRestTemplate.exchange(URL_PREFIX,
+        ResponseEntity<List<SectorDTO>> response = testRestTemplate.withBasicAuth("username", "password")
+                .exchange(URL_PREFIX,
                 HttpMethod.GET, null, new ParameterizedTypeReference<List<SectorDTO>>() {
                 });
 
@@ -81,8 +84,8 @@ public class SectorControllerUnitTest {
      */
     @Test
     public void get() throws SectorDoesNotExist {
-        ResponseEntity<SectorDTO> response = testRestTemplate.
-                getForEntity(URL_PREFIX + "/1", SectorDTO.class);
+        ResponseEntity<SectorDTO> response = testRestTemplate.withBasicAuth("username", "password")
+                .getForEntity(URL_PREFIX + "/1", SectorDTO.class);
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -96,8 +99,8 @@ public class SectorControllerUnitTest {
      */
     @Test
     public void get_Negative_SectorDoesNotExist() throws SectorDoesNotExist {
-        ResponseEntity<SectorDTO> response = testRestTemplate.
-                getForEntity(URL_PREFIX + "/2", SectorDTO.class);
+        ResponseEntity<SectorDTO> response = testRestTemplate.withBasicAuth("username", "password")
+                .getForEntity(URL_PREFIX + "/2", SectorDTO.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
