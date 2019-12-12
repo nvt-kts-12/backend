@@ -38,6 +38,9 @@ public class SectorDTO {
     @PositiveOrZero
     private int colNum;
 
+    public SectorDTO() {
+        super();
+    }
 
     private SectorType type;
 
