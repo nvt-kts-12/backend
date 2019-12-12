@@ -33,7 +33,7 @@ public class LocationSchemeSectorController {
     private LocationSchemeService locationSchemeService;
     private SectorService sectorService;
 
-    public LocationSchemeSectorController(LocationSchemeService locationSchemeService, SectorService sectorService){
+    public LocationSchemeSectorController(LocationSchemeService locationSchemeService, SectorService sectorService) {
         this.locationSchemeService = locationSchemeService;
         this.sectorService = sectorService;
     }
@@ -50,8 +50,8 @@ public class LocationSchemeSectorController {
     }
 
     @GetMapping("/{schemeId}")
-    public List<SectorDTO> getByScheme(@PathVariable Long schemeId){
-        return sectorService.getByScheme(schemeId);
+    public ResponseEntity getByScheme(@PathVariable Long schemeId) {
+        return new ResponseEntity<List<SectorDTO>>(sectorService.getByScheme(schemeId), HttpStatus.OK);
     }
 
     @DeleteMapping()
