@@ -29,11 +29,9 @@ import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.repository.user.UserRepository;
 import nvt.kts.ticketapp.service.event.EventService;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -42,7 +40,6 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -424,6 +421,7 @@ public class ReserveEventIntegrationTest {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         eventDay.get().setReservationExpirationDate(calendar.getTime());
+        eventDaysRepository.save(eventDay.get());
 
         eventService.reserve(eventDayReservationDTO_Grandstand, user);
     }
