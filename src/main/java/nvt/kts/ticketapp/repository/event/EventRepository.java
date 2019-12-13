@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event,Long> {
+public interface EventRepository extends JpaRepository<Event,Long>, CustomEventRepository {
     Optional<Event> findByIdAndDeletedFalse(Long aLong);
 }
 

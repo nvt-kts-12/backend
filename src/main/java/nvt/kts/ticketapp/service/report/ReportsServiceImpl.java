@@ -39,7 +39,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     public ReportsServiceImpl(EventRepository eventRepository, EventDaysRepository eventDaysRepository,
                               TicketRepository ticketRepository, LocationSectorRepository locationSectorRepository,
-                              LocationRepository locationRepository){
+                              LocationRepository locationRepository) {
         this.eventRepository = eventRepository;
         this.eventDaysRepository = eventDaysRepository;
         this.ticketRepository = ticketRepository;
@@ -48,8 +48,7 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
 
-
-    public EventReportDTO eventReport(Long id) throws EventNotFound{
+    public EventReportDTO eventReport(Long id) throws EventNotFound {
         Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFound(id));
 
         List<EventDay> eventDays = eventDaysRepository.findAllByEventId(id);
@@ -58,7 +57,7 @@ public class ReportsServiceImpl implements ReportsService {
         double totalIncome = 0.0, avgPrice = 0.0;
 
         // going through every event day and calculating number of tickets, reservations and total income
-        for (EventDay eventDay: eventDays) {
+        for (EventDay eventDay : eventDays) {
             List<Ticket> tickets = ticketRepository.findByEventDayIdAndSoldTrueAndUserNotNull(eventDay.getId());
             List<Ticket> reservations = ticketRepository.findByEventDayIdAndSoldFalseAndUserNotNull(eventDay.getId());
 
@@ -68,7 +67,7 @@ public class ReportsServiceImpl implements ReportsService {
             totalIncome += sumIncome(tickets);
         }
 
-        if(numOfTickets != 0)   avgPrice = totalIncome / numOfTickets;
+        if (numOfTickets != 0) avgPrice = totalIncome / numOfTickets;
 
         EventDTO eventDTO = ObjectMapperUtils.map(event, EventDTO.class);
         return new EventReportDTO(eventDTO, numOfTickets, numOfReservations, totalIncome, avgPrice);
@@ -85,7 +84,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<EventDayReportDTO> reports = new ArrayList<>();
 
         // going through every event day and creating report for every single day
-        for (EventDay eventDay: eventDays) {
+        for (EventDay eventDay : eventDays) {
             List<Ticket> tickets = ticketRepository.findByEventDayIdAndSoldTrueAndUserNotNull(eventDay.getId());
             List<Ticket> reservations = ticketRepository.findByEventDayIdAndSoldFalseAndUserNotNull(eventDay.getId());
 
@@ -103,13 +102,13 @@ public class ReportsServiceImpl implements ReportsService {
             }
 
             reports.add(new EventDayReportDTO(ObjectMapperUtils.map(eventDay, PlainEventDayDTO.class), numOfTickets, numOfReservations,
-                                                totalIncome, avgPrice, soldBySector));
+                    totalIncome, avgPrice, soldBySector));
         }
 
         return reports;
     }
 
-    public LocationReportDTO locationReport(Long id) throws LocationNotFound{
+    public LocationReportDTO locationReport(Long id) throws LocationNotFound {
 
         Location location = locationRepository.findById(id).orElseThrow(() -> new LocationNotFound(id));
         PlainLocationDTO locationDTO = ObjectMapperUtils.map(location, PlainLocationDTO.class);
@@ -121,7 +120,7 @@ public class ReportsServiceImpl implements ReportsService {
         Map<EventCategory, Integer> numOfEventDaysByCategory = new HashMap<>();
 
         // going through every event day and calculating incomes and events on this location
-        for (EventDay eventDay: eventDays) {
+        for (EventDay eventDay : eventDays) {
             List<Ticket> tickets = ticketRepository.findByEventDayIdAndSoldTrueAndUserNotNull(eventDay.getId());
             double incomeForEventDay = sumIncome(tickets);
             totalIncome += incomeForEventDay;
@@ -137,18 +136,19 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     /**
-     *  increases or initialises income for event category
+     * increases or initialises income for event category
+     *
      * @param incomeByCategory  -   map of categories and incomes
      * @param category          -   category of an event whose income we are calculating
      * @param incomeForEventDay -   income to be mapped
      * @return
      */
     private Map<EventCategory, Double> mapIncome(Map<EventCategory, Double> incomeByCategory, EventCategory category,
-                                                 double incomeForEventDay){
-        if(incomeByCategory.containsKey(category)){
+                                                 double incomeForEventDay) {
+        if (incomeByCategory.containsKey(category)) {
             double currentIncome = incomeByCategory.get(category);
             incomeByCategory.put(category, currentIncome + incomeForEventDay);
-        }else{
+        } else {
             incomeByCategory.put(category, incomeForEventDay);
         }
         return incomeByCategory;
@@ -156,15 +156,16 @@ public class ReportsServiceImpl implements ReportsService {
 
     /**
      * increases or initialises number of event days by event category
-     * @param numOfEventDaysByCategory  -   map of categories and number of event days
-     * @param category                  -   category of an event whose event day we are calculationg
+     *
+     * @param numOfEventDaysByCategory -   map of categories and number of event days
+     * @param category                 -   category of an event whose event day we are calculationg
      * @return
      */
-    private Map<EventCategory, Integer> mapDay(Map<EventCategory, Integer> numOfEventDaysByCategory, EventCategory category){
-        if(numOfEventDaysByCategory.containsKey(category)){
+    private Map<EventCategory, Integer> mapDay(Map<EventCategory, Integer> numOfEventDaysByCategory, EventCategory category) {
+        if (numOfEventDaysByCategory.containsKey(category)) {
             int currentNumOfDays = numOfEventDaysByCategory.get(category);
             numOfEventDaysByCategory.put(category, currentNumOfDays + 1);
-        }else{
+        } else {
             numOfEventDaysByCategory.put(category, 1);
         }
         return numOfEventDaysByCategory;
@@ -172,22 +173,23 @@ public class ReportsServiceImpl implements ReportsService {
 
     /**
      * Calculates number of tickets sold by single locationSector
-     * @param eventDay  -   day whose sectors we are going through
-     * @param tickets   -   list of tickts for that day of event
-     * @return          -   map of sector id : number of tickets for that sector
+     *
+     * @param eventDay -   day whose sectors we are going through
+     * @param tickets  -   list of tickts for that day of event
+     * @return -   map of sector id : number of tickets for that sector
      */
-    private Map<Long, Integer> calculateTicketsBySector(EventDay eventDay, List<Ticket> tickets){
+    private Map<Long, Integer> calculateTicketsBySector(EventDay eventDay, List<Ticket> tickets) {
         List<LocationSector> locationSectors = locationSectorRepository.findAllByLocationIdAndDeletedFalse(eventDay.getLocation().getId());
 
         // map that is going to be returned
         Map<Long, Integer> sectorId_tickets = new HashMap<>();
 
         // map initialising
-        for (LocationSector sector: locationSectors) {
+        for (LocationSector sector : locationSectors) {
             sectorId_tickets.put(sector.getId(), 0);
         }
 
-        for (Ticket ticket: tickets) {
+        for (Ticket ticket : tickets) {
             int currentNumOfTickets = (int) sectorId_tickets.get(ticket.getSectorId());
             currentNumOfTickets++;
             sectorId_tickets.put(ticket.getSectorId(), currentNumOfTickets);
@@ -198,12 +200,13 @@ public class ReportsServiceImpl implements ReportsService {
 
     /**
      * Calculates total sum of prices in ticket collection
-     * @param tickets   -   list of tickets with prices
-     * @return  -   total sum
+     *
+     * @param tickets -   list of tickets with prices
+     * @return -   total sum
      */
-    private double sumIncome(List<Ticket> tickets){
+    private double sumIncome(List<Ticket> tickets) {
         double retVal = 0.0;
-        for (Ticket ticket: tickets) {
+        for (Ticket ticket : tickets) {
             retVal += ticket.getPrice();
         }
         return retVal;

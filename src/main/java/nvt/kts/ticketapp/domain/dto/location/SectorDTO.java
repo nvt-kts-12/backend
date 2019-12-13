@@ -9,8 +9,6 @@ import javax.validation.constraints.PositiveOrZero;
 @Data
 public class SectorDTO {
 
-    @NotNull
-    @PositiveOrZero
     private Long id;
     private boolean deleted;
 
@@ -40,6 +38,22 @@ public class SectorDTO {
     @PositiveOrZero
     private int colNum;
 
+    public SectorDTO() {
+        super();
+    }
 
     private SectorType type;
+
+    public SectorDTO(boolean deleted, double topLeftX, double topLeftY, double bottomRightX,
+                     double bottomRightY, int capacity, int rowNum, int colNum, SectorType type) {
+        this.deleted = deleted;
+        this.topLeftX = topLeftX;
+        this.topLeftY = topLeftY;
+        this.bottomRightX = bottomRightX;
+        this.bottomRightY = bottomRightY;
+        this.capacity = capacity;
+        this.rowNum = rowNum;
+        this.colNum = colNum;
+        this.type = type;
+    }
 }

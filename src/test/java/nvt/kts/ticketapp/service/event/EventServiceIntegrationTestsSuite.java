@@ -3,6 +3,7 @@ package nvt.kts.ticketapp.service.event;
 import nvt.kts.ticketapp.service.event.create.CreateEventIntegrationTest;
 import nvt.kts.ticketapp.service.event.getAll.GetAllEventsIntegrationTest;
 import nvt.kts.ticketapp.service.event.reserve.ReserveEventIntegrationTest;
+import nvt.kts.ticketapp.service.event.searchAndFilter.SearchAndFilterIntegrationTest;
 import nvt.kts.ticketapp.service.event.update.UpdateEventIntegrationTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -13,7 +14,8 @@ import org.junit.runners.Suite;
         UpdateEventIntegrationTest.class,
         UpdateEventIntegrationTest.class,
         GetAllEventsIntegrationTest.class,
-        ReserveEventIntegrationTest.class
+        ReserveEventIntegrationTest.class,
+        SearchAndFilterIntegrationTest.class
 })
 public class EventServiceIntegrationTestsSuite {
 }

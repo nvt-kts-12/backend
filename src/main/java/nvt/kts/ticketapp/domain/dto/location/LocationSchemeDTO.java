@@ -11,8 +11,6 @@ import javax.validation.constraints.PositiveOrZero;
 @NoArgsConstructor
 public class LocationSchemeDTO {
 
-    @NotNull
-    @PositiveOrZero
     private Long id;
 
     private boolean deleted;
@@ -22,4 +20,10 @@ public class LocationSchemeDTO {
     private String name;
 
     private String address;
+
+    public LocationSchemeDTO(boolean deleted, String name, String address) {
+        this.deleted = deleted;
+        this.name = name;
+        this.address = address;
+    }
 }

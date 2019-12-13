@@ -32,7 +32,6 @@ import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.service.common.email.ticket.TicketEmailService;
-import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.SectorService;
@@ -68,14 +67,13 @@ public class EventServiceImpl implements EventService {
     private final LocationSchemeService locationSchemeService;
     private LocationSectorService locationSectorService;
     private TicketService ticketService;
-    private EntityManager em;
     private SectorService sectorService;
     private LocationRepository locationRepository;
     private LocationSectorRepository locationSectorRepository;
     private TicketRepository ticketRepository;
 
 
-    public EventServiceImpl(TicketEmailService ticketEmailService, EventRepository eventRepository, EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationSectorService locationSectorService, TicketService ticketService, EntityManager em, SectorService sectorService, LocationRepository locationRepository, LocationSectorRepository locationSectorRepository, TicketRepository ticketRepository) {
+    public EventServiceImpl(TicketEmailService ticketEmailService, EventRepository eventRepository, EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationSectorService locationSectorService, TicketService ticketService, SectorService sectorService, LocationRepository locationRepository, LocationSectorRepository locationSectorRepository, TicketRepository ticketRepository) {
         this.ticketEmailService = ticketEmailService;
         this.eventRepository = eventRepository;
         this.eventDaysRepository = eventDaysRepository;
@@ -83,7 +81,6 @@ public class EventServiceImpl implements EventService {
         this.locationSchemeService = locationSchemeService;
         this.locationSectorService = locationSectorService;
         this.ticketService = ticketService;
-        this.em = em;
         this.sectorService = sectorService;
         this.locationRepository = locationRepository;
         this.locationSectorRepository = locationSectorRepository;
@@ -226,69 +223,16 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter,
+    public EventsDTO findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter,
                                String locationFilter) {
 
         if (searchQuery == null && dateFilter == null && typeFilter == null && locationFilter == null) {
-            return eventRepository.findAll(pageable);
+            Page<Event> events = eventRepository.findAll(pageable);
+            return new EventsDTO(events.getContent(), events.getNumberOfElements());
         } else {
-            return executeCustomQuery(pageable, searchQuery, dateFilter, typeFilter, locationFilter);
+            Page<Event> events = eventRepository.executeCustomQuery(pageable, searchQuery, dateFilter, typeFilter, locationFilter);
+            return new EventsDTO(events.getContent(), events.getNumberOfElements());
         }
-    }
-
-    private Page<Event> executeCustomQuery(Pageable pageable, String searchQuery,String dateFilter,String typeFilter,
-                                           String locationFilter) {
-        String queryString = "select e from Event e where ";
-
-        boolean andNeeded = false;
-
-        if (searchQuery != null) {
-            searchQuery = removeSingleQuotationMarks(searchQuery);
-            String queryAddition = "e.name like '%" + searchQuery + "%'";
-            queryString += queryAddition;
-            andNeeded = true;
-        }
-
-        if (dateFilter != null) {
-            dateFilter = removeSingleQuotationMarks(dateFilter);
-            queryString = addAndIfNeeded(queryString, andNeeded);
-            String queryAddition = "e.id in (select ed.event from EventDay ed where ed.date like '" + dateFilter + "')";
-            queryString += queryAddition;
-            andNeeded = true;
-        }
-
-        if (typeFilter != null) {
-            typeFilter = removeSingleQuotationMarks(typeFilter);
-            queryString = addAndIfNeeded(queryString, andNeeded);
-            String queryAddition = "e.category like '" + typeFilter + "'";
-            queryString += queryAddition;
-            andNeeded = true;
-        }
-
-        if(locationFilter != null) {
-            locationFilter = removeSingleQuotationMarks(locationFilter);
-            queryString = addAndIfNeeded(queryString, andNeeded);
-            String queryAddition = "e.id in (select ed.event from EventDay ed where ed.location in " +
-                    "(select l.id from Location l where l.scheme in (select ls.id from LocationScheme " +
-                    "ls where ls.name like '%" + locationFilter + "%')))";
-            queryString += queryAddition;
-        }
-
-        TypedQuery<Event> query = em.createQuery(queryString, Event.class)
-                .setMaxResults(pageable.getPageSize())
-                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-        return new PageImpl<>(query.getResultList());
-    }
-
-    private String addAndIfNeeded(String queryString, boolean andNeeded) {
-        if (andNeeded) {
-            queryString += " and ";
-        }
-        return queryString;
-    }
-
-    private String removeSingleQuotationMarks(String filterParam) {
-        return filterParam.replace("'", "");
     }
 
     @Override
