@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        CreateEventIntegrationTest.class
+        CreateEventIntegrationTest.class,
+        ReserveEventIntegrationTest.class
 })
 public class EventControllerIntegrationTestsSuite {
 }

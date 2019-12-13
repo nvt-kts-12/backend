@@ -27,11 +27,13 @@ import nvt.kts.ticketapp.exception.sector.SectorWrongType;
 import nvt.kts.ticketapp.exception.ticket.NumberOfTicketsException;
 import nvt.kts.ticketapp.exception.ticket.ReservationIsNotPossible;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
+import nvt.kts.ticketapp.exception.user.UserNotFound;
 import nvt.kts.ticketapp.repository.user.UserRepository;
 import nvt.kts.ticketapp.service.event.EventService;
 import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
 import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.user.CustomUserDetailsService;
+import nvt.kts.ticketapp.service.user.UserService;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,6 +48,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -56,13 +59,15 @@ public class EventController {
 
     private EventService eventService;
     private CustomUserDetailsService customUserDetailsService;
+    private UserService userService;
 
     @Autowired
     private LocationService locationService;
 
-    public EventController(EventService eventService, CustomUserDetailsService customUserDetailsService) {
+    public EventController(EventService eventService, CustomUserDetailsService customUserDetailsService, UserService userService) {
         this.eventService = eventService;
         this.customUserDetailsService = customUserDetailsService;
+        this.userService = userService;
     }
 
     @PostMapping()
@@ -92,14 +97,13 @@ public class EventController {
 
     @PostMapping("/reserve")
     @PreAuthorize("hasRole('REGISTERED')")
-    public ResponseEntity reserve(HttpServletRequest request, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
-
-        User user = customUserDetailsService.getUserFromRequest(request);
+    public ResponseEntity reserve(Principal user, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
 
         List<Ticket> tickets = null;
          try {
-             tickets = eventService.reserve(eventDayReservationDTO, user);
-         } catch (LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible ex) {
+             User u = userService.findByUsername(user.getName());
+             tickets = eventService.reserve(eventDayReservationDTO, u);
+         } catch (LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible | UserNotFound ex) {
              ex.printStackTrace();
              return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
          } catch (ObjectOptimisticLockingFailureException e) {
