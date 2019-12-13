@@ -29,6 +29,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.swing.*;
@@ -43,6 +44,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test, test-conf")
 public class ReportsControllerTest {
 
     @LocalServerPort
@@ -101,7 +103,8 @@ public class ReportsControllerTest {
      */
     @Test
     public void eventReport_Positive() throws EventNotFound {
-        ResponseEntity<EventReportDTO> response = testRestTemplate.getForEntity(URL_PREFIX + "/event/1", EventReportDTO.class);
+        ResponseEntity<EventReportDTO> response = testRestTemplate.withBasicAuth("admin", "password")
+                .getForEntity(URL_PREFIX + "/event/1", EventReportDTO.class);
 
         assertNotNull(response.getBody());
         assertNotNull(response.getBody().getEventDTO());
@@ -119,7 +122,8 @@ public class ReportsControllerTest {
     @Test
     public void eventReport_Negative_EventNotFound() throws EventNotFound {
         when(reportsService.eventReport(anyLong())).thenThrow(EventNotFound.class);
-        ResponseEntity<EventReportDTO> response = testRestTemplate.getForEntity(URL_PREFIX + "/event/2", EventReportDTO.class);
+        ResponseEntity<EventReportDTO> response = testRestTemplate.withBasicAuth("admin", "password")
+                .getForEntity(URL_PREFIX + "/event/2", EventReportDTO.class);
 
         assertNull(response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -133,7 +137,8 @@ public class ReportsControllerTest {
      */
     @Test
     public void eventDaysReport() throws EventNotFound {
-        ResponseEntity<EventDayReportDTO[]> response = testRestTemplate.getForEntity
+        ResponseEntity<EventDayReportDTO[]> response = testRestTemplate.withBasicAuth("admin", "password")
+                .getForEntity
                 (URL_PREFIX + "/eventDay/1", EventDayReportDTO[].class);
 
         assertNotNull(response.getBody());
@@ -152,8 +157,8 @@ public class ReportsControllerTest {
     @Test
     public void eventDaysReport_Negative_EventNotFound() throws EventNotFound {
         when(reportsService.eventDaysReport(anyLong())).thenThrow(EventNotFound.class);
-        ResponseEntity<EventDayReportDTO[]> response = testRestTemplate.getForEntity
-                (URL_PREFIX + "/eventDay/2", EventDayReportDTO[].class);
+        ResponseEntity<EventDayReportDTO[]> response = testRestTemplate.withBasicAuth("admin", "password")
+                .getForEntity(URL_PREFIX + "/eventDay/2", EventDayReportDTO[].class);
 
         assertNull(response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -166,7 +171,8 @@ public class ReportsControllerTest {
      */
     @Test
     public void locationReport_Positive() throws LocationNotFound {
-        ResponseEntity<LocationReportDTO> response = testRestTemplate.getForEntity(URL_PREFIX + "/location/1", LocationReportDTO.class);
+        ResponseEntity<LocationReportDTO> response = testRestTemplate.withBasicAuth("admin", "password")
+                .getForEntity(URL_PREFIX + "/location/1", LocationReportDTO.class);
 
         assertNotNull(response);
         assertEquals(EXISTING_SCHEME_ID, response.getBody().getLocationDTO().getLocationSchemeId());
@@ -182,8 +188,8 @@ public class ReportsControllerTest {
     @Test
     public void locationReport_Negative_LocationNotFound() throws LocationNotFound {
         when(reportsService.locationReport(anyLong())).thenThrow(LocationNotFound.class);
-        ResponseEntity<LocationReportDTO> response = testRestTemplate.getForEntity
-                (URL_PREFIX + "/location/2", LocationReportDTO.class);
+        ResponseEntity<LocationReportDTO> response = testRestTemplate.withBasicAuth("admin", "password")
+                .getForEntity(URL_PREFIX + "/location/2", LocationReportDTO.class);
 
         assertNull(response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
