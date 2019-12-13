@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,7 +38,6 @@ public class GetLocationSchemeUnitTest {
 
     @Before
     public void init() {
-
         LocationScheme existingScheme = new LocationScheme("Scheme 1", "Address 1");
         existingScheme.setId(EXISTING_SCHEME_ID);
         LocationScheme existingScheme2 = new LocationScheme("Scheme 2", "Address 2");
@@ -53,36 +52,77 @@ public class GetLocationSchemeUnitTest {
         locationSchemeService = new LocationSchemeServiceImpl(locationSchemeRepository, locationRepository);
     }
 
+    /**
+     * Test getting location scheme dto with id EXISTING_SCHEME_ID == 1L
+     *
+     * @throws LocationSchemeDoesNotExist
+     */
     @Test
     public void getSchemeDto_Positive() throws LocationSchemeDoesNotExist {
         LocationSchemeDTO locationScheme = locationSchemeService.get(EXISTING_SCHEME_ID);
+
         assertNotNull(locationScheme);
         assertEquals(EXISTING_SCHEME_ID, locationScheme.getId());
+        assertFalse(locationScheme.isDeleted());
+        assertEquals("Scheme 1", locationScheme.getName());
+        assertEquals("Address 1", locationScheme.getAddress());
+
+        verify(locationSchemeRepository, times(1)).findByIdAndDeletedFalse(EXISTING_SCHEME_ID);
     }
 
+    /**
+     * Test getting location scheme dto with id NONEXISTENT_SCHEME_ID == 2L fails
+     *
+     * @throws LocationSchemeDoesNotExist
+     */
     @Test(expected = LocationSchemeDoesNotExist.class)
     public void getSchemeDto_Negative() throws LocationSchemeDoesNotExist {
         locationSchemeService.get(NONEXISTENT_SCHEME_ID);
+
+        verify(locationSchemeRepository, times(1)).findByIdAndDeletedFalse(NONEXISTENT_SCHEME_ID);
     }
 
+    /**
+     * Test getting location scheme with EXISTING_SCHEME_ID == 1L
+     *
+     * @throws LocationSchemeDoesNotExist
+     */
     @Test
     public void getScheme_Positive() throws LocationSchemeDoesNotExist {
         LocationScheme locationScheme = locationSchemeService.getScheme(EXISTING_SCHEME_ID);
+
         assertNotNull(locationScheme);
         assertEquals(EXISTING_SCHEME_ID, locationScheme.getId());
+        assertEquals("Scheme 1", locationScheme.getName());
+        assertEquals("Address 1", locationScheme.getAddress());
+
+        verify(locationSchemeRepository, times(1)).findByIdAndDeletedFalse(EXISTING_SCHEME_ID);
     }
 
+    /**
+     * Test getting location scheme with NONEXISTENT_SCHEME_ID == 2L, fails
+     * @throws LocationSchemeDoesNotExist
+     */
     @Test(expected = LocationSchemeDoesNotExist.class)
-    public void getScheme_Negative() throws LocationSchemeDoesNotExist {
+    public void getScheme_Negative_LocationSchemeDoesNotExist() throws LocationSchemeDoesNotExist {
         locationSchemeService.getScheme(NONEXISTENT_SCHEME_ID);
+
+        verify(locationSchemeRepository, times(1)).findByIdAndDeletedFalse(NONEXISTENT_SCHEME_ID);
     }
 
+    /**
+     * Test getting all location schemas
+     */
     @Test
     public void getAll_Positive() {
         List<LocationSchemeDTO> locationSchemes = locationSchemeService.getAll();
 
         assertNotNull(locationSchemes);
         assertEquals(EXISTING_SCHEME_ID, locationSchemes.get(0).getId());
+        assertFalse(locationSchemes.get(0).isDeleted());
         assertEquals(EXISTING_SCHEME2_ID, locationSchemes.get(1).getId());
+        assertFalse(locationSchemes.get(1).isDeleted());
+
+        verify(locationSchemeRepository, times(1)).findAllByDeletedFalse();
     }
 }

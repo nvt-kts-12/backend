@@ -52,18 +52,6 @@ public class LocationSectorRepositoryTest {
         testEntityManager.persistAndFlush(locationSector2);
     }
 
-    @Test
-    public void findAllByLocationIdAndDeletedFalse_Positive() {
-        List<LocationSector> locationSectors = locationSectorRepository.
-                findAllByLocationIdAndDeletedFalse(locationScheme.getId());
-
-        assertNotNull(locationSectors);
-        assertEquals(2, locationSectors.size());
-        assertFalse(locationSectors.get(0).isDeleted());
-        assertEquals(120, locationSectors.get(0).getCapacity());
-        assertFalse(locationSectors.get(1).isDeleted());
-        assertEquals(100, locationSectors.get(1).getCapacity());
-    }
 
     @Test
     public void findAllBySectorId_Positive() {

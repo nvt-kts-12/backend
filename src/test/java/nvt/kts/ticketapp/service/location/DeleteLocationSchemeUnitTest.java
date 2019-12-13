@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -61,6 +61,12 @@ public class DeleteLocationSchemeUnitTest {
         locationSchemeService = new LocationSchemeServiceImpl(locationSchemeRepository, locationRepository);
     }
 
+    /**
+     * Test deleting location scheme with EXISTING_SCHEME_ID == 1L
+     *
+     * @throws LocationSchemeDoesNotExist
+     * @throws LocationSchemeCanNotBeDeleted
+     */
     @Test
     public void deleteScheme_Positive() throws LocationSchemeDoesNotExist, LocationSchemeCanNotBeDeleted {
         when(locationRepository.findAllBySchemeIdAndDeletedFalse(EXISTING_SCHEME_ID)).
@@ -68,17 +74,40 @@ public class DeleteLocationSchemeUnitTest {
         LocationSchemeDTO locationScheme = locationSchemeService.delete(EXISTING_SCHEME_ID);
 
         assertNotNull(locationScheme);
-        assertEquals(EXISTING_SCHEME_ID, locationScheme.getId());
         assertTrue(locationScheme.isDeleted());
+        assertEquals(EXISTING_SCHEME_ID, locationScheme.getId());
+
+        verify(locationSchemeRepository, times(1)).findByIdAndDeletedFalse(EXISTING_SCHEME_ID);
+        verify(locationRepository, times(1)).findAllBySchemeIdAndDeletedFalse(EXISTING_SCHEME_ID);
+        verify(locationSchemeRepository, times(1)).save(any(LocationScheme.class));
     }
 
+    /**
+     * Test deleting scheme that already has location created and assigned to event, fails
+     *
+     * @throws LocationSchemeDoesNotExist
+     * @throws LocationSchemeCanNotBeDeleted
+     */
     @Test(expected = LocationSchemeCanNotBeDeleted.class)
     public void deleteScheme_Negative_CanNotBeDeleted() throws LocationSchemeDoesNotExist, LocationSchemeCanNotBeDeleted {
         locationSchemeService.delete(EXISTING_SCHEME_ID);
+
+        verify(locationSchemeRepository, times(1)).findByIdAndDeletedFalse(EXISTING_SCHEME_ID);
+        verify(locationRepository, times(1)).findAllBySchemeIdAndDeletedFalse(EXISTING_SCHEME_ID);
+        verify(locationSchemeRepository, times(0)).save(any(LocationScheme.class));
     }
 
+    /**
+     * Test deleting scheme with NONEXISTENT_SCHEME_ID == 5L, fails because such scheme does not exist
+     * @throws LocationSchemeDoesNotExist
+     * @throws LocationSchemeCanNotBeDeleted
+     */
     @Test(expected = LocationSchemeDoesNotExist.class)
     public void deleteScheme_Negative_DoesNotExist() throws LocationSchemeDoesNotExist, LocationSchemeCanNotBeDeleted {
         locationSchemeService.delete(NONEXISTENT_SCHEME_ID);
+
+        verify(locationSchemeRepository, times(1)).findByIdAndDeletedFalse(NONEXISTENT_SCHEME_ID);
+        verify(locationRepository, times(0)).findAllBySchemeIdAndDeletedFalse(anyLong());
+        verify(locationSchemeRepository, times(0)).save(any(LocationScheme.class));
     }
 }

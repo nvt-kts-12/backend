@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,11 +30,10 @@ public class SaveLocationSchemeUnitTest {
     private LocationRepository locationRepository;
 
     private final Long EXISTING_SCHEME_ID = 1L;
-    private final String EXISTING_SCHEME_NAME = "Scheme 1";
-
-    private final String NONEXISTENT_SCHEME_NAME = "Scheme 2";
     private final Long CREATED_SCHEME_ID = 2L;
 
+    private final String EXISTING_SCHEME_NAME = "Scheme 1";
+    private final String NONEXISTENT_SCHEME_NAME = "Scheme 2";
     private final String UPDATED_SCHEME_NAME = "Updated scheme";
 
 
@@ -54,7 +53,7 @@ public class SaveLocationSchemeUnitTest {
     }
 
     /**
-     * Test saving new location scheme
+     * Test saving a scheme without id and with unique name, that means saving a new location scheme
      *
      * @throws LocationSchemeAlreadyExists
      */
@@ -67,17 +66,33 @@ public class SaveLocationSchemeUnitTest {
         when(locationSchemeRepository.save(nonExistentScheme)).thenReturn(createdScheme);
 
         LocationScheme locationScheme = locationSchemeService.save(nonExistentScheme);
+
         assertNotNull(locationScheme);
         assertEquals(CREATED_SCHEME_ID, locationScheme.getId());
         assertEquals(NONEXISTENT_SCHEME_NAME, locationScheme.getName());
+
+        verify(locationSchemeRepository, times(1)).findByNameIgnoreCaseAndDeletedFalse(NONEXISTENT_SCHEME_NAME);
+        verify(locationSchemeRepository, times(1)).save(nonExistentScheme);
     }
 
+    /**
+     * Test saving new location scheme without id and with existing name,
+     * fails because there can not be two schemas with same name
+     *
+     * @throws LocationSchemeAlreadyExists
+     */
     @Test(expected = LocationSchemeAlreadyExists.class)
-    public void saveNewScheme_Negative() throws LocationSchemeAlreadyExists {
+    public void saveNewScheme_Negative_LocationSchemeAlreadyExists() throws LocationSchemeAlreadyExists {
         LocationScheme existentScheme = new LocationScheme(EXISTING_SCHEME_NAME, "Address 1");
         locationSchemeService.save(existentScheme);
+
+        verify(locationSchemeRepository, times(1)).findByNameIgnoreCaseAndDeletedFalse(NONEXISTENT_SCHEME_NAME);
+        verify(locationSchemeRepository, times(0)).save(any(LocationScheme.class));
     }
 
+    /**
+     * Test saving scheme with existing id, that means updating
+     */
     @Test
     public void updateScheme_Positive() {
         LocationScheme updatedScheme = new LocationScheme(UPDATED_SCHEME_NAME, "Address 1");
@@ -89,5 +104,9 @@ public class SaveLocationSchemeUnitTest {
         assertNotNull(locationScheme);
         assertEquals(UPDATED_SCHEME_NAME, locationScheme.getName());
         assertEquals(EXISTING_SCHEME_ID, locationScheme.getId());
+
+        verify(locationSchemeRepository, times(0)).findByNameIgnoreCaseAndDeletedFalse(anyString());
+        verify(locationSchemeRepository, times(1)).save(any(LocationScheme.class));
     }
+
 }
