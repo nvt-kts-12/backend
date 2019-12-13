@@ -2,6 +2,7 @@ package nvt.kts.ticketapp.service.event;
 
 import nvt.kts.ticketapp.service.event.create.CreateEventUnitTest;
 import nvt.kts.ticketapp.service.event.getAll.GetAllEventsUnitTest;
+import nvt.kts.ticketapp.service.event.reserve.ReserveEventUnitTest;
 import nvt.kts.ticketapp.service.event.update.UpdateEventDayUnitTest;
 import nvt.kts.ticketapp.service.event.update.UpdateEventUnitTest;
 import org.junit.runner.RunWith;
@@ -12,7 +13,8 @@ import org.junit.runners.Suite;
     CreateEventUnitTest.class,
     UpdateEventUnitTest.class,
     UpdateEventDayUnitTest.class,
-    GetAllEventsUnitTest.class
+    GetAllEventsUnitTest.class,
+    ReserveEventUnitTest.class
 })
 public class EventServiceUnitTestsSuite {
 }

@@ -300,9 +300,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException {
+    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws  EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException {
 
-        EventDay eventDay = eventDayService.getReservableAndBuyableAndDateBefore(eventDayReservationDTO.getEventDayId(), setTimeToMidnight(new Date()));
+        EventDay eventDay = eventDayService.getReservableAndBuyableAndDateAfter(eventDayReservationDTO.getEventDayId(), setTimeToMidnight(new Date()));
 
         // if it is reservation, check reservation date
         if (!eventDayReservationDTO.isPurchase() && eventDay.getReservationExpirationDate().before(setTimeToMidnight(new Date()))) {
@@ -320,11 +320,10 @@ public class EventServiceImpl implements EventService {
         tickets.addAll(reservedGrandstandTickets);
         tickets.addAll(reservedParterTickets);
 
-        List<Ticket> savedTickets = ticketRepository.saveAll(tickets);
 
-        EventDay eventDay1 = checkIfEventDayIsSoldOut(eventDay);
+        checkIfEventDayIsSoldOut(eventDay);
 
-        sendMailsForPurchasedTickets(savedTickets);
+        sendMailsForPurchasedTickets(tickets);
 
         return  tickets;
     }
@@ -351,6 +350,7 @@ public class EventServiceImpl implements EventService {
                 ticket.setUser(user);
                 ticket.setSold(eventDayReservationDTO.isPurchase());
                 reservedTickets.add(ticket);
+                ticketRepository.save(ticket);
                 reservationSuccess = true;
             }
             if (!reservationSuccess) {
@@ -390,6 +390,7 @@ public class EventServiceImpl implements EventService {
                     Ticket ticket = availableTickets.get(i);
                     ticket.setUser(user);
                     ticket.setSold(eventDayReservationDTO.isPurchase());
+                    ticketRepository.save(ticket);
                     reservedTickets.add(ticket);
                 }
                 return reservedTickets;
@@ -402,16 +403,16 @@ public class EventServiceImpl implements EventService {
     }
 
 
-    private EventDay checkIfEventDayIsSoldOut(EventDay eventDay) {
+    private void checkIfEventDayIsSoldOut(EventDay eventDay) {
 
         List<Ticket> tickets = ticketService.getAvailableTickets(eventDay.getId());
 
         if (!tickets.isEmpty()) {
-            return eventDay;
+            return ;
         }
 
         eventDay.setState(EventDayState.SOLD_OUT);
-        return  eventDayService.save(eventDay);
+        eventDayService.save(eventDay);
 
     }
 
