@@ -1,8 +1,12 @@
 package nvt.kts.ticketapp.service.common.email.ticket;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.service.common.email.EmailClient;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 @Service
 public class ReservationsReminderService {
@@ -15,18 +19,19 @@ public class ReservationsReminderService {
         this.emailClient = emailClient;
     }
 
-    public void sendReminderForExpiringReservation(String emailTo, Ticket ticket) {
+    public void sendReminderForExpiringReservation(String emailTo, Ticket ticket) throws IOException, WriterException {
 
         String content = generateContent(ticket);
 
         emailClient.sendMimeEmail(
                 emailTo,
                 EMAIL_SUBJECT,
-                content
+                content,
+                Arrays.asList(ticket)
         );
     }
 
-    private String generateContent(Ticket ticket) {
+    private String generateContent(Ticket ticket) throws IOException, WriterException {
 
         String msg = "";
         msg += "<html><body>";
@@ -47,6 +52,9 @@ public class ReservationsReminderService {
             msg += "Row:" + ticket.getSeatRow() + "<br/>";
             msg += "Column: " +  ticket.getSeatCol() + "</p>";
         }
+        emailClient.generateQrCode(String.valueOf(ticket.getId()));
+        msg += "<img src='cid:qr_code_" + String.valueOf(ticket.getId()) + "' width='500px' height='500px'>";
+
         msg+= "</div><br/>";
         msg += "</body></html>";
 

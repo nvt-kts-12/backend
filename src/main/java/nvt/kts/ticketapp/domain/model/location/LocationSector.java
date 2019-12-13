@@ -30,7 +30,8 @@ public class LocationSector extends AbstractEntity {
     @NotNull
     private boolean vip;
 
-    public LocationSector(Sector sector, Location location, @NotNull double price, @NotNull int capacity, @NotNull boolean vip) {
+    public LocationSector(Sector sector, Location location,
+                          @NotNull double price, @NotNull int capacity, @NotNull boolean vip) {
         super();
         this.sector = sector;
         this.location = location;

@@ -16,9 +16,11 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -48,13 +50,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    TokenUtils tokenUtils;
+    private SecurityConfigurer securityConfigurer;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         // TODO delete this and uncomment code below
-//        http.authorizeRequests().antMatchers("/").permitAll();
+        //http.authorizeRequests().antMatchers("/").permitAll();
 
         http.httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -62,19 +64,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/event/show-events").permitAll()
-                .anyRequest().authenticated().and()
-                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
+                .anyRequest().authenticated().and();
+        http.apply(securityConfigurer);
         http.csrf().disable();
 
     }
 
     @Override
     public void configure(WebSecurity web) {
-        // TODO delete this and uncomment code below
-        web.ignoring().antMatchers(HttpMethod.POST, "/**");
-        web.ignoring().antMatchers(HttpMethod.GET, "/**");
-        web.ignoring().antMatchers(HttpMethod.PUT, "/**");
-        web.ignoring().antMatchers(HttpMethod.DELETE, "/**");
+//        TODO delete this and uncomment code below
+//        web.ignoring().antMatchers(HttpMethod.POST, "/**");
+//        web.ignoring().antMatchers(HttpMethod.GET, "/**");
+//        web.ignoring().antMatchers(HttpMethod.PUT, "/**");
 
 //        web.ignoring().antMatchers(HttpMethod.POST, "auth/login");
 //        web.ignoring().antMatchers(HttpMethod.POST, "auth/register");

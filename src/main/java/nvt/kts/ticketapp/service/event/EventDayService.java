@@ -12,7 +12,7 @@ import java.util.List;
 public interface EventDayService {
     void saveAll(List<EventDay> eventDays);
 
-    List<EventDay> findAllByDate(Date date);
+//    List<EventDay> findAllByDate(Date date);
 
     EventDay findOneById(Long eventDayId) throws EventDayDoesNotExist;
 
