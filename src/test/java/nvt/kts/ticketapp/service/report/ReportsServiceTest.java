@@ -67,12 +67,15 @@ public class ReportsServiceTest {
         when(eventRepository.findById(EXISTING_EVENT_ID)).
                 thenReturn(Optional.of(existingEvent));
 
+
         LocationScheme locationScheme = new LocationScheme("Scheme 1", "Address 1");
         locationScheme.setId(EXISTING_LOCATION_ID);
         Location location = new Location(locationScheme);
         location.setId(EXISTING_LOCATION_ID);
+
         when(locationRepository.findById(EXISTING_LOCATION_ID)).
                 thenReturn(Optional.of(location));
+
 
         EventDay eventDay = new EventDay(new Date(), location, new Date(), EventDayState.RESERVABLE_AND_BUYABLE, existingEvent);
         eventDay.setId(EXISTING_EVENT_DAY_ID);
@@ -81,9 +84,9 @@ public class ReportsServiceTest {
 
         when(eventDaysRepository.findAllByEventId(EXISTING_EVENT_ID)).
                 thenReturn(Arrays.asList(eventDay, eventDay2));
-
         when(eventDaysRepository.findAllByLocationId(EXISTING_LOCATION_ID)).
                 thenReturn(Arrays.asList(eventDay, eventDay2));
+
 
         User user = new User("user", "1234", "John", "Doe", "johnDoe@gmail.com");
         Ticket ticket = new Ticket(false, EXISTING_SECTOR_ID, 150.00, false, eventDay, user);
@@ -101,6 +104,7 @@ public class ReportsServiceTest {
         when(ticketRepository.findByEventDayIdAndSoldFalseAndUserNotNull(EXISTING_EVENT_DAY2_ID)).
                 thenReturn(Arrays.asList(ticket5));
 
+
         Sector sector = new Sector(1.0, 1.0, 0.0, 0.0, 150, 0, 0, SectorType.PARTER, locationScheme);
         sector.setId(EXISTING_SECTOR_ID);
         Sector sector2 = new Sector(1.0, 1.0, 0.0, 0.0, 100, 10, 10, SectorType.GRANDSTAND, locationScheme);
@@ -115,6 +119,11 @@ public class ReportsServiceTest {
                 ticketRepository, locationSectorRepository, locationRepository);
     }
 
+    /**
+     * Test report about event with id EXISTING_EVENT_ID == 1L
+     *
+     * @throws EventNotFound
+     */
     @Test
     public void eventReport_Positive() throws EventNotFound {
         EventReportDTO eventReportDTO = reportsService.eventReport(EXISTING_EVENT_ID);
@@ -124,11 +133,21 @@ public class ReportsServiceTest {
         assertEquals(216.666, eventReportDTO.getAvgPrice(), 0.001);
     }
 
+    /**
+     * Test report about event with NONEXISTENT_EVENT_ID == 2L fails
+     *
+     * @throws EventNotFound
+     */
     @Test(expected = EventNotFound.class)
     public void eventReport_Negative_EventNotFound() throws EventNotFound {
         reportsService.eventReport(NONEXISTENT_EVENT_ID);
     }
 
+    /**
+     * Test report about event days of a single event with id EXISTING_EVENT_ID == 1L
+     *
+     * @throws EventNotFound
+     */
     @Test
     public void eventDaysReport_Positive() throws EventNotFound {
         List<EventDayReportDTO> reports = reportsService.eventDaysReport(EXISTING_EVENT_ID);
@@ -147,11 +166,21 @@ public class ReportsServiceTest {
         assertEquals(1, reports.get(1).getSoldBySector().get(EXISTING_SECTOR2_ID), 0.001);
     }
 
+    /**
+     * Test report about event days of a single event with id NONEXISTENT_EVENT_ID == 2L fails
+     *
+     * @throws EventNotFound
+     */
     @Test(expected = EventNotFound.class)
     public void eventDaysReport_Negative_EventNotFound() throws EventNotFound {
         reportsService.eventDaysReport(NONEXISTENT_EVENT_ID);
     }
 
+    /**
+     * Test report about events on a single location with id EXISTING_LOCATION_ID == 1L
+     *
+     * @throws LocationNotFound
+     */
     @Test
     public void locationReport_Positive() throws LocationNotFound {
         LocationReportDTO locationReportDTO = reportsService.locationReport(EXISTING_LOCATION_ID);
@@ -162,6 +191,11 @@ public class ReportsServiceTest {
 
     }
 
+    /**
+     * Test report about location with id NONEXISTENT_LOCATION_ID == 2L fails
+     *
+     * @throws LocationNotFound
+     */
     @Test(expected = LocationNotFound.class)
     public void locationReport_Negative_LocationNotFound() throws LocationNotFound {
         reportsService.locationReport(NONEXISTENT_LOCATION_ID);

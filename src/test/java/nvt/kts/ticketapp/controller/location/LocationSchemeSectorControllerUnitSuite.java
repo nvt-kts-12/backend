@@ -8,7 +8,9 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         DeleteLocationSchemeSectorControllerUnitTest.class,
         GetLocationSchemeSectorControllerUnitTest.class,
-        SaveLocationSchemeSectorControllerUnitTest.class
+        SaveLocationSchemeSectorControllerUnitTest.class,
+        LocationSchemeControllerUnitTest.class,
+        SectorControllerUnitTest.class
 })
 public class LocationSchemeSectorControllerUnitSuite {
 }

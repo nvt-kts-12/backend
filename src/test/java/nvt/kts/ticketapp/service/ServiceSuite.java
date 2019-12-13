@@ -3,6 +3,10 @@ package nvt.kts.ticketapp.service;
 import nvt.kts.ticketapp.service.event.EventServiceIntegrationTestsSuite;
 import nvt.kts.ticketapp.service.event.EventServiceUnitTestsSuite;
 import nvt.kts.ticketapp.service.eventDay.EventDayUnitTestSuite;
+import nvt.kts.ticketapp.service.location.LocationSchemeServiceUnitSuite;
+import nvt.kts.ticketapp.service.report.ReportServiceUnitSuite;
+import nvt.kts.ticketapp.service.report.ReportsService;
+import nvt.kts.ticketapp.service.sector.SectorServiceUnitSuite;
 import nvt.kts.ticketapp.service.ticket.TicketService;
 import nvt.kts.ticketapp.service.ticket.TicketServiceIntegrationTestsSuite;
 import nvt.kts.ticketapp.service.ticket.TicketServiceUnitTestsSuite;
@@ -19,7 +23,10 @@ import org.junit.runners.Suite;
         UserServiceUnitTestsSuite.class,
         EventDayUnitTestSuite.class,
         TicketServiceIntegrationTestsSuite.class,
-        TicketServiceUnitTestsSuite.class
+        TicketServiceUnitTestsSuite.class,
+        LocationSchemeServiceUnitSuite.class,
+        ReportServiceUnitSuite.class,
+        SectorServiceUnitSuite.class
 })
 public class ServiceSuite {
 }
