@@ -21,6 +21,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -32,6 +33,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test, test-conf")
 public class LocationSchemeControllerUnitTest {
 
     @LocalServerPort
@@ -71,8 +73,8 @@ public class LocationSchemeControllerUnitTest {
      */
     @Test
     public void get_Positive() throws LocationSchemeDoesNotExist {
-        ResponseEntity<LocationSchemeDTO> response = testRestTemplate.
-                getForEntity(URL_PREFIX + "/1", LocationSchemeDTO.class);
+        ResponseEntity<LocationSchemeDTO> response = testRestTemplate.withBasicAuth("username", "password")
+                .getForEntity(URL_PREFIX + "/1", LocationSchemeDTO.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -86,7 +88,8 @@ public class LocationSchemeControllerUnitTest {
      */
     @Test
     public void get_Negative() throws LocationSchemeDoesNotExist {
-        ResponseEntity<LocationSchemeDTO> response = testRestTemplate.getForEntity(URL_PREFIX + "/2", LocationSchemeDTO.class);
+        ResponseEntity<LocationSchemeDTO> response = testRestTemplate.withBasicAuth("username", "password")
+                .getForEntity(URL_PREFIX + "/2", LocationSchemeDTO.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -96,7 +99,8 @@ public class LocationSchemeControllerUnitTest {
      */
     @Test
     public void getAll_Positive() {
-        ResponseEntity<List<LocationSchemeDTO>> response = testRestTemplate.exchange(URL_PREFIX, HttpMethod.GET,
+        ResponseEntity<List<LocationSchemeDTO>> response = testRestTemplate.withBasicAuth("username", "password")
+                .exchange(URL_PREFIX, HttpMethod.GET,
                 null, new ParameterizedTypeReference<List<LocationSchemeDTO>>() {
                 });
 
