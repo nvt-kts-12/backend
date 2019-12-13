@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.controller.event;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventDayUpdateDTO;
@@ -44,6 +45,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +57,7 @@ public class EventController {
     private EventService eventService;
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
     private LocationService locationService;
 
     public EventController(EventService eventService, CustomUserDetailsService customUserDetailsService) {
@@ -64,12 +67,12 @@ public class EventController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-     private ResponseEntity save (@RequestBody @Valid  EventEventDaysDTO eventEventDaysDTO){
+    public ResponseEntity save (@RequestBody @Valid  EventEventDaysDTO eventEventDaysDTO){
 
          Event event = null;
          try {
-             event = eventService.save(eventEventDaysDTO);
-         } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | ParseException | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid ex) {
+             event = eventService.create(eventEventDaysDTO);
+         } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
              ex.printStackTrace();
              return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
          }
@@ -77,19 +80,20 @@ public class EventController {
          return new ResponseEntity<EventDTO>(ObjectMapperUtils.map(event, EventDTO.class), HttpStatus.OK);
      }
 
-     @GetMapping("/show-events")
-     private ResponseEntity<Page<Event>> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
+    @GetMapping("/show-events")
+    public ResponseEntity<EventsDTO> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
                                                @RequestParam(required=false) String dateFilter,
                                                @RequestParam(required=false) String typeFilter,
                                                @RequestParam(required=false) String locationFilter) {
 
-         return new ResponseEntity<Page<Event>>(eventService.findAll(pageable, searchQuery,
+         return new ResponseEntity<EventsDTO>(eventService.findAll(pageable, searchQuery,
                  dateFilter, typeFilter, locationFilter),HttpStatus.OK);
      }
 
-     @PostMapping("/reserve")
-     @PreAuthorize("hasRole('REGISTERED')")
-     private ResponseEntity reserve(HttpServletRequest request, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
+
+    @PostMapping("/reserve")
+    @PreAuthorize("hasRole('REGISTERED')")
+    public ResponseEntity reserve(HttpServletRequest request, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
 
         User user = customUserDetailsService.getUserFromRequest(request);
 
@@ -102,6 +106,9 @@ public class EventController {
          } catch (ObjectOptimisticLockingFailureException e) {
              e.printStackTrace();
              return new ResponseEntity<String>("Something went wrong! Please try again.", HttpStatus.BAD_REQUEST);
+         } catch (IOException| WriterException e) {
+             e.printStackTrace();
+             return new ResponseEntity<String>("Could not generate QR code", HttpStatus.EXPECTATION_FAILED);
          }
 
          return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets),HttpStatus.OK);

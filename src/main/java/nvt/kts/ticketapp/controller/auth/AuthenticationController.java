@@ -42,10 +42,6 @@ public class AuthenticationController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-//    public AuthenticationController(UserService userService) {
-//        this.userService = userService;
-//    }
-
 
     @PostMapping(path = "/register")
     public ResponseEntity register(@RequestBody @Valid UserRegistrationDTO userRegistrationDTO) {

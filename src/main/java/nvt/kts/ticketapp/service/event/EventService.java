@@ -1,9 +1,7 @@
 package nvt.kts.ticketapp.service.event;
 
-import nvt.kts.ticketapp.domain.dto.event.EventDayReservationDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventDayUpdateDTO;
-import nvt.kts.ticketapp.domain.dto.event.EventEventDaysDTO;
+import com.google.zxing.WriterException;
+import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
@@ -24,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -32,13 +31,13 @@ import java.util.List;
 @Service
 public interface EventService  {
 
-    Event save(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, ParseException, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid;
-    Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter, String locationFilter);
+    Event create(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid, ParseException;
+    EventsDTO findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter, String locationFilter);
     Event findOne(Long eventId);
     EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound;
-
-    List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible;
-
+    List<Event> findAllEvents();
+    List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException;
+//    Page<Event> executeCustomQuery(Pageable pageable, String searchQuery, String dateFilter, String typeFilter, String locationFilter);
     EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails)throws EventdayNotFound,DateFormatIsNotValid;
 }
 

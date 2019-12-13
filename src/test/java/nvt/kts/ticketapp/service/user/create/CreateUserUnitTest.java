@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.service.user;
+package nvt.kts.ticketapp.service.user.create;
 
 
 import nvt.kts.ticketapp.domain.dto.user.UserRegistrationDTO;
@@ -8,6 +8,7 @@ import nvt.kts.ticketapp.exception.user.*;
 import nvt.kts.ticketapp.repository.user.AdminRepository;
 import nvt.kts.ticketapp.repository.user.AuthorityRepository;
 import nvt.kts.ticketapp.repository.user.UserRepository;
+import nvt.kts.ticketapp.service.user.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -25,7 +26,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CreateUnitTest {
+public class CreateUserUnitTest {
 
     @Autowired
     private UserService userService;
@@ -56,7 +57,7 @@ public class CreateUnitTest {
         Mockito.when(userRepositoryMocked.findOneByUsername(userRegistrationDTO.getUsername())).thenReturn(Optional.empty());
         Mockito.when(adminRepositoryMocked.findOneByUsername(userRegistrationDTO.getUsername())).thenReturn(Optional.empty());
         Mockito.when(userRepositoryMocked.findOneByEmail(userRegistrationDTO.getEmail())).thenReturn(Optional.empty());
-        Mockito.when(authorityRepositoryMocked.findOneById(1L)).thenReturn(Optional.of(authority));
+        Mockito.when(authorityRepositoryMocked.findOneByName("ROLE_REGISTERED")).thenReturn(Optional.of(authority));
         Mockito.when(userRepositoryMocked.save(Mockito.any(User.class))).thenReturn(user);
 
         User createdUser = userService.create(userRegistrationDTO);
@@ -75,8 +76,8 @@ public class CreateUnitTest {
         Mockito.verify(userRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(adminRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(userRepositoryMocked).findOneByEmail(userRegistrationDTO.getEmail());
-        Mockito.verify(authorityRepositoryMocked).findOneById(1L);
-        Mockito.verify(userRepositoryMocked).save(Mockito.any(User.class));
+        Mockito.verify(authorityRepositoryMocked).findOneByName("ROLE_REGISTERED");
+        Mockito.verify(userRepositoryMocked,Mockito.times(2)).save(Mockito.any(User.class));
 
     }
 
@@ -97,7 +98,7 @@ public class CreateUnitTest {
         Mockito.verify(userRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(adminRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(userRepositoryMocked).findOneByEmail(userRegistrationDTO.getEmail());
-        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneById(1L);
+        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneByName("ROLE_REGISTERED");
         Mockito.verify(userRepositoryMocked, Mockito.times(0)).save(Mockito.any(User.class));
     }
 
@@ -116,7 +117,7 @@ public class CreateUnitTest {
         Mockito.verify(userRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(adminRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(userRepositoryMocked).findOneByEmail(userRegistrationDTO.getEmail());
-        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneById(1L);
+        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneByName("ROLE_REGISTERED");
         Mockito.verify(userRepositoryMocked, Mockito.times(0)).save(Mockito.any(User.class));
 
     }
@@ -137,7 +138,7 @@ public class CreateUnitTest {
         Mockito.verify(userRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(adminRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(userRepositoryMocked).findOneByEmail(userRegistrationDTO.getEmail());
-        Mockito.verify(authorityRepositoryMocked).findOneById(1L);
+        Mockito.verify(authorityRepositoryMocked).findOneByName("ROLE_REGISTERED");
         Mockito.verify(userRepositoryMocked, Mockito.times(0)).save(Mockito.any(User.class));
 
     }
@@ -157,7 +158,7 @@ public class CreateUnitTest {
         Mockito.verify(userRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(adminRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(userRepositoryMocked).findOneByEmail(userRegistrationDTO.getEmail());
-        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneById(1L);
+        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneByName("ROLE_REGISTERED");
         Mockito.verify(userRepositoryMocked, Mockito.times(0)).save(Mockito.any(User.class));
 
     }
@@ -177,7 +178,7 @@ public class CreateUnitTest {
         Mockito.verify(userRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(adminRepositoryMocked, Mockito.times(0)).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(userRepositoryMocked, Mockito.times(0)).findOneByEmail(userRegistrationDTO.getEmail());
-        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneById(1L);
+        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneByName("ROLE_REGISTERED");
         Mockito.verify(userRepositoryMocked, Mockito.times(0)).save(Mockito.any(User.class));
 
     }
@@ -197,7 +198,7 @@ public class CreateUnitTest {
         Mockito.verify(userRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(adminRepositoryMocked).findOneByUsername(userRegistrationDTO.getUsername());
         Mockito.verify(userRepositoryMocked).findOneByEmail(userRegistrationDTO.getEmail());
-        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneById(1L);
+        Mockito.verify(authorityRepositoryMocked, Mockito.times(0)).findOneByName("ROLE_REGISTERED");
         Mockito.verify(userRepositoryMocked, Mockito.times(0)).save(Mockito.any(User.class));
 
     }

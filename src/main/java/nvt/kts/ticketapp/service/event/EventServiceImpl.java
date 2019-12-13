@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.service.event;
 
+import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
@@ -27,8 +28,10 @@ import nvt.kts.ticketapp.exception.ticket.ReservationIsNotPossible;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.event.EventRepository;
+import nvt.kts.ticketapp.repository.location.LocationRepository;
+import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
+import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.service.common.email.ticket.TicketEmailService;
-import nvt.kts.ticketapp.service.location.LocationService;
 import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.SectorService;
@@ -44,13 +47,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static nvt.kts.ticketapp.config.Constants.DATE_FORMAT;
-import static nvt.kts.ticketapp.config.Constants.DATE_TIME_FORMAT;
 import static nvt.kts.ticketapp.util.DateUtil.*;
 
 @Service
@@ -62,27 +65,30 @@ public class EventServiceImpl implements EventService {
     private final EventDaysRepository eventDaysRepository;
     private final EventDayService eventDayService;
     private final LocationSchemeService locationSchemeService;
-    private final LocationService locationService;
-    private final SectorService sectorService;
-    private final LocationSectorService locationSectorService;
-    private final EntityManager em;
-    private final TicketService ticketService;
+    private LocationSectorService locationSectorService;
+    private TicketService ticketService;
+    private SectorService sectorService;
+    private LocationRepository locationRepository;
+    private LocationSectorRepository locationSectorRepository;
+    private TicketRepository ticketRepository;
 
-    public EventServiceImpl(TicketEmailService ticketEmailService, EventRepository eventRepository, EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationService locationService, SectorService sectorService, LocationSectorService locationSectorService, TicketService ticketService, EntityManager em) {
+
+    public EventServiceImpl(TicketEmailService ticketEmailService, EventRepository eventRepository, EventDaysRepository eventDaysRepository, EventDayService eventDayService, LocationSchemeService locationSchemeService, LocationSectorService locationSectorService, TicketService ticketService, SectorService sectorService, LocationRepository locationRepository, LocationSectorRepository locationSectorRepository, TicketRepository ticketRepository) {
         this.ticketEmailService = ticketEmailService;
         this.eventRepository = eventRepository;
         this.eventDaysRepository = eventDaysRepository;
         this.eventDayService = eventDayService;
         this.locationSchemeService = locationSchemeService;
-        this.locationService = locationService;
-        this.sectorService = sectorService;
         this.locationSectorService = locationSectorService;
-        this.em = em;
         this.ticketService = ticketService;
+        this.sectorService = sectorService;
+        this.locationRepository = locationRepository;
+        this.locationSectorRepository = locationSectorRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     @Override
-    public Event save(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, ParseException, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid {
+    public Event create(EventEventDaysDTO eventEventDaysDTO) throws DateFormatIsNotValid, LocationSchemeDoesNotExist, SectorDoesNotExist, LocationNotAvailableThatDate, EventDaysListEmpty, SectorCapacityOverload, DateCantBeInThePast, ReservationExpireDateInvalid, ParseException {
 
         Event event = ObjectMapperUtils.map(eventEventDaysDTO.getEvent(), Event.class);
 
@@ -150,10 +156,11 @@ public class EventServiceImpl implements EventService {
 
         // save event, eventDays, locations, locationSectors
         event = eventRepository.save(event);
-        locationService.saveAll(locations);
-        locationSectorService.saveAll(locationSectors);
-        eventDayService.saveAll(eventDays);
-        ticketService.saveAll(tickets);
+
+        locationRepository.saveAll(locations);
+        locationSectorRepository.saveAll(locationSectors);
+        eventDaysRepository.saveAll(eventDays);
+        ticketRepository.saveAll(tickets);
 
         return event;
     }
@@ -171,13 +178,13 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    private void checkAvailabilityOfLocationOnDate(Long locationSchemeId, Date date) throws ParseException, LocationNotAvailableThatDate {
+    private void checkAvailabilityOfLocationOnDate(Long locationSchemeId, Date date) throws LocationNotAvailableThatDate, ParseException {
 
-        List<EventDay> eventDays = eventDayService.findAllByDate(date);
+        List<EventDay> eventDays = eventDaysRepository.findAllByLocationId(locationSchemeId);
 
         if (!eventDays.isEmpty()) {
             for (EventDay eventDay: eventDays) {
-                if (eventDay.getLocation().getScheme().getId() == locationSchemeId) {
+                if(DateUtil.datesEqual(eventDay.getDate(), date)) {
                     throw new LocationNotAvailableThatDate();
                 }
             }
@@ -216,77 +223,28 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter,
+    public EventsDTO findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter,
                                String locationFilter) {
 
         if (searchQuery == null && dateFilter == null && typeFilter == null && locationFilter == null) {
-            return eventRepository.findAll(pageable);
+            Page<Event> events = eventRepository.findAll(pageable);
+            return new EventsDTO(events.getContent(), events.getNumberOfElements());
         } else {
-            return executeCustomQuery(pageable, searchQuery, dateFilter, typeFilter, locationFilter);
+            Page<Event> events = eventRepository.executeCustomQuery(pageable, searchQuery, dateFilter, typeFilter, locationFilter);
+            return new EventsDTO(events.getContent(), events.getNumberOfElements());
         }
-    }
-
-    private Page<Event> executeCustomQuery(Pageable pageable, String searchQuery,String dateFilter,String typeFilter,
-                                           String locationFilter) {
-        String queryString = "select e from Event e where ";
-
-        boolean andNeeded = false;
-
-        if (searchQuery != null) {
-            searchQuery = removeSingleQuotationMarks(searchQuery);
-            String queryAddition = "e.name like '%" + searchQuery + "%'";
-            queryString += queryAddition;
-            andNeeded = true;
-        }
-
-        if (dateFilter != null) {
-            dateFilter = removeSingleQuotationMarks(dateFilter);
-            queryString = addAndIfNeeded(queryString, andNeeded);
-            String queryAddition = "e.id in (select ed.event from EventDay ed where ed.date like '" + dateFilter + "')";
-            queryString += queryAddition;
-            andNeeded = true;
-        }
-
-        if (typeFilter != null) {
-            typeFilter = removeSingleQuotationMarks(typeFilter);
-            queryString = addAndIfNeeded(queryString, andNeeded);
-            String queryAddition = "e.category like '" + typeFilter + "'";
-            queryString += queryAddition;
-            andNeeded = true;
-        }
-
-        if(locationFilter != null) {
-            locationFilter = removeSingleQuotationMarks(locationFilter);
-            queryString = addAndIfNeeded(queryString, andNeeded);
-            String queryAddition = "e.id in (select ed.event from EventDay ed where ed.location in " +
-                    "(select l.id from Location l where l.scheme in (select ls.id from LocationScheme " +
-                    "ls where ls.name like '%" + locationFilter + "%')))";
-            queryString += queryAddition;
-        }
-
-        TypedQuery<Event> query = em.createQuery(queryString, Event.class)
-                .setMaxResults(pageable.getPageSize())
-                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-        return new PageImpl<>(query.getResultList());
-    }
-
-    private String addAndIfNeeded(String queryString, boolean andNeeded) {
-        if (andNeeded) {
-            queryString += " and ";
-        }
-        return queryString;
-    }
-
-    private String removeSingleQuotationMarks(String filterParam) {
-        return filterParam.replace("'", "");
     }
 
     @Override
     public Event findOne(Long id){return eventRepository.getOne(id);}
 
     @Override
+    public List<Event> findAllEvents(){return eventRepository.findAll();}
+
+
+    @Override
     @Transactional(rollbackOn = Exception.class)
-    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible {
+    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException {
 
         EventDay eventDay = eventDayService.getReservableAndBuyableAndDateBefore(eventDayReservationDTO.getEventDayId(), setTimeToMidnight(new Date()));
 
@@ -306,7 +264,7 @@ public class EventServiceImpl implements EventService {
         tickets.addAll(reservedGrandstandTickets);
         tickets.addAll(reservedParterTickets);
 
-        List<Ticket> savedTickets = ticketService.saveAll(tickets);
+        List<Ticket> savedTickets = ticketRepository.saveAll(tickets);
 
         EventDay eventDay1 = checkIfEventDayIsSoldOut(eventDay);
 
@@ -401,7 +359,7 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    private void sendMailsForPurchasedTickets(List<Ticket> tickets) {
+    private void sendMailsForPurchasedTickets(List<Ticket> tickets) throws IOException, WriterException {
 
         List<Ticket> purchasedTickets = new ArrayList<>();
         for(Ticket ticket : tickets) {

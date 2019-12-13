@@ -9,6 +9,6 @@ import org.junit.runners.Suite;
         GetLocationSchemeUnitTest.class,
         DeleteLocationSchemeUnitTest.class
 })
-public class LocationSchemeServiceImplUnitSuite {
+public class LocationSchemeServiceUnitSuite {
 
 }
