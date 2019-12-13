@@ -35,6 +35,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.*;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -244,7 +245,16 @@ public class ReserveEventUnitTest {
         when(ticketRepositoryMocked.save(Mockito.any(Ticket.class))).thenReturn(ticket_Parter);
         when(ticketServiceMocked.getAvailableTickets(eventDay.getId())).thenReturn(new ArrayList<>());
 
-        eventService.reserve(eventDayReservationDTO_Parter, user);
+        List<Ticket> reservedTickets = eventService.reserve(eventDayReservationDTO_Parter, user);
+
+        assertEquals(1, reservedTickets.size());
+        Ticket reservedTicket = reservedTickets.get(0);
+        assertEquals(user.getId(), reservedTicket.getUser().getId());
+        assertEquals(0, reservedTicket.getSeatCol());
+        assertEquals(0, reservedTicket.getSeatRow());
+        assertEquals(sector1.getId(), reservedTicket.getSectorId());
+        assertEquals(eventDay.getId(), reservedTicket.getEventDay().getId());
+
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
@@ -351,7 +361,6 @@ public class ReserveEventUnitTest {
 
         when(eventDayServiceMocked.getReservableAndBuyableAndDateAfter(Mockito.anyLong(), Mockito.any(Date.class))).thenReturn(eventDay);
 
-
         eventService.reserve(eventDayReservationDTO_Parter, user);
     }
 
@@ -379,7 +388,15 @@ public class ReserveEventUnitTest {
 
         when(ticketServiceMocked.getAvailableTickets(eventDay.getId())).thenReturn(new ArrayList<>());
 
-        eventService.reserve(eventDayReservationDTO_Grandstand, user);
+        List<Ticket> reservedTickets = eventService.reserve(eventDayReservationDTO_Grandstand, user);
+
+        assertEquals(1, reservedTickets.size());
+        Ticket reservedTicket = reservedTickets.get(0);
+        assertEquals(user.getId(), reservedTicket.getUser().getId());
+        assertEquals(eventDayReservationDTO_Grandstand.getSeats().get(0).getCol(), reservedTicket.getSeatCol());
+        assertEquals(eventDayReservationDTO_Grandstand.getSeats().get(0).getRow(), reservedTicket.getSeatRow());
+        assertEquals(eventDayReservationDTO_Grandstand.getSeats().get(0).getSectorId(), reservedTicket.getSectorId());
+        assertEquals(eventDay.getId(), reservedTicket.getEventDay().getId());
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
@@ -534,7 +551,26 @@ public class ReserveEventUnitTest {
 
         when(ticketServiceMocked.getAvailableTickets(eventDay.getId())).thenReturn(new ArrayList<>());
 
-        eventService.reserve(eventDayReservationDTO, user);
+        List<Ticket> reservedTickets = eventService.reserve(eventDayReservationDTO, user);
+
+
+        assertEquals(2, reservedTickets.size());
+
+        Ticket reservedTicket_Parter = reservedTickets.get(1);
+
+        assertEquals(user.getId(), reservedTicket_Parter.getUser().getId());
+        assertEquals(0, reservedTicket_Parter.getSeatCol());
+        assertEquals(0, reservedTicket_Parter.getSeatRow());
+        assertEquals(sector1.getId(), reservedTicket_Parter.getSectorId());
+        assertEquals(eventDay.getId(), reservedTicket_Parter.getEventDay().getId());
+
+        Ticket reservedTicket_Grandstand = reservedTickets.get(0);
+
+        assertEquals(user.getId(), reservedTicket_Grandstand.getUser().getId());
+        assertEquals(eventDayReservationDTO.getSeats().get(0).getCol(), reservedTicket_Grandstand.getSeatCol());
+        assertEquals(eventDayReservationDTO.getSeats().get(0).getRow(), reservedTicket_Grandstand.getSeatRow());
+        assertEquals(eventDayReservationDTO.getSeats().get(0).getSectorId(), reservedTicket_Grandstand.getSectorId());
+        assertEquals(eventDay.getId(), reservedTicket_Grandstand.getEventDay().getId());
     }
 
 }

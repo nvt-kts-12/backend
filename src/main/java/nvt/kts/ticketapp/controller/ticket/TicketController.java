@@ -2,26 +2,17 @@ package nvt.kts.ticketapp.controller.ticket;
 
 import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.ticket.TicketDTO;
-import nvt.kts.ticketapp.domain.dto.ticket.TicketsDTO;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
-import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.ticket.ReservationCanNotBeCancelled;
 import nvt.kts.ticketapp.exception.ticket.TicketDoesNotExist;
 import nvt.kts.ticketapp.exception.ticket.TicketNotFoundOrAlreadyBought;
-import nvt.kts.ticketapp.exception.user.UserNotFound;
 import nvt.kts.ticketapp.service.ticket.TicketService;
-import nvt.kts.ticketapp.service.ticket.TicketServiceImpl;
-import nvt.kts.ticketapp.service.user.UserService;
-import nvt.kts.ticketapp.service.user.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/ticket")
