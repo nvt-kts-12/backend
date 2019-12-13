@@ -44,8 +44,8 @@ public class EventDayServiceImpl implements EventDayService {
     }
 
     @Override
-    public EventDay getReservableAndBuyableAndDateBefore(Long eventDayId, Date date) throws EventDayDoesNotExist, EventDayDoesNotExistOrStateIsNotValid {
-        return eventDaysRepository.findOneByIdAndStateAndDateBefore(eventDayId, EventDayState.RESERVABLE_AND_BUYABLE,  date)
+    public EventDay getReservableAndBuyableAndDateAfter(Long eventDayId, Date date) throws  EventDayDoesNotExistOrStateIsNotValid {
+        return eventDaysRepository.findOneByIdAndStateAndDateAfter(eventDayId, EventDayState.RESERVABLE_AND_BUYABLE,  date)
                 .orElseThrow(() -> new EventDayDoesNotExistOrStateIsNotValid(eventDayId));
 
     }
