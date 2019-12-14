@@ -51,7 +51,8 @@ public class EmailClient {
                 messageHelper.addInline("qr_code_" + String.valueOf(ticket.getId()), file);
             }
             messageHelper.setFrom(emailFrom);
-            messageHelper.setTo("isamrs19mail@gmail.com");
+            messageHelper.setTo("ljubicjanko1@gmail.com");
+//            messageHelper.setTo("isamrs19mail@gmail.com");
             messageHelper.setSubject(subject);
 
         };
@@ -69,12 +70,10 @@ public class EmailClient {
 
 
     public void generateQrCode(String ticketId) throws WriterException, IOException {
-
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode("Ticket id is: " + ticketId, BarcodeFormat.QR_CODE, 15, 15);
 
         Path path = FileSystems.getDefault().getPath(QR_CODE_PATH + ticketId + ".png");
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
-
     }
 }
