@@ -25,6 +25,7 @@ import nvt.kts.ticketapp.exception.sector.SectorWrongType;
 import nvt.kts.ticketapp.exception.ticket.NumberOfTicketsException;
 import nvt.kts.ticketapp.exception.ticket.ReservationIsNotPossible;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
+import nvt.kts.ticketapp.exception.ticket.TicketListCantBeEmpty;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.event.EventRepository;
 import nvt.kts.ticketapp.repository.location.LocationRepository;
@@ -240,7 +241,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws  EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException {
+    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException, TicketListCantBeEmpty {
 
         EventDay eventDay = eventDayService.getReservableAndBuyableAndDateAfter(eventDayReservationDTO.getEventDayId(), setTimeToMidnight(new Date()));
 
@@ -356,7 +357,7 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    private void sendMailsForPurchasedTickets(List<Ticket> tickets) throws IOException, WriterException {
+    private void sendMailsForPurchasedTickets(List<Ticket> tickets) throws IOException, WriterException, TicketListCantBeEmpty {
 
         List<Ticket> purchasedTickets = new ArrayList<>();
         for(Ticket ticket : tickets) {

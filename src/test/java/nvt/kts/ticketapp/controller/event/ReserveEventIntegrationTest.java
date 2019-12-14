@@ -23,20 +23,26 @@ import nvt.kts.ticketapp.repository.user.UserRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInitializer;
+import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.transaction.TestTransaction;
 
 import javax.annotation.PostConstruct;
+import java.lang.annotation.Repeatable;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -334,15 +340,31 @@ public class ReserveEventIntegrationTest {
         EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Grandstand();
         EventDayReservationDTO eventDayReservationDTO2 = generateEventDayReservationDTO_Grandstand();
 
+        TimerTask t1 = new TimerTask() {
+            @Override
+            public void run() {
+                ResponseEntity response =  clientTemplate.postForEntity(url, eventDayReservationDTO, String.class);
 
-        ResponseEntity response = clientTemplate.postForEntity(url, eventDayReservationDTO, String.class);
-        ResponseEntity response2 = clientTemplate.postForEntity(url, eventDayReservationDTO2, String.class);
+                assertNotNull(response.getBody());
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+            }
+        };
 
-        assertNotNull(response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        TimerTask t2 = new TimerTask() {
+            @Override
+            public void run() {
+                ResponseEntity response2 =  clientTemplate.postForEntity(url, eventDayReservationDTO2, String.class);
 
-        assertNotNull(response2.getBody());
-        assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
+
+                assertNotNull(response2.getBody());
+                assertEquals(HttpStatus.EXPECTATION_FAILED, response2.getStatusCode());
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(t1, 0L);
+        timer.schedule(t2, 0L);
+
 
     }
 

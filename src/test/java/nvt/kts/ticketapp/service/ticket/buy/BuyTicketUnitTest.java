@@ -9,6 +9,7 @@ import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
+import nvt.kts.ticketapp.exception.ticket.TicketListCantBeEmpty;
 import nvt.kts.ticketapp.exception.ticket.TicketNotFoundOrAlreadyBought;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.service.ticket.TicketService;
@@ -66,7 +67,7 @@ public class BuyTicketUnitTest {
     }
 
     @Test
-    public void buyTicketTest() throws WriterException, IOException, TicketNotFoundOrAlreadyBought {
+    public void buyTicketTest() throws WriterException, IOException, TicketNotFoundOrAlreadyBought, TicketListCantBeEmpty {
 
         Mockito.when(ticketRepository.findOneByIdAndSoldFalse(ticket.getId())).thenReturn(Optional.of(ticket));
         Ticket bought = ticketService.buyTicket(ticket.getId());
@@ -75,7 +76,7 @@ public class BuyTicketUnitTest {
     }
 
     @Test(expected = TicketNotFoundOrAlreadyBought.class)
-    public void buyTicket_TicketNotFoundOrAlreadyBought() throws WriterException, IOException, TicketNotFoundOrAlreadyBought {
+    public void buyTicket_TicketNotFoundOrAlreadyBought() throws WriterException, IOException, TicketNotFoundOrAlreadyBought, TicketListCantBeEmpty {
         Long ticketId= 100L;
         Mockito.when(ticketRepository.findOneByIdAndSoldFalse(ticketId)).thenReturn(Optional.empty());
 
@@ -83,7 +84,7 @@ public class BuyTicketUnitTest {
     }
 
     @Test(expected = TicketNotFoundOrAlreadyBought.class)
-    public void buyTicket_TicketNotFoundOrAlreadyBought2() throws WriterException, IOException, TicketNotFoundOrAlreadyBought {
+    public void buyTicket_TicketNotFoundOrAlreadyBought2() throws WriterException, IOException, TicketNotFoundOrAlreadyBought, TicketListCantBeEmpty {
         Mockito.when(ticketRepository.findOneByIdAndSoldFalse(sold_ticket.getId())).thenReturn(Optional.empty());
 
         ticketService.buyTicket(sold_ticket.getId());

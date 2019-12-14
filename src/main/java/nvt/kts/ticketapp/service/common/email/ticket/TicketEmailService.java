@@ -2,8 +2,10 @@ package nvt.kts.ticketapp.service.common.email.ticket;
 
 import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
+import nvt.kts.ticketapp.exception.ticket.TicketListCantBeEmpty;
 import nvt.kts.ticketapp.service.common.email.EmailClient;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +21,7 @@ public class TicketEmailService  {
         this.emailClient = emailClient;
     }
 
-    public void sendEmailForPurchasedTickets(String emailTo, List<Ticket> tickets) throws IOException, WriterException {
+    public void sendEmailForPurchasedTickets(String emailTo, List<Ticket> tickets) throws IOException, WriterException, TicketListCantBeEmpty {
 
         String content = generateContent(tickets);
 
@@ -31,7 +33,11 @@ public class TicketEmailService  {
         );
     }
 
-    private String generateContent(List<Ticket> tickets) throws IOException, WriterException {
+    private String generateContent(List<Ticket> tickets) throws IOException, WriterException, TicketListCantBeEmpty {
+
+        if (tickets.size() == 0) {
+            throw new TicketListCantBeEmpty();
+        }
 
         String msg = "";
         msg += "<html><body>";

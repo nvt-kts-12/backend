@@ -26,6 +26,7 @@ import nvt.kts.ticketapp.exception.sector.SectorWrongType;
 import nvt.kts.ticketapp.exception.ticket.NumberOfTicketsException;
 import nvt.kts.ticketapp.exception.ticket.ReservationIsNotPossible;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
+import nvt.kts.ticketapp.exception.ticket.TicketListCantBeEmpty;
 import nvt.kts.ticketapp.exception.user.UserNotFound;
 import nvt.kts.ticketapp.service.event.EventService;
 import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
@@ -99,15 +100,15 @@ public class EventController {
          } catch (LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible | UserNotFound ex) {
              ex.printStackTrace();
              return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-         } catch (ObjectOptimisticLockingFailureException e) {
+         } catch (ObjectOptimisticLockingFailureException | TicketListCantBeEmpty e) {
              e.printStackTrace();
-             return new ResponseEntity<String>("Something went wrong! Please try again.", HttpStatus.BAD_REQUEST);
+             return new ResponseEntity<String>("Something went wrong! Please try again.", HttpStatus.EXPECTATION_FAILED);
          } catch (IOException| WriterException e) {
              e.printStackTrace();
              return new ResponseEntity<String>("Could not generate QR code", HttpStatus.EXPECTATION_FAILED);
          }
 
-         return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets),HttpStatus.OK);
+        return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets),HttpStatus.OK);
      }
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
