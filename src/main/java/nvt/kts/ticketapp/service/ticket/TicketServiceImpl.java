@@ -6,11 +6,8 @@ import nvt.kts.ticketapp.domain.dto.ticket.TicketDTO;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
-import nvt.kts.ticketapp.exception.ticket.ReservationCanNotBeCancelled;
-import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
+import nvt.kts.ticketapp.exception.ticket.*;
 import nvt.kts.ticketapp.domain.model.user.User;
-import nvt.kts.ticketapp.exception.ticket.TicketDoesNotExist;
-import nvt.kts.ticketapp.exception.ticket.TicketNotFoundOrAlreadyBought;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.service.common.email.ticket.TicketEmailService;
@@ -77,7 +74,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Ticket buyTicket(Long id) throws TicketNotFoundOrAlreadyBought, IOException, WriterException {
+    public Ticket buyTicket(Long id) throws TicketNotFoundOrAlreadyBought, IOException, WriterException, TicketListCantBeEmpty {
         Ticket ticket = ticketRepository.findOneByIdAndSoldFalse(id).orElseThrow(() -> new TicketNotFoundOrAlreadyBought(id));
         ticket.setSold(true);
 

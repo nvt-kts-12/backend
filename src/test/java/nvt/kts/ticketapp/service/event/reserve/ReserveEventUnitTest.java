@@ -18,6 +18,7 @@ import nvt.kts.ticketapp.exception.sector.SectorWrongType;
 import nvt.kts.ticketapp.exception.ticket.NumberOfTicketsException;
 import nvt.kts.ticketapp.exception.ticket.ReservationIsNotPossible;
 import nvt.kts.ticketapp.exception.ticket.SeatIsNotAvailable;
+import nvt.kts.ticketapp.exception.ticket.TicketListCantBeEmpty;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.service.event.EventDayService;
 import nvt.kts.ticketapp.service.event.EventService;
@@ -35,7 +36,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -224,7 +225,7 @@ public class ReserveEventUnitTest {
     // PARTER
 
     @Test
-    public void reserve_parter_success() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_parter_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         Sector sector1 = generateSector_Parter();
@@ -254,11 +255,49 @@ public class ReserveEventUnitTest {
         assertEquals(0, reservedTicket.getSeatRow());
         assertEquals(sector1.getId(), reservedTicket.getSectorId());
         assertEquals(eventDay.getId(), reservedTicket.getEventDay().getId());
+        assertFalse(reservedTicket.isSold());
+
+    }
+
+    // Buy
+    @Test
+    public void buy_parter_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+
+        Location location = generateLocation();
+        Sector sector1 = generateSector_Parter();
+        LocationSector locationSector1 = generateLocationSector_Parter();
+        Ticket ticket_Parter = generateTicket_Parter();
+        User user = generateUser();
+        EventDay eventDay = generateEventDay();
+
+        EventDayReservationDTO eventDayReservationDTO_Parter = generateEventDayReservationDTO_Parter();
+        eventDayReservationDTO_Parter.setPurchase(true);
+
+        when(eventDayServiceMocked.getReservableAndBuyableAndDateAfter(Mockito.anyLong(), Mockito.any(Date.class))).thenReturn(eventDay);
+
+        when(locationSectorServiceMocked.get(location.getId())).thenReturn(new ArrayList<>(Collections.singletonList(locationSector1)));
+        when(ticketServiceMocked.getAvailableTicketsForEventDayAndSector(eventDay.getId(), sector1.getId())).thenReturn(new ArrayList<>(Collections.singletonList(ticket_Parter)));
+
+        ticket_Parter.setUser(user);
+
+        when(ticketRepositoryMocked.save(Mockito.any(Ticket.class))).thenReturn(ticket_Parter);
+        when(ticketServiceMocked.getAvailableTickets(eventDay.getId())).thenReturn(new ArrayList<>());
+
+        List<Ticket> reservedTickets = eventService.reserve(eventDayReservationDTO_Parter, user);
+
+        assertEquals(1, reservedTickets.size());
+        Ticket reservedTicket = reservedTickets.get(0);
+        assertEquals(user.getId(), reservedTicket.getUser().getId());
+        assertEquals(0, reservedTicket.getSeatCol());
+        assertEquals(0, reservedTicket.getSeatRow());
+        assertEquals(sector1.getId(), reservedTicket.getSectorId());
+        assertEquals(eventDay.getId(), reservedTicket.getEventDay().getId());
+        assertTrue(reservedTicket.isSold());
 
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
-    public void reserve_parter_EventDayDoesNotExistOrStateIsNotValid() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_parter_EventDayDoesNotExistOrStateIsNotValid() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         User user = generateUser();
         EventDay eventDay = generateEventDay();
@@ -273,7 +312,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = SectorNotFound.class)
-    public void reserve_parter_SectorNotFound() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_parter_SectorNotFound() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         User user = generateUser();
@@ -289,7 +328,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = SectorWrongType.class)
-    public void reserve_parter_SectorWrongType() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_parter_SectorWrongType() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         LocationSector locationSector1 = generateLocationSector_Parter();
@@ -308,7 +347,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = LocationSectorsDoesNotExistForLocation.class)
-    public void reserve_parter_LocationSectorsDoesNotExistForLocation() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_parter_LocationSectorsDoesNotExistForLocation() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         LocationSector locationSector1 = generateLocationSector_Parter();
@@ -327,7 +366,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = NumberOfTicketsException.class)
-    public void reserve_parter_NumberOfTicketsException() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_parter_NumberOfTicketsException() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         Sector sector1 = generateSector_Parter();
@@ -348,7 +387,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = ReservationIsNotPossible.class)
-    public void reserve_parter_ReservationIsNotPossible() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_parter_ReservationIsNotPossible() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         User user = generateUser();
         EventDay eventDay = generateEventDay();
@@ -367,7 +406,7 @@ public class ReserveEventUnitTest {
     // GRANDSTAND
 
     @Test
-    public void reserve_grandstand_success() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         LocationSector locationSector2 = generateLocationSector_Grandstand();
@@ -397,10 +436,47 @@ public class ReserveEventUnitTest {
         assertEquals(eventDayReservationDTO_Grandstand.getSeats().get(0).getRow(), reservedTicket.getSeatRow());
         assertEquals(eventDayReservationDTO_Grandstand.getSeats().get(0).getSectorId(), reservedTicket.getSectorId());
         assertEquals(eventDay.getId(), reservedTicket.getEventDay().getId());
+        assertFalse(reservedTicket.isSold());
+    }
+
+    // Buy
+    @Test
+    public void buy_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+
+        Location location = generateLocation();
+        LocationSector locationSector2 = generateLocationSector_Grandstand();
+        Ticket ticket_Grandstand = generateTicket_Grandstand();
+        User user = generateUser();
+        EventDay eventDay = generateEventDay();
+
+        EventDayReservationDTO eventDayReservationDTO_Grandstand = generateEventDayReservationDTO_Grandstand();
+        eventDayReservationDTO_Grandstand.setPurchase(true);
+
+        when(eventDayServiceMocked.getReservableAndBuyableAndDateAfter(Mockito.anyLong(), Mockito.any(Date.class))).thenReturn(eventDay);
+
+        when(locationSectorServiceMocked.get(location.getId())).thenReturn(new ArrayList<>(Collections.singletonList(locationSector2)));
+        when(ticketServiceMocked.getAvailableGrandstandTicketForEventDayAndSector(Mockito.any(SeatDTO.class), Mockito.any(EventDay.class))).thenReturn(ticket_Grandstand);
+
+        ticket_Grandstand.setUser(user);
+
+        when(ticketRepositoryMocked.save(Mockito.any(Ticket.class))).thenReturn(ticket_Grandstand);
+
+        when(ticketServiceMocked.getAvailableTickets(eventDay.getId())).thenReturn(new ArrayList<>());
+
+        List<Ticket> reservedTickets = eventService.reserve(eventDayReservationDTO_Grandstand, user);
+
+        assertEquals(1, reservedTickets.size());
+        Ticket reservedTicket = reservedTickets.get(0);
+        assertEquals(user.getId(), reservedTicket.getUser().getId());
+        assertEquals(eventDayReservationDTO_Grandstand.getSeats().get(0).getCol(), reservedTicket.getSeatCol());
+        assertEquals(eventDayReservationDTO_Grandstand.getSeats().get(0).getRow(), reservedTicket.getSeatRow());
+        assertEquals(eventDayReservationDTO_Grandstand.getSeats().get(0).getSectorId(), reservedTicket.getSectorId());
+        assertEquals(eventDay.getId(), reservedTicket.getEventDay().getId());
+        assertTrue(reservedTicket.isSold());
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
-    public void reserve_grandstand_EventDayDoesNotExistOrStateIsNotValid() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_grandstand_EventDayDoesNotExistOrStateIsNotValid() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         User user = generateUser();
         EventDay eventDay = generateEventDay();
@@ -414,7 +490,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = SectorNotFound.class)
-    public void reserve_grandstand_SectorNotFound() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_grandstand_SectorNotFound() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         User user = generateUser();
@@ -430,7 +506,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = SectorWrongType.class)
-    public void reserve_grandstand_SectorWrongType() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_grandstand_SectorWrongType() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         LocationSector locationSector2 = generateLocationSector_Grandstand();
@@ -449,7 +525,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = LocationSectorsDoesNotExistForLocation.class)
-    public void reserve_grandstand_LocationSectorsDoesNotExistForLocation() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_grandstand_LocationSectorsDoesNotExistForLocation() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         LocationSector locationSector2 = generateLocationSector_Grandstand();
@@ -468,7 +544,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = SeatIsNotAvailable.class)
-    public void reserve_grandstand_SeatIsNotAvailable() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_grandstand_SeatIsNotAvailable() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         Sector sector2 = generateSector_Grandstand();
@@ -501,7 +577,7 @@ public class ReserveEventUnitTest {
     }
 
     @Test(expected = ReservationIsNotPossible.class)
-    public void reserve_grandstand_ReservationIsNotPossible() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_grandstand_ReservationIsNotPossible() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         User user = generateUser();
         EventDay eventDay = generateEventDay();
@@ -522,7 +598,7 @@ public class ReserveEventUnitTest {
     // PARTER AND GRANDSTAND
 
     @Test
-    public void reserve_parter_and_grandstand_success() throws  EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException {
+    public void reserve_parter_and_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
 
         Location location = generateLocation();
         Sector sector1 = generateSector_Parter();
@@ -563,6 +639,7 @@ public class ReserveEventUnitTest {
         assertEquals(0, reservedTicket_Parter.getSeatRow());
         assertEquals(sector1.getId(), reservedTicket_Parter.getSectorId());
         assertEquals(eventDay.getId(), reservedTicket_Parter.getEventDay().getId());
+        assertFalse(reservedTickets.get(1).isSold());
 
         Ticket reservedTicket_Grandstand = reservedTickets.get(0);
 
@@ -571,6 +648,64 @@ public class ReserveEventUnitTest {
         assertEquals(eventDayReservationDTO.getSeats().get(0).getRow(), reservedTicket_Grandstand.getSeatRow());
         assertEquals(eventDayReservationDTO.getSeats().get(0).getSectorId(), reservedTicket_Grandstand.getSectorId());
         assertEquals(eventDay.getId(), reservedTicket_Grandstand.getEventDay().getId());
+        assertFalse(reservedTickets.get(0).isSold());
+    }
+
+
+    // Buy
+    @Test
+    public void buy_parter_and_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+
+        Location location = generateLocation();
+        Sector sector1 = generateSector_Parter();
+        Sector sector2 = generateSector_Grandstand();
+        LocationSector locationSector1 = generateLocationSector_Parter();
+        LocationSector locationSector2 = generateLocationSector_Grandstand();
+        Ticket ticket_Parter = generateTicket_Parter();
+        Ticket ticket_Grandstand = generateTicket_Grandstand();
+        User user = generateUser();
+        EventDay eventDay = generateEventDay();
+
+        EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Parter_and_Grandstand();
+        eventDayReservationDTO.setPurchase(true);
+
+        when(eventDayServiceMocked.getReservableAndBuyableAndDateAfter(Mockito.anyLong(), Mockito.any(Date.class))).thenReturn(eventDay);
+
+        when(locationSectorServiceMocked.get(location.getId())).thenReturn(new ArrayList<>(Arrays.asList(locationSector1, locationSector2)));
+
+        when(ticketServiceMocked.getAvailableTicketsForEventDayAndSector(eventDay.getId(), sector1.getId())).thenReturn(new ArrayList<>(Collections.singletonList(ticket_Parter)));
+        when(ticketServiceMocked.getAvailableGrandstandTicketForEventDayAndSector(Mockito.any(SeatDTO.class), Mockito.any(EventDay.class))).thenReturn(ticket_Grandstand);
+
+
+        ticket_Grandstand.setUser(user);
+        ticket_Parter.setUser(user);
+
+        when(ticketRepositoryMocked.save(Mockito.any(Ticket.class))).thenReturn(ticket_Parter, ticket_Grandstand);
+
+        when(ticketServiceMocked.getAvailableTickets(eventDay.getId())).thenReturn(new ArrayList<>());
+
+        List<Ticket> reservedTickets = eventService.reserve(eventDayReservationDTO, user);
+
+
+        assertEquals(2, reservedTickets.size());
+
+        Ticket reservedTicket_Parter = reservedTickets.get(1);
+
+        assertEquals(user.getId(), reservedTicket_Parter.getUser().getId());
+        assertEquals(0, reservedTicket_Parter.getSeatCol());
+        assertEquals(0, reservedTicket_Parter.getSeatRow());
+        assertEquals(sector1.getId(), reservedTicket_Parter.getSectorId());
+        assertEquals(eventDay.getId(), reservedTicket_Parter.getEventDay().getId());
+        assertTrue(reservedTickets.get(1).isSold());
+
+        Ticket reservedTicket_Grandstand = reservedTickets.get(0);
+
+        assertEquals(user.getId(), reservedTicket_Grandstand.getUser().getId());
+        assertEquals(eventDayReservationDTO.getSeats().get(0).getCol(), reservedTicket_Grandstand.getSeatCol());
+        assertEquals(eventDayReservationDTO.getSeats().get(0).getRow(), reservedTicket_Grandstand.getSeatRow());
+        assertEquals(eventDayReservationDTO.getSeats().get(0).getSectorId(), reservedTicket_Grandstand.getSectorId());
+        assertEquals(eventDay.getId(), reservedTicket_Grandstand.getEventDay().getId());
+        assertTrue(reservedTickets.get(0).isSold());
     }
 
 }

@@ -342,7 +342,7 @@ public class ReserveEventIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         assertNotNull(response2.getBody());
-        assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
+        assertEquals(HttpStatus.EXPECTATION_FAILED, response2.getStatusCode());
 
     }
 

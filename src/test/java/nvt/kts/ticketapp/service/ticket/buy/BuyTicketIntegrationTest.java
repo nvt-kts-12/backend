@@ -11,6 +11,7 @@ import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
+import nvt.kts.ticketapp.exception.ticket.TicketListCantBeEmpty;
 import nvt.kts.ticketapp.exception.ticket.TicketNotFoundOrAlreadyBought;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.event.EventRepository;
@@ -84,7 +85,7 @@ public class BuyTicketIntegrationTest {
     }
 
     @Test
-    public void buyTicketTest() throws WriterException, IOException, TicketNotFoundOrAlreadyBought {
+    public void buyTicketTest() throws WriterException, IOException, TicketNotFoundOrAlreadyBought, TicketListCantBeEmpty {
 
         Ticket bought = ticketService.buyTicket(ticket.getId());
         assertNotNull(bought);
@@ -93,7 +94,7 @@ public class BuyTicketIntegrationTest {
     }
 
     @Test(expected = TicketNotFoundOrAlreadyBought.class)
-    public void buyTicketTest_TicketNotFound() throws WriterException, IOException, TicketNotFoundOrAlreadyBought {
+    public void buyTicketTest_TicketNotFound() throws WriterException, IOException, TicketNotFoundOrAlreadyBought, TicketListCantBeEmpty {
         Ticket bought = ticketService.buyTicket(sold_ticket.getId());
     }
 }

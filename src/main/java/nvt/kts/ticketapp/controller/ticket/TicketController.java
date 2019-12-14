@@ -5,6 +5,7 @@ import nvt.kts.ticketapp.domain.dto.ticket.TicketDTO;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.exception.ticket.ReservationCanNotBeCancelled;
 import nvt.kts.ticketapp.exception.ticket.TicketDoesNotExist;
+import nvt.kts.ticketapp.exception.ticket.TicketListCantBeEmpty;
 import nvt.kts.ticketapp.exception.ticket.TicketNotFoundOrAlreadyBought;
 import nvt.kts.ticketapp.service.ticket.TicketService;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,9 @@ public class TicketController {
         } catch (IOException| WriterException e) {
             e.printStackTrace();
             return new ResponseEntity<String>("Could not generate QR code", HttpStatus.EXPECTATION_FAILED);
+        } catch (TicketListCantBeEmpty ticketListCantBeEmpty) {
+            ticketListCantBeEmpty.printStackTrace();
+            return new ResponseEntity<String>("Something went wrong! Please try again.", HttpStatus.EXPECTATION_FAILED);
         }
     }
 
