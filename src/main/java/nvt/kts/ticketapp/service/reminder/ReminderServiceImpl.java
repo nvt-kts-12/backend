@@ -40,7 +40,7 @@ public class ReminderServiceImpl implements ReminderService {
 
         List<Ticket> soldTickets = ticketRepository.findAllBySoldTrueAndUserNotNull();
 
-        Date today = new Date();
+        Date today = new Date(System.currentTimeMillis());
 
         for (Ticket t : soldTickets) {
 
@@ -58,7 +58,7 @@ public class ReminderServiceImpl implements ReminderService {
     private void checkReservations() throws IOException, WriterException {
 
         List<Ticket> reservations = ticketRepository.findAllBySoldFalseAndUserNotNull();
-        Date today = new Date();
+        Date today = new Date(System.currentTimeMillis());
 
         for (Ticket t : reservations) {
             Date expirationDate = t.getEventDay().getReservationExpirationDate();

@@ -101,7 +101,7 @@ public class ReminderServiceIntegrationTest {
         eventRepository.save(event2);
 
         EventDay eventDay2 = new EventDay(new Date(System.currentTimeMillis() + (86400000 * 7)), location,
-                new Date(System.currentTimeMillis() + (86400000 * 3)), EventDayState.RESERVABLE_AND_BUYABLE, event);
+                new Date(System.currentTimeMillis() + (86400000 * 3)), EventDayState.RESERVABLE_AND_BUYABLE, event2);
         eventDaysRepository.save(eventDay2);
 
         ticketRepository.save(new Ticket(false, 1L, 1, 1, 2000, eventDay2, user, false));

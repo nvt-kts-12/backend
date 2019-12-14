@@ -56,7 +56,7 @@ public class ReminderServiceUnitTest {
 
         Event event = new Event("eventname", EventCategory.ENTERTAINMENT, "description");
 
-        EventDay eventDay = new EventDay(new Date(System.currentTimeMillis() + (86400000 * 3)), location,
+        EventDay eventDay = new EventDay(new Date(System.currentTimeMillis() + (86400000 * 3 - 30000000)), location,
                 new Date(System.currentTimeMillis() + 86400000), EventDayState.RESERVABLE_AND_BUYABLE, event);
 
         ArrayList<Ticket> tickets = new ArrayList<Ticket>();
@@ -68,7 +68,7 @@ public class ReminderServiceUnitTest {
 
         Event event2 = new Event("eventname2", EventCategory.ENTERTAINMENT, "description2");
         EventDay eventDay2 = new EventDay(new Date(System.currentTimeMillis() + (86400000 * 7)), location,
-                new Date(System.currentTimeMillis() + (86400000 * 3)), EventDayState.RESERVABLE_AND_BUYABLE, event);
+                new Date(System.currentTimeMillis() + (86400000 * 3 - 30000000)), EventDayState.RESERVABLE_AND_BUYABLE, event2);
 
         ArrayList<Ticket> reservations = new ArrayList<>();
 

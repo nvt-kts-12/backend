@@ -27,8 +27,8 @@ import org.junit.runners.Suite;
         LocationSchemeServiceUnitSuite.class,
         ReportServiceUnitSuite.class,
         SectorServiceUnitSuite.class,
-        ReminderServiceIntegrationTest.class,
-        ReminderServiceUnitTest.class
+        ReminderServiceUnitTest.class,
+        ReminderServiceIntegrationTest.class
 
 })
 public class ServiceSuite {
