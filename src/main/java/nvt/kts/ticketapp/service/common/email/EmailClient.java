@@ -51,8 +51,7 @@ public class EmailClient {
                 messageHelper.addInline("qr_code_" + String.valueOf(ticket.getId()), file);
             }
             messageHelper.setFrom(emailFrom);
-            messageHelper.setTo("ljubicjanko1@gmail.com");
-//            messageHelper.setTo("isamrs19mail@gmail.com");
+            messageHelper.setTo("isamrs19mail@gmail.com");
             messageHelper.setSubject(subject);
 
         };
