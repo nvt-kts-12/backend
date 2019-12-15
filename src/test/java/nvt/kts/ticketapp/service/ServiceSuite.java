@@ -6,6 +6,7 @@ import nvt.kts.ticketapp.service.eventDay.EventDayUnitTestSuite;
 import nvt.kts.ticketapp.service.location.LocationSchemeServiceUnitSuite;
 import nvt.kts.ticketapp.service.reminders.ReminderServiceIntegrationTest;
 import nvt.kts.ticketapp.service.reminders.ReminderServiceUnitTest;
+import nvt.kts.ticketapp.service.reminders.RemindersSuite;
 import nvt.kts.ticketapp.service.report.ReportServiceUnitSuite;
 import nvt.kts.ticketapp.service.sector.SectorServiceUnitSuite;
 import nvt.kts.ticketapp.service.ticket.TicketServiceIntegrationTestsSuite;
@@ -27,9 +28,7 @@ import org.junit.runners.Suite;
         LocationSchemeServiceUnitSuite.class,
         ReportServiceUnitSuite.class,
         SectorServiceUnitSuite.class,
-        ReminderServiceUnitTest.class,
-        ReminderServiceIntegrationTest.class
-
+        RemindersSuite.class
 })
 public class ServiceSuite {
 }
