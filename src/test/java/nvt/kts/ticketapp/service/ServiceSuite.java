@@ -3,6 +3,7 @@ package nvt.kts.ticketapp.service;
 import nvt.kts.ticketapp.service.event.EventServiceIntegrationTestsSuite;
 import nvt.kts.ticketapp.service.event.EventServiceUnitTestsSuite;
 import nvt.kts.ticketapp.service.eventDay.EventDayUnitTestSuite;
+import nvt.kts.ticketapp.service.location.LocationSchemeServiceIntegrationSuite;
 import nvt.kts.ticketapp.service.location.LocationSchemeServiceUnitSuite;
 import nvt.kts.ticketapp.service.reminders.ReminderServiceIntegrationTest;
 import nvt.kts.ticketapp.service.reminders.ReminderServiceUnitTest;
@@ -25,6 +26,7 @@ import org.junit.runners.Suite;
         TicketServiceIntegrationTestsSuite.class,
         TicketServiceUnitTestsSuite.class,
         LocationSchemeServiceUnitSuite.class,
+        LocationSchemeServiceIntegrationSuite.class,
         ReportServiceUnitSuite.class,
         SectorServiceUnitSuite.class,
         ReminderServiceUnitTest.class,
