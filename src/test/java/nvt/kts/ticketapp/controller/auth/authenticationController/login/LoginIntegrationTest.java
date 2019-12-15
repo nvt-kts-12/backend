@@ -63,10 +63,23 @@ public class LoginIntegrationTest {
     }
 
     @Test(expected = ResourceAccessException.class)
-    public void testLogin_failure() {
-        JwtAuthenticationRequest request = new JwtAuthenticationRequest("invaliduser", "wrongpass");
+    public void testLogin_wrongUsername() {
+        JwtAuthenticationRequest request = new JwtAuthenticationRequest("invalidusername", "pass");
 
         restTemplate.postForEntity(URL, request, UserTokenState.class);
     }
 
+    @Test(expected = ResourceAccessException.class)
+    public void testLogin_wrongPassword() {
+        JwtAuthenticationRequest request = new JwtAuthenticationRequest("user", "wrongpass");
+
+        restTemplate.postForEntity(URL, request, UserTokenState.class);
+    }
+
+    @Test(expected = ResourceAccessException.class)
+    public void testLogin_wrongUsernameAndPassword() {
+        JwtAuthenticationRequest request = new JwtAuthenticationRequest("invaliduser", "wrongpass");
+
+        restTemplate.postForEntity(URL, request, UserTokenState.class);
+    }
 }
