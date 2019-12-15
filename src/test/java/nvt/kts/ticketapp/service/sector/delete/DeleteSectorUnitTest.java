@@ -1,10 +1,12 @@
-package nvt.kts.ticketapp.service.sector;
+package nvt.kts.ticketapp.service.sector.delete;
 
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.model.location.*;
 import nvt.kts.ticketapp.exception.sector.CanNotDeleteSchemeSectors;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
 import nvt.kts.ticketapp.repository.sector.SectorRepository;
+import nvt.kts.ticketapp.service.sector.SectorService;
+import nvt.kts.ticketapp.service.sector.SectorServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

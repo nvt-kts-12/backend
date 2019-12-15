@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.service.location;
+package nvt.kts.ticketapp.service.location.delete;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.model.location.Location;
@@ -7,6 +7,8 @@ import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeCanNotBeDeleted;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.locationScheme.LocationSchemeRepository;
+import nvt.kts.ticketapp.service.location.LocationSchemeService;
+import nvt.kts.ticketapp.service.location.LocationSchemeServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

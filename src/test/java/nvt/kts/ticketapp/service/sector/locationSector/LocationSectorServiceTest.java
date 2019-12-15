@@ -1,8 +1,10 @@
-package nvt.kts.ticketapp.service.sector;
+package nvt.kts.ticketapp.service.sector.locationSector;
 
 import nvt.kts.ticketapp.domain.model.location.*;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
+import nvt.kts.ticketapp.service.sector.LocationSectorService;
+import nvt.kts.ticketapp.service.sector.LocationSectorServiceImpl;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;

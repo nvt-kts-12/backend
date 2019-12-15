@@ -1,7 +1,6 @@
-package nvt.kts.ticketapp.controller.location;
+package nvt.kts.ticketapp.controller.location.sector.get;
 
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
-import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.domain.model.location.SectorType;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.service.location.LocationSchemeServiceImpl;

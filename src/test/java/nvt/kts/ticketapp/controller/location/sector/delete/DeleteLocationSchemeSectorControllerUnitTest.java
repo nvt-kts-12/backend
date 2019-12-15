@@ -1,9 +1,8 @@
-package nvt.kts.ticketapp.controller.location;
+package nvt.kts.ticketapp.controller.location.sector.delete;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
-import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.domain.model.location.SectorType;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeCanNotBeDeleted;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
@@ -13,13 +12,11 @@ import nvt.kts.ticketapp.service.sector.SectorServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -27,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.util.Arrays;
 import java.util.List;
 
