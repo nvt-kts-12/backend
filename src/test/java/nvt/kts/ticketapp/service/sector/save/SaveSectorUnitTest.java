@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.service.sector;
+package nvt.kts.ticketapp.service.sector.save;
 
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
@@ -6,6 +6,8 @@ import nvt.kts.ticketapp.domain.model.location.Sector;
 import nvt.kts.ticketapp.domain.model.location.SectorType;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
 import nvt.kts.ticketapp.repository.sector.SectorRepository;
+import nvt.kts.ticketapp.service.sector.SectorService;
+import nvt.kts.ticketapp.service.sector.SectorServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

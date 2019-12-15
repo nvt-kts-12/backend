@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.controller.location;
+package nvt.kts.ticketapp.controller.location.sector.save;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
@@ -8,7 +8,6 @@ import nvt.kts.ticketapp.domain.model.location.SectorType;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.service.location.LocationSchemeServiceImpl;
 import nvt.kts.ticketapp.service.sector.SectorServiceImpl;
-import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 

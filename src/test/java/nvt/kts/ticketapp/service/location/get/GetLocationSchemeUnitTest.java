@@ -1,10 +1,12 @@
-package nvt.kts.ticketapp.service.location;
+package nvt.kts.ticketapp.service.location.get;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.locationScheme.LocationSchemeRepository;
+import nvt.kts.ticketapp.service.location.LocationSchemeService;
+import nvt.kts.ticketapp.service.location.LocationSchemeServiceImpl;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.junit.Before;
 import org.junit.Test;
