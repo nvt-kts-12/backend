@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.service.sector.locationSector;
 
+import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
 import nvt.kts.ticketapp.domain.model.location.*;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
@@ -32,7 +33,7 @@ public class LocationSectorServiceTest {
 
 
     private final Long EXISTING_SECTOR_ID = 1L;
-    private final Long EXISTING_SECTOR2_ID = 1L;
+    private final Long EXISTING_SECTOR2_ID = 2L;
     private final Long EXISTING_SCHEME_ID = 1L;
     private final Long EXISTING_LOCATION_ID = 1L;
     private final Long NONEXISTENT_LOCATION_ID = 2L;
@@ -83,8 +84,10 @@ public class LocationSectorServiceTest {
         LocationSector locationSector = new LocationSector(sector, location, 150.00, 100, false);
         LocationSector locationSector2 = new LocationSector(sector, location2, 250.00, 100, false);
 
-        locationSectorService.saveAll(Arrays.asList(locationSector, locationSector2));
+        List<LocationSectorsDTO> locationSectorsDTOS = locationSectorService.saveAll(Arrays.asList(locationSector, locationSector2));
 
+        assertNotNull(locationSectorsDTOS);
+        assertEquals(2, locationSectorsDTOS.size());
         verify(locationSectorRepository, times(1)).saveAll(anyList());
     }
 
