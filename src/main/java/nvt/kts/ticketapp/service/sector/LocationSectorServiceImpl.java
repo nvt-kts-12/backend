@@ -1,8 +1,11 @@
 package nvt.kts.ticketapp.service.sector;
 
+import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationSector;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
+import nvt.kts.ticketapp.exception.sector.LocationSectorDoesNotExist;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
+import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +20,9 @@ public class LocationSectorServiceImpl implements LocationSectorService {
     }
 
     @Override
-    public void saveAll(List<LocationSector> locationSectors) {
+    public List<LocationSectorsDTO> saveAll(List<LocationSector> locationSectors) {
         locationSectorRepository.saveAll(locationSectors);
+        return ObjectMapperUtils.mapAll(locationSectors, LocationSectorsDTO.class);
     }
 
     @Override
@@ -29,6 +33,14 @@ public class LocationSectorServiceImpl implements LocationSectorService {
         }
 
         return locationSectors;
+    }
+
+    @Override
+    public LocationSectorsDTO getOne(Long sectorId) throws LocationSectorDoesNotExist {
+        LocationSector foundSector = locationSectorRepository.findById(sectorId).
+                orElseThrow(() -> new LocationSectorDoesNotExist(sectorId));
+
+        return ObjectMapperUtils.map(foundSector, LocationSectorsDTO.class);
     }
 
 
