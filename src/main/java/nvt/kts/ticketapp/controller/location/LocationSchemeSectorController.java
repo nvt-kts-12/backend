@@ -40,12 +40,18 @@ public class LocationSchemeSectorController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public void save(@RequestBody @Valid LocationSchemeSectorsDTO locationSchemeSectorsDTO){
+    public ResponseEntity save(@RequestBody @Valid LocationSchemeSectorsDTO locationSchemeSectorsDTO){
         try {
-            sectorService.saveAll(locationSchemeSectorsDTO.getSectors(),
-                    locationSchemeService.save(ObjectMapperUtils.map(locationSchemeSectorsDTO.getLocationScheme(), LocationScheme.class)));
+            LocationSchemeDTO savedScheme = locationSchemeService.
+                    save(ObjectMapperUtils.map(locationSchemeSectorsDTO.getLocationScheme(), LocationScheme.class));
+            List<SectorDTO> savedSectors = sectorService.saveAll(locationSchemeSectorsDTO.getSectors(),
+                    ObjectMapperUtils.map(savedScheme, LocationScheme.class));
+
+            return new ResponseEntity<LocationSchemeSectorsDTO>(
+                    new LocationSchemeSectorsDTO(savedSectors, savedScheme),HttpStatus.OK);
         } catch (LocationSchemeAlreadyExists locationSchemeAlreadyExists) {
             locationSchemeAlreadyExists.printStackTrace();
+            return new ResponseEntity<String>(locationSchemeAlreadyExists.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -50,7 +50,7 @@ public class SaveLocationSchemeSectorControllerUnitTest {
 
     @Before
     public void init() throws LocationSchemeAlreadyExists {
-        LocationScheme locationScheme = new LocationScheme("Scheme", "Address");
+        LocationSchemeDTO locationScheme = new LocationSchemeDTO(false, "Scheme", "Address");
         locationScheme.setId(EXISTING_SCHEME_ID);
 
         when(locationSchemeService.save(any(LocationScheme.class))).thenReturn(locationScheme);

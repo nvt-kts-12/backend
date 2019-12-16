@@ -78,20 +78,19 @@ public class LocationSchemeControllerIntegrationTest {
         assertEquals(MARAKANA_NAME, providedMarakana.getBody().getName());
     }
 
-    /*FixMe: Test method throws exception and shows that test is failing with exclamation mark*/
+    /**
+     * Test getting LocationScheme with id NONEXISTENT_SCHEME_ID == 5L fails
+     *
+     * @throws LocationSchemeDoesNotExist
+     */
+    @Test
+    public void get_Negative() throws LocationSchemeDoesNotExist {
+        ResponseEntity<String> response = restTemplate.withBasicAuth("username", "password")
+                .getForEntity(URL_PREFIX + "/19", String.class);
 
-//    /**
-//     * Test getting LocationScheme with id NONEXISTENT_SCHEME_ID == 5L fails
-//     *
-//     * @throws LocationSchemeDoesNotExist
-//     */
-//    @Test
-//    public void get_Negative() throws LocationSchemeDoesNotExist {
-//        ResponseEntity<LocationSchemeDTO> providedScheme = restTemplate.withBasicAuth("username", "password")
-//                .getForEntity(URL_PREFIX + "/19", LocationSchemeDTO.class);
-//
-//        assertEquals(HttpStatus.BAD_REQUEST, providedScheme.getStatusCode());
-//    }
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 
     /**
      * Test getting all location schemas

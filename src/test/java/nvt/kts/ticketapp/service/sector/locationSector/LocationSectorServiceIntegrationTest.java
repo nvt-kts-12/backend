@@ -1,8 +1,10 @@
 package nvt.kts.ticketapp.service.sector.locationSector;
 
 import nvt.kts.ticketapp.ClearDatabaseRule;
+import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
 import nvt.kts.ticketapp.domain.model.location.*;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
+import nvt.kts.ticketapp.exception.sector.LocationSectorDoesNotExist;
 import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.locationScheme.LocationSchemeRepository;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
@@ -19,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -111,6 +114,15 @@ public class LocationSectorServiceIntegrationTest {
      */
     @Test
     public void get_Positive() throws LocationSectorsDoesNotExistForLocation {
+        west = locationSectorRepository.save(west);
+        east = locationSectorRepository.save(east);
+
+        List<LocationSector> spensSectors = locationSectorService.get(spens.getId());
+
+        assertNotNull(spensSectors);
+        assertEquals(2, spensSectors.size());
+        assertEquals(west.getId(), spensSectors.get(0).getId());
+        assertEquals(east.getId(), spensSectors.get(1).getId());
     }
 
     /**
@@ -120,5 +132,20 @@ public class LocationSectorServiceIntegrationTest {
      */
     @Test(expected = LocationSectorsDoesNotExistForLocation.class)
     public void get_Negative() throws LocationSectorsDoesNotExistForLocation {
+        locationSectorService.get(spens.getId());
+    }
+
+    @Test
+    public void getOne_Positive() throws LocationSectorDoesNotExist {
+        LocationSectorsDTO providedNorth = locationSectorService.getOne(north.getId());
+
+        assertNotNull(providedNorth);
+        assertEquals(providedNorth.getSectorId(), north.getSector().getId());
+        assertEquals(providedNorth.getCapacity(), north.getCapacity());
+    }
+
+    @Test(expected = LocationSectorDoesNotExist.class)
+    public void getOne_Negative_LocationSectorDoesNotExist() throws LocationSectorDoesNotExist {
+        locationSectorService.getOne(NONEXISTENT_SECTOR_ID);
     }
 }

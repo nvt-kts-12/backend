@@ -26,12 +26,13 @@ public class SectorServiceImpl implements SectorService {
     }
 
 
-    public void saveAll(List<SectorDTO> sectorDTOs, LocationScheme locationScheme) {
+    public List<SectorDTO> saveAll(List<SectorDTO> sectorDTOs, LocationScheme locationScheme) {
         List<Sector> sectors = ObjectMapperUtils.mapAll(sectorDTOs, Sector.class);
         for (Sector sector : sectors) {
             sector.setLocationScheme(locationScheme);
             sectorRepository.save(sector);
         }
+        return sectorDTOs;
     }
 
     public List<SectorDTO> getAll() {
