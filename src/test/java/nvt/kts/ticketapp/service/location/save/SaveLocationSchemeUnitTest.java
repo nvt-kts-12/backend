@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.service.location.save;
 
+import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeAlreadyExists;
 import nvt.kts.ticketapp.repository.location.LocationRepository;
@@ -67,7 +68,7 @@ public class SaveLocationSchemeUnitTest {
 
         when(locationSchemeRepository.save(nonExistentScheme)).thenReturn(createdScheme);
 
-        LocationScheme locationScheme = locationSchemeService.save(nonExistentScheme);
+        LocationSchemeDTO locationScheme = locationSchemeService.save(nonExistentScheme);
 
         assertNotNull(locationScheme);
         assertEquals(CREATED_SCHEME_ID, locationScheme.getId());

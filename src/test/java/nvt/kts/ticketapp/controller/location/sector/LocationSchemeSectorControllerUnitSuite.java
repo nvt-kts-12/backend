@@ -14,7 +14,8 @@ import org.junit.runners.Suite;
         GetLocationSchemeSectorControllerUnitTest.class,
         SaveLocationSchemeSectorControllerUnitTest.class,
         LocationSchemeControllerUnitTest.class,
-        SectorControllerUnitTest.class
+        SectorControllerUnitTest.class,
+        SectorControllerIntegrationTest.class
 })
 public class LocationSchemeSectorControllerUnitSuite {
 }

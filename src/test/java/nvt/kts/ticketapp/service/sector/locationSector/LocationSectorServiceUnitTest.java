@@ -3,6 +3,7 @@ package nvt.kts.ticketapp.service.sector.locationSector;
 import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
 import nvt.kts.ticketapp.domain.model.location.*;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
+import nvt.kts.ticketapp.exception.sector.LocationSectorDoesNotExist;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.LocationSectorServiceImpl;
@@ -18,6 +19,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -25,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LocationSectorServiceTest {
+public class LocationSectorServiceUnitTest {
 
     private LocationSectorService locationSectorService;
     @Mock
@@ -37,26 +39,35 @@ public class LocationSectorServiceTest {
     private final Long EXISTING_SCHEME_ID = 1L;
     private final Long EXISTING_LOCATION_ID = 1L;
     private final Long NONEXISTENT_LOCATION_ID = 2L;
+    private final Long EXISTING_LOCATION_SECTOR_ID = 1L;
+
+    private static LocationScheme locationScheme;
+    private static Location location;
+    private static Location location2;
+    private static Sector sector;
+    private static Sector sector2;
+    private static LocationSector locationSector;
+    private static LocationSector locationSector2;
 
     @Before
     public void init() {
-        LocationScheme locationScheme = new LocationScheme("Scheme", "Address");
+        locationScheme = new LocationScheme("Scheme", "Address");
         locationScheme.setId(EXISTING_SCHEME_ID);
 
-        Location location = new Location(locationScheme);
-        Location location2 = new Location(locationScheme);
+        location = new Location(locationScheme);
+        location2 = new Location(locationScheme);
 
-        Sector sector = new Sector(10.0, 10.0,
+        sector = new Sector(10.0, 10.0,
                 0.0, 0.0, 100,
                 10, 10, SectorType.GRANDSTAND, locationScheme);
         sector.setId(EXISTING_SECTOR_ID);
-        Sector sector2 = new Sector(10.0, 10.0,
+        sector2 = new Sector(10.0, 10.0,
                 0.0, 0.0, 100,
                 10, 10, SectorType.GRANDSTAND, locationScheme);
         sector2.setId(EXISTING_SECTOR2_ID);
 
-        LocationSector locationSector = new LocationSector(sector, location, 150.00, 100, false);
-        LocationSector locationSector2 = new LocationSector(sector, location2, 250.00, 100, false);
+        locationSector = new LocationSector(sector, location, 150.00, 100, false);
+        locationSector2 = new LocationSector(sector, location2, 250.00, 100, false);
 
         when(locationSectorRepository.findAllByLocationIdAndDeletedFalse(EXISTING_LOCATION_ID)).
                 thenReturn(Arrays.asList(locationSector, locationSector2));
@@ -66,24 +77,6 @@ public class LocationSectorServiceTest {
 
     @Test
     public void saveAll_Positive() {
-        LocationScheme locationScheme = new LocationScheme("Scheme", "Address");
-        locationScheme.setId(EXISTING_SCHEME_ID);
-
-        Location location = new Location(locationScheme);
-        Location location2 = new Location(locationScheme);
-
-        Sector sector = new Sector(10.0, 10.0,
-                0.0, 0.0, 100,
-                10, 10, SectorType.GRANDSTAND, locationScheme);
-        sector.setId(EXISTING_SECTOR_ID);
-        Sector sector2 = new Sector(10.0, 10.0,
-                0.0, 0.0, 100,
-                10, 10, SectorType.GRANDSTAND, locationScheme);
-        sector2.setId(EXISTING_SECTOR2_ID);
-
-        LocationSector locationSector = new LocationSector(sector, location, 150.00, 100, false);
-        LocationSector locationSector2 = new LocationSector(sector, location2, 250.00, 100, false);
-
         List<LocationSectorsDTO> locationSectorsDTOS = locationSectorService.saveAll(Arrays.asList(locationSector, locationSector2));
 
         assertNotNull(locationSectorsDTOS);
@@ -103,5 +96,23 @@ public class LocationSectorServiceTest {
         when(locationSectorRepository.findAllByLocationIdAndDeletedFalse(NONEXISTENT_LOCATION_ID)).
                 thenReturn(new ArrayList<>());
         locationSectorService.get(NONEXISTENT_LOCATION_ID);
+    }
+
+    @Test
+    public void getOne_Positive() throws LocationSectorDoesNotExist {
+        when(locationSectorRepository.findById(EXISTING_LOCATION_SECTOR_ID)).thenReturn(java.util.Optional.ofNullable(locationSector));
+
+        LocationSectorsDTO sector = locationSectorService.getOne(EXISTING_SECTOR_ID);
+
+        assertNotNull(sector);
+        assertEquals(sector.getSectorId(), locationSector.getSector().getId());
+        assertEquals(sector.getCapacity(), locationSector.getCapacity());
+    }
+
+    @Test(expected = LocationSectorDoesNotExist.class)
+    public void getOne_Negative_LocationSectorDoesNotExist() throws LocationSectorDoesNotExist {
+        when(locationSectorRepository.findById(NONEXISTENT_LOCATION_ID)).thenReturn(Optional.empty());
+
+        locationSectorService.getOne(NONEXISTENT_LOCATION_ID);
     }
 }

@@ -1,6 +1,7 @@
 package nvt.kts.ticketapp.controller.location;
 
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
+import nvt.kts.ticketapp.domain.model.location.Sector;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
 import nvt.kts.ticketapp.service.sector.SectorService;
 import nvt.kts.ticketapp.service.sector.SectorServiceImpl;
@@ -32,7 +33,8 @@ public class SectorController {
     @GetMapping("/{id}")
     public ResponseEntity get(@PathVariable Long id){
         try {
-            return new ResponseEntity<SectorDTO>(sectorService.get(id), HttpStatus.OK);
+            SectorDTO sectorDTO = sectorService.get(id);
+            return new ResponseEntity<SectorDTO>(sectorDTO, HttpStatus.OK);
         } catch (SectorDoesNotExist sectorDoesNotExist) {
             sectorDoesNotExist.printStackTrace();
             return new ResponseEntity<String>(sectorDoesNotExist.getMessage(), HttpStatus.BAD_REQUEST);

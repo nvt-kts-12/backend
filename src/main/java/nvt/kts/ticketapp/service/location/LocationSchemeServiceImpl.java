@@ -25,14 +25,14 @@ public class LocationSchemeServiceImpl implements LocationSchemeService {
         this.locationRepository = locationRepository;
     }
 
-    public LocationScheme save(LocationScheme locationScheme) throws LocationSchemeAlreadyExists {
+    public LocationSchemeDTO save(LocationScheme locationScheme) throws LocationSchemeAlreadyExists {
         if (locationScheme.getId() == null &&
                 locationSchemeRepository.findByNameIgnoreCaseAndDeletedFalse(locationScheme.getName()).isPresent()) {
             // because id is null i know he is trying to save new scheme with existing name
             throw new LocationSchemeAlreadyExists(locationScheme.getName());
         }
         // if id is not null it is update action
-        return locationSchemeRepository.save(locationScheme);
+        return ObjectMapperUtils.map(locationSchemeRepository.save(locationScheme), LocationSchemeDTO.class);
     }
 
     public LocationSchemeDTO get(Long id) throws LocationSchemeDoesNotExist {

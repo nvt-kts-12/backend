@@ -17,7 +17,7 @@ public interface LocationSchemeService {
      * @param locationScheme - scheme to save
      * @return
      */
-    public LocationScheme save(LocationScheme locationScheme) throws LocationSchemeAlreadyExists;
+    public LocationSchemeDTO save(LocationScheme locationScheme) throws LocationSchemeAlreadyExists;
 
     /**
      * Provides location scheme with given id
