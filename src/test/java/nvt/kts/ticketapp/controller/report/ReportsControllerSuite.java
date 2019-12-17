@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        ReportsControllerTest.class
+        ReportsControllerUnitTest.class,
+        ReportsControllerIntegrationTest.class
 })
-public class ReportsUnitSuite {
+public class ReportsControllerSuite {
 }

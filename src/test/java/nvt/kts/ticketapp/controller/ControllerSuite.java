@@ -6,8 +6,7 @@ import nvt.kts.ticketapp.controller.event.EventControllerIntegrationTestsSuite;
 import nvt.kts.ticketapp.controller.location.LocationSchemeControllerIntegrationSuite;
 import nvt.kts.ticketapp.controller.location.sector.LocationSchemeSectorControllerIntegrationSuite;
 import nvt.kts.ticketapp.controller.location.sector.LocationSchemeSectorControllerUnitSuite;
-import nvt.kts.ticketapp.controller.location.sector.SectorControllerUnitTest;
-import nvt.kts.ticketapp.controller.report.ReportsUnitSuite;
+import nvt.kts.ticketapp.controller.report.ReportsControllerSuite;
 import nvt.kts.ticketapp.controller.ticket.TicketControllerIntegrationTestsSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -21,7 +20,7 @@ import org.junit.runners.Suite;
         LocationSchemeSectorControllerUnitSuite.class,
         LocationSchemeControllerIntegrationSuite.class,
         LocationSchemeSectorControllerIntegrationSuite.class,
-        ReportsUnitSuite.class
+        ReportsControllerSuite.class
 })
 public class ControllerSuite {
 }
