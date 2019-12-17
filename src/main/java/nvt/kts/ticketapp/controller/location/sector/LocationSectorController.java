@@ -30,7 +30,7 @@ public class LocationSectorController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity saveAll(@RequestBody @Valid LocationSectorsWrapperDTO locationSectorsWrapperDTO) {
         try {
             return new ResponseEntity<List<LocationSectorDTO>>

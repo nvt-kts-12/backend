@@ -36,7 +36,7 @@ public class LocationController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity save(@RequestBody @Valid PlainLocationDTO locationDTO){
         try {
             return new ResponseEntity<PlainLocationDTO>(locationService.save(locationDTO.getLocationSchemeId()), HttpStatus.OK);
