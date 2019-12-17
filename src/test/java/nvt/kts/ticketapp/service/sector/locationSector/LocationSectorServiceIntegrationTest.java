@@ -2,15 +2,18 @@ package nvt.kts.ticketapp.service.sector.locationSector;
 
 import nvt.kts.ticketapp.ClearDatabaseRule;
 import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
+import nvt.kts.ticketapp.domain.dto.location.LocationSectorDTO;
 import nvt.kts.ticketapp.domain.model.location.*;
 import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
+import nvt.kts.ticketapp.exception.location.SectorNotFound;
 import nvt.kts.ticketapp.exception.sector.LocationSectorDoesNotExist;
 import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.locationScheme.LocationSchemeRepository;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
 import nvt.kts.ticketapp.repository.sector.SectorRepository;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
+import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -97,8 +100,8 @@ public class LocationSectorServiceIntegrationTest {
      * Test saving list of location sectors
      */
     @Test
-    public void saveAll_Positive() throws LocationSectorsDoesNotExistForLocation, LocationNotFound {
-        locationSectorService.saveAll(Arrays.asList(west, east));
+    public void saveAll_Positive() throws LocationSectorsDoesNotExistForLocation, LocationNotFound, SectorNotFound {
+        locationSectorService.saveAll(ObjectMapperUtils.mapAll(Arrays.asList(west, east), LocationSectorDTO.class));
 
         List<LocationSector> spensSectors = locationSectorService.get(spens.getId());
 
@@ -138,7 +141,7 @@ public class LocationSectorServiceIntegrationTest {
 
     @Test
     public void getOne_Positive() throws LocationSectorDoesNotExist {
-        LocationSectorsDTO providedNorth = locationSectorService.getOne(north.getId());
+        LocationSectorDTO providedNorth = locationSectorService.getOne(north.getId());
 
         assertNotNull(providedNorth);
         assertEquals(providedNorth.getSectorId(), north.getSector().getId());
