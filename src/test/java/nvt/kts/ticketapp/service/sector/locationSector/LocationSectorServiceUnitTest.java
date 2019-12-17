@@ -1,18 +1,25 @@
 package nvt.kts.ticketapp.service.sector.locationSector;
 
 import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
+import nvt.kts.ticketapp.domain.dto.location.LocationSectorDTO;
 import nvt.kts.ticketapp.domain.model.location.*;
+import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
+import nvt.kts.ticketapp.exception.location.SectorNotFound;
 import nvt.kts.ticketapp.exception.sector.LocationSectorDoesNotExist;
+import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
+import nvt.kts.ticketapp.repository.sector.SectorRepository;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.LocationSectorServiceImpl;
+import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Array;
@@ -33,12 +40,17 @@ public class LocationSectorServiceUnitTest {
     @Mock
     private LocationSectorRepository locationSectorRepository;
 
+    @Mock
+    private LocationRepository locationRepository;
+    @Mock
+    private SectorRepository sectorRepository;
 
     private final Long EXISTING_SECTOR_ID = 1L;
     private final Long EXISTING_SECTOR2_ID = 2L;
     private final Long EXISTING_SCHEME_ID = 1L;
     private final Long EXISTING_LOCATION_ID = 1L;
-    private final Long NONEXISTENT_LOCATION_ID = 2L;
+    private final Long EXISTING_LOCATION2_ID = 2L;
+    private final Long NONEXISTENT_LOCATION_ID = 5L;
     private final Long EXISTING_LOCATION_SECTOR_ID = 1L;
 
     private static LocationScheme locationScheme;
@@ -55,7 +67,9 @@ public class LocationSectorServiceUnitTest {
         locationScheme.setId(EXISTING_SCHEME_ID);
 
         location = new Location(locationScheme);
+        location.setId(EXISTING_LOCATION_ID);
         location2 = new Location(locationScheme);
+        location2.setId(EXISTING_LOCATION2_ID);
 
         sector = new Sector(10.0, 10.0,
                 0.0, 0.0, 100,
@@ -71,17 +85,24 @@ public class LocationSectorServiceUnitTest {
 
         when(locationSectorRepository.findAllByLocationIdAndDeletedFalse(EXISTING_LOCATION_ID)).
                 thenReturn(Arrays.asList(locationSector, locationSector2));
+        when(locationRepository.findByIdAndDeletedFalse(EXISTING_LOCATION_ID)).thenReturn(Optional.of(location));
+        when(locationRepository.findByIdAndDeletedFalse(EXISTING_LOCATION2_ID)).thenReturn(Optional.of(location2));
+        when(sectorRepository.findByIdAndDeletedFalse(EXISTING_SECTOR_ID)).thenReturn(Optional.of(sector));
+        when(sectorRepository.findByIdAndDeletedFalse(EXISTING_SECTOR2_ID)).thenReturn(Optional.of(sector2));
+        when(locationSectorRepository.save(any(LocationSector.class))).thenReturn(locationSector);
 
-        locationSectorService = new LocationSectorServiceImpl(locationSectorRepository);
+
+        locationSectorService = new LocationSectorServiceImpl(locationSectorRepository, sectorRepository, locationRepository);
     }
 
     @Test
-    public void saveAll_Positive() {
-        List<LocationSectorsDTO> locationSectorsDTOS = locationSectorService.saveAll(Arrays.asList(locationSector, locationSector2));
+    public void saveAll_Positive() throws LocationNotFound, SectorNotFound {
+        List<LocationSectorDTO> locationSectorsDTOS = locationSectorService
+                .saveAll(ObjectMapperUtils.mapAll(Arrays.asList(locationSector, locationSector2), LocationSectorDTO.class));
 
         assertNotNull(locationSectorsDTOS);
         assertEquals(2, locationSectorsDTOS.size());
-        verify(locationSectorRepository, times(1)).saveAll(anyList());
+        verify(locationSectorRepository, times(2)).save(any(LocationSector.class));
     }
 
     @Test
@@ -102,7 +123,7 @@ public class LocationSectorServiceUnitTest {
     public void getOne_Positive() throws LocationSectorDoesNotExist {
         when(locationSectorRepository.findById(EXISTING_LOCATION_SECTOR_ID)).thenReturn(java.util.Optional.ofNullable(locationSector));
 
-        LocationSectorsDTO sector = locationSectorService.getOne(EXISTING_SECTOR_ID);
+        LocationSectorDTO sector = locationSectorService.getOne(EXISTING_SECTOR_ID);
 
         assertNotNull(sector);
         assertEquals(sector.getSectorId(), locationSector.getSector().getId());

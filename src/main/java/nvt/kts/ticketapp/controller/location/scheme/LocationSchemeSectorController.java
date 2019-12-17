@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.controller.location;
+package nvt.kts.ticketapp.controller.location.scheme;
 
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeSectorsDTO;
