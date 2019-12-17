@@ -6,8 +6,10 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        ReportsServiceTest.class
+        ReportsServiceUnitTest.class,
+        ReportServiceIntegrationTest.class
+
 })
-public class ReportServiceUnitSuite {
+public class ReportServiceSuite {
 
 }

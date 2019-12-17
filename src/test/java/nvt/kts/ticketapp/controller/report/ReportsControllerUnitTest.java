@@ -25,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test, test-conf")
-public class ReportsControllerTest {
+public class ReportsControllerUnitTest {
 
     @LocalServerPort
     int randomServerPort;
@@ -137,14 +138,16 @@ public class ReportsControllerTest {
      */
     @Test
     public void eventDaysReport() throws EventNotFound {
-        ResponseEntity<EventDayReportDTO[]> response = testRestTemplate.withBasicAuth("admin", "password")
-                .getForEntity
-                (URL_PREFIX + "/eventDay/1", EventDayReportDTO[].class);
+        ResponseEntity<List<EventDayReportDTO>> response = testRestTemplate.withBasicAuth("admin", "password")
+                .exchange
+                        (URL_PREFIX + "/eventDay/1", HttpMethod.GET, null,
+                                new ParameterizedTypeReference<List<EventDayReportDTO>>() {
+                                });
 
         assertNotNull(response.getBody());
-        assertEquals(2, response.getBody().length);
-        assertEquals(EXISTING_EVENT_DAY_ID, response.getBody()[0].getEventDayDTO().getId());
-        assertEquals(EXISTING_EVENT_DAY_ID_2, response.getBody()[1].getEventDayDTO().getId());
+        assertEquals(2, response.getBody().size());
+        assertEquals(EXISTING_EVENT_DAY_ID, response.getBody().get(0).getEventDayDTO().getId());
+        assertEquals(EXISTING_EVENT_DAY_ID_2, response.getBody().get(1).getEventDayDTO().getId());
 
         verify(reportsService, times(1)).eventDaysReport(anyLong());
     }
