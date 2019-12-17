@@ -2,8 +2,10 @@ package nvt.kts.ticketapp.service.sector.locationSector;
 
 import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
 import nvt.kts.ticketapp.domain.model.location.*;
+import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
 import nvt.kts.ticketapp.exception.sector.LocationSectorDoesNotExist;
+import nvt.kts.ticketapp.repository.location.LocationRepository;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
 import nvt.kts.ticketapp.service.sector.LocationSectorServiceImpl;
@@ -33,6 +35,8 @@ public class LocationSectorServiceUnitTest {
     @Mock
     private LocationSectorRepository locationSectorRepository;
 
+    @Mock
+    private LocationRepository locationRepository;
 
     private final Long EXISTING_SECTOR_ID = 1L;
     private final Long EXISTING_SECTOR2_ID = 2L;
@@ -71,17 +75,19 @@ public class LocationSectorServiceUnitTest {
 
         when(locationSectorRepository.findAllByLocationIdAndDeletedFalse(EXISTING_LOCATION_ID)).
                 thenReturn(Arrays.asList(locationSector, locationSector2));
+        when(locationRepository.findByIdAndDeletedFalse(locationSector.getId())).thenReturn(Optional.of(location));
+        when(locationRepository.findByIdAndDeletedFalse(locationSector2.getId())).thenReturn(Optional.of(location2));
 
-        locationSectorService = new LocationSectorServiceImpl(locationSectorRepository);
+        locationSectorService = new LocationSectorServiceImpl(locationSectorRepository, locationRepository);
     }
 
     @Test
-    public void saveAll_Positive() {
+    public void saveAll_Positive() throws LocationNotFound {
         List<LocationSectorsDTO> locationSectorsDTOS = locationSectorService.saveAll(Arrays.asList(locationSector, locationSector2));
 
         assertNotNull(locationSectorsDTOS);
         assertEquals(2, locationSectorsDTOS.size());
-        verify(locationSectorRepository, times(1)).saveAll(anyList());
+        verify(locationSectorRepository, times(1)).save(any(LocationSector.class));
     }
 
     @Test

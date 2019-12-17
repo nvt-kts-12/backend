@@ -3,6 +3,7 @@ package nvt.kts.ticketapp.service.sector.locationSector;
 import nvt.kts.ticketapp.ClearDatabaseRule;
 import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
 import nvt.kts.ticketapp.domain.model.location.*;
+import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
 import nvt.kts.ticketapp.exception.sector.LocationSectorDoesNotExist;
 import nvt.kts.ticketapp.repository.location.LocationRepository;
@@ -96,7 +97,7 @@ public class LocationSectorServiceIntegrationTest {
      * Test saving list of location sectors
      */
     @Test
-    public void saveAll_Positive() throws LocationSectorsDoesNotExistForLocation {
+    public void saveAll_Positive() throws LocationSectorsDoesNotExistForLocation, LocationNotFound {
         locationSectorService.saveAll(Arrays.asList(west, east));
 
         List<LocationSector> spensSectors = locationSectorService.get(spens.getId());

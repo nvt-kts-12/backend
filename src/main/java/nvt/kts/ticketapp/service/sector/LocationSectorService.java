@@ -2,6 +2,7 @@ package nvt.kts.ticketapp.service.sector;
 
 import nvt.kts.ticketapp.domain.dto.event.LocationSectorsDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationSector;
+import nvt.kts.ticketapp.exception.location.LocationNotFound;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
 import nvt.kts.ticketapp.exception.sector.LocationSectorDoesNotExist;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public interface LocationSectorService {
      *
      * @param locationSectors
      */
-    List<LocationSectorsDTO> saveAll(List<LocationSector> locationSectors);
+    List<LocationSectorsDTO> saveAll(List<LocationSector> locationSectors) throws LocationNotFound;
 
     /**
      * Method provides all location sectors that are assigned to location with passed id
