@@ -49,7 +49,8 @@ public class LocationSectorServiceUnitTest {
     private final Long EXISTING_SECTOR2_ID = 2L;
     private final Long EXISTING_SCHEME_ID = 1L;
     private final Long EXISTING_LOCATION_ID = 1L;
-    private final Long NONEXISTENT_LOCATION_ID = 2L;
+    private final Long EXISTING_LOCATION2_ID = 2L;
+    private final Long NONEXISTENT_LOCATION_ID = 5L;
     private final Long EXISTING_LOCATION_SECTOR_ID = 1L;
 
     private static LocationScheme locationScheme;
@@ -66,7 +67,9 @@ public class LocationSectorServiceUnitTest {
         locationScheme.setId(EXISTING_SCHEME_ID);
 
         location = new Location(locationScheme);
+        location.setId(EXISTING_LOCATION_ID);
         location2 = new Location(locationScheme);
+        location2.setId(EXISTING_LOCATION2_ID);
 
         sector = new Sector(10.0, 10.0,
                 0.0, 0.0, 100,
@@ -82,8 +85,12 @@ public class LocationSectorServiceUnitTest {
 
         when(locationSectorRepository.findAllByLocationIdAndDeletedFalse(EXISTING_LOCATION_ID)).
                 thenReturn(Arrays.asList(locationSector, locationSector2));
-        when(locationRepository.findByIdAndDeletedFalse(locationSector.getId())).thenReturn(Optional.of(location));
-        when(locationRepository.findByIdAndDeletedFalse(locationSector2.getId())).thenReturn(Optional.of(location2));
+        when(locationRepository.findByIdAndDeletedFalse(EXISTING_LOCATION_ID)).thenReturn(Optional.of(location));
+        when(locationRepository.findByIdAndDeletedFalse(EXISTING_LOCATION2_ID)).thenReturn(Optional.of(location2));
+        when(sectorRepository.findByIdAndDeletedFalse(EXISTING_SECTOR_ID)).thenReturn(Optional.of(sector));
+        when(sectorRepository.findByIdAndDeletedFalse(EXISTING_SECTOR2_ID)).thenReturn(Optional.of(sector2));
+        when(locationSectorRepository.save(any(LocationSector.class))).thenReturn(locationSector);
+
 
         locationSectorService = new LocationSectorServiceImpl(locationSectorRepository, sectorRepository, locationRepository);
     }
@@ -95,7 +102,7 @@ public class LocationSectorServiceUnitTest {
 
         assertNotNull(locationSectorsDTOS);
         assertEquals(2, locationSectorsDTOS.size());
-        verify(locationSectorRepository, times(1)).save(any(LocationSector.class));
+        verify(locationSectorRepository, times(2)).save(any(LocationSector.class));
     }
 
     @Test

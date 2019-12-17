@@ -1,15 +1,9 @@
 package nvt.kts.ticketapp.controller.location;
 
-import nvt.kts.ticketapp.domain.dto.event.LocationDTO;
 import nvt.kts.ticketapp.domain.dto.location.PlainLocationDTO;
-import nvt.kts.ticketapp.domain.model.location.LocationSector;
 import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeDoesNotExist;
 import nvt.kts.ticketapp.service.location.LocationService;
-import nvt.kts.ticketapp.service.location.LocationServiceImpl;
 import nvt.kts.ticketapp.service.sector.LocationSectorService;
-import nvt.kts.ticketapp.service.sector.LocationSectorServiceImpl;
-import nvt.kts.ticketapp.service.sector.SectorService;
-import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +24,7 @@ public class LocationController {
     private LocationService locationService;
     private LocationSectorService locationSectorService;
 
-    public LocationController(LocationServiceImpl locationService, LocationSectorServiceImpl locationSectorService){
+    public LocationController(LocationService locationService, LocationSectorService locationSectorService){
         this.locationService = locationService;
         this.locationSectorService = locationSectorService;
     }
