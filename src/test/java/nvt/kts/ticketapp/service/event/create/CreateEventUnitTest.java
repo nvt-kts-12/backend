@@ -115,7 +115,7 @@ public class CreateEventUnitTest{
 
         LocationDTO locationDTO = new LocationDTO(locationScheme.getId(), locationSectorsDTOS );
 
-        EventDayDTO eventDayDTO = new EventDayDTO("2020-01-18", locationDTO, "2020-01-16");
+        EventDayDTO eventDayDTO = new EventDayDTO("2021-01-18", locationDTO, "2021-01-16");
 
         evenyDays.add(eventDayDTO);
 
@@ -161,10 +161,10 @@ public class CreateEventUnitTest{
         LocationDTO locationDTO2 =  new LocationDTO(locationScheme.getId(), locationSectorsDTOS2 );
 
         // EventDay 1
-        EventDayDTO eventDayDTO = new EventDayDTO("2020-01-18", locationDTO, "2020-01-16");
+        EventDayDTO eventDayDTO = new EventDayDTO("2021-01-18", locationDTO, "2021-01-16");
 
         // EventDay 2
-        EventDayDTO eventDayDTO2 = new EventDayDTO("2020-01-19", locationDTO2, "2020-01-17");
+        EventDayDTO eventDayDTO2 = new EventDayDTO("2021-01-19", locationDTO2, "2021-01-17");
 
         eventDays.add(eventDayDTO);
         eventDays.add(eventDayDTO2);
@@ -382,7 +382,7 @@ public class CreateEventUnitTest{
 
         List<EventDay> eventDays = new ArrayList<>();
         EventDay eventDay = new EventDay();
-        eventDay.setDate(DateUtil.parseDate("2020-01-18", "yyyy-MM-dd"));
+        eventDay.setDate(DateUtil.parseDate("2021-01-18", "yyyy-MM-dd"));
         eventDay.setLocation(location);
         eventDays.add(eventDay);
 
@@ -438,7 +438,7 @@ public class CreateEventUnitTest{
         EventDTO eventDTO = generateEventDTO();
         EventEventDaysDTO eventEventDaysDTO = generateOneEventDayDTO(eventDTO);
 
-        eventEventDaysDTO.getEventDays().get(0).setReservationExpireDate("2020-01-19");
+        eventEventDaysDTO.getEventDays().get(0).setReservationExpireDate("2021-01-19");
 
         try {
             Event createdEvent = eventService.create(eventEventDaysDTO);
