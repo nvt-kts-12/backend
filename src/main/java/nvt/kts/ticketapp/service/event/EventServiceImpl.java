@@ -225,10 +225,10 @@ public class EventServiceImpl implements EventService {
 
         if (searchQuery == null && dateFilter == null && typeFilter == null && locationFilter == null) {
             Page<Event> events = eventRepository.findAll(pageable);
-            return new EventsDTO(events.getContent(), events.getNumberOfElements());
+            return new EventsDTO(events.getContent(), events.getTotalElements());
         } else {
             Page<Event> events = eventRepository.executeCustomQuery(pageable, searchQuery, dateFilter, typeFilter, locationFilter);
-            return new EventsDTO(events.getContent(), events.getNumberOfElements());
+            return new EventsDTO(events.getContent(), events.getTotalElements());
         }
     }
 
