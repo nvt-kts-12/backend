@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Repository
 public class CustomEventRepositoryImpl implements CustomEventRepository {
@@ -59,7 +60,12 @@ public class CustomEventRepositoryImpl implements CustomEventRepository {
         TypedQuery<Event> query = em.createQuery(queryString, Event.class)
                 .setMaxResults(pageable.getPageSize())
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-        return new PageImpl<>(query.getResultList());
+
+        TypedQuery<Event> query1 = em.createQuery(queryString, Event.class);
+
+        int total = query1.getResultList().size();
+
+        return new PageImpl<>(query.getResultList(), pageable, total);
     }
 
     private String addAndIfNeeded(String queryString, boolean andNeeded) {
