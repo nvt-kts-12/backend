@@ -13,9 +13,9 @@ public class EventsDTO {
 
     private List<Event> events = new ArrayList<>();
 
-    private int numberOfElements;
+    private long numberOfElements;
 
-    public EventsDTO(List<Event> eventList, int numberOfElements) {
+    public EventsDTO(List<Event> eventList, long numberOfElements) {
         this.events.addAll(eventList);
         this.numberOfElements = numberOfElements;
     }
