@@ -69,7 +69,7 @@ public class LocationSchemeControllerIntegrationTest {
      */
     @Test
     public void get_Positive() throws LocationSchemeDoesNotExist {
-        ResponseEntity<LocationSchemeDTO> providedMarakana = restTemplate.withBasicAuth("username", "password")
+        ResponseEntity<LocationSchemeDTO> providedMarakana = restTemplate.withBasicAuth("admin", "password")
                 .getForEntity(URL_PREFIX + "/" + marakanaScheme.getId(), LocationSchemeDTO.class);
 
         assertNotNull(providedMarakana.getBody());
@@ -85,7 +85,7 @@ public class LocationSchemeControllerIntegrationTest {
      */
     @Test
     public void get_Negative() throws LocationSchemeDoesNotExist {
-        ResponseEntity<String> response = restTemplate.withBasicAuth("username", "password")
+        ResponseEntity<String> response = restTemplate.withBasicAuth("admin", "password")
                 .getForEntity(URL_PREFIX + "/19", String.class);
 
         assertNotNull(response.getBody());
