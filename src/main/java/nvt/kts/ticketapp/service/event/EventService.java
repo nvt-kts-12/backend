@@ -40,5 +40,7 @@ public interface EventService  {
     List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, EventDayDoesNotExistOrStateIsNotValid, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException, TicketListCantBeEmpty;
 //    Page<Event> executeCustomQuery(Pageable pageable, String searchQuery, String dateFilter, String typeFilter, String locationFilter);
     EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails)throws EventdayNotFound,DateFormatIsNotValid;
+
+    List<EventDayDTOHomePage> getEventDays(Long id) throws EventdayNotFound;
 }
 

@@ -56,7 +56,7 @@ public class ShowUserIntegrationTest {
 
         String username = "username";
 
-        User foundUser = userService.findByUsername(username);
+        User foundUser = (User) userService.findByUsername(username);
 
         assertNotNull(foundUser);
         assertEquals(foundUser.getUsername(), "username");

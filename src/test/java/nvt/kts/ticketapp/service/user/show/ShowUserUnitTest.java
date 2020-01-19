@@ -38,7 +38,7 @@ public class ShowUserUnitTest {
 
         Mockito.when(userRepositoryMocked.findOneByUsername(username)).thenReturn(Optional.of(user));
 
-        User foundUser = userService.findByUsername(username);
+        User foundUser = (User) userService.findByUsername(username);
 
         assertNotNull(foundUser);
         assertEquals(foundUser.getUsername(), user.getUsername());

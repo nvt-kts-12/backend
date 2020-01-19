@@ -11,13 +11,21 @@ import java.util.List;
 @NoArgsConstructor
 public class EventsDTO {
 
-    private List<Event> events = new ArrayList<>();
+//    private List<Event> events = new ArrayList<>();
+//
+//    private long numberOfElements;
+//
+//    public EventsDTO(List<Event> eventList, long numberOfElements) {
+//        this.events.addAll(eventList);
+//        this.numberOfElements = numberOfElements;
+//    }
 
-    private long numberOfElements;
+    private List<EventDTO> events = new ArrayList<>();
 
-    public EventsDTO(List<Event> eventList, long numberOfElements) {
-        this.events.addAll(eventList);
+    private int numberOfElements;
+
+    public EventsDTO(List<EventDTO> events, int numberOfElements) {
+        this.events = events;
         this.numberOfElements = numberOfElements;
     }
-
 }

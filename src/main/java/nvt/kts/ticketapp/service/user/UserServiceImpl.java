@@ -2,6 +2,7 @@ package nvt.kts.ticketapp.service.user;
 
 import nvt.kts.ticketapp.domain.dto.user.UserEditDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserRegistrationDTO;
+import nvt.kts.ticketapp.domain.model.user.AbstractUser;
 import nvt.kts.ticketapp.domain.model.user.Admin;
 import nvt.kts.ticketapp.domain.model.user.Authority;
 import nvt.kts.ticketapp.domain.model.user.User;
@@ -80,11 +81,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) throws UserNotFound{
+    public AbstractUser findByUsername(String username) throws UserNotFound{
         Optional<User> u = userRepository.findOneByUsername(username);
         if (u.isPresent()) {
             return u.get();
         } else {
+            Optional<Admin> a = adminRepository.findOneByUsername(username);
+            if (a.isPresent()) {
+                return a.get();
+            }
             throw new UserNotFound();
         }
     }
