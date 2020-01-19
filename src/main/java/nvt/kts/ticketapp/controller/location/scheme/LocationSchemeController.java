@@ -6,6 +6,7 @@ import nvt.kts.ticketapp.service.location.LocationSchemeService;
 import nvt.kts.ticketapp.service.location.LocationSchemeServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class LocationSchemeController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity get(@PathVariable Long id){
         try {
             return new ResponseEntity<LocationSchemeDTO>(locationSchemeService.get(id), HttpStatus.OK);

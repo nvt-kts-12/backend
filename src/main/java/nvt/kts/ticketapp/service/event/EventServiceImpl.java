@@ -239,8 +239,8 @@ public class EventServiceImpl implements EventService {
                 eventDTO.setDates(dates);
             }
 
-            return new EventsDTO(eventDTOList, eventDTOList.size());
-//            return new EventsDTO(events.getContent(), events.getTotalElements());
+            return new EventsDTO(eventDTOList, events.getTotalElements());
+            
         } else {
             Page<Event> events = eventRepository.executeCustomQuery(pageable, searchQuery, dateFilter, typeFilter, locationFilter);
 
@@ -256,9 +256,8 @@ public class EventServiceImpl implements EventService {
                 eventDTO.setDates(dates);
             }
 
-            return new EventsDTO(eventDTOList, eventDTOList.size());
+            return new EventsDTO(eventDTOList, events.getTotalElements());
 
-//            return new EventsDTO(events.getContent(), events.getTotalElements());
         }
     }
 

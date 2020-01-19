@@ -73,7 +73,7 @@ public class LocationSchemeControllerUnitTest {
      */
     @Test
     public void get_Positive() throws LocationSchemeDoesNotExist {
-        ResponseEntity<LocationSchemeDTO> response = testRestTemplate.withBasicAuth("username", "password")
+        ResponseEntity<LocationSchemeDTO> response = testRestTemplate.withBasicAuth("admin", "password")
                 .getForEntity(URL_PREFIX + "/1", LocationSchemeDTO.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -88,7 +88,7 @@ public class LocationSchemeControllerUnitTest {
      */
     @Test
     public void get_Negative() throws LocationSchemeDoesNotExist {
-        ResponseEntity<LocationSchemeDTO> response = testRestTemplate.withBasicAuth("username", "password")
+        ResponseEntity<LocationSchemeDTO> response = testRestTemplate.withBasicAuth("admin", "password")
                 .getForEntity(URL_PREFIX + "/2", LocationSchemeDTO.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
