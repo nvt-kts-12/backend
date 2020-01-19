@@ -1,6 +1,8 @@
 package nvt.kts.ticketapp.service.user;
 
+import nvt.kts.ticketapp.domain.model.user.Admin;
 import nvt.kts.ticketapp.domain.model.user.User;
+import nvt.kts.ticketapp.repository.user.AdminRepository;
 import nvt.kts.ticketapp.repository.user.UserRepository;
 import nvt.kts.ticketapp.security.TokenUtils;
 import org.apache.commons.logging.Log;
@@ -28,6 +30,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -51,6 +56,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user.isPresent()) {
             return user.get();
         } else {
+
+            Optional<Admin> admin = adminRepository.findOneByUsername(username);
+            if (admin.isPresent()) {
+                return admin.get();
+            }
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         }
     }

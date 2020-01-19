@@ -1,6 +1,7 @@
 package nvt.kts.ticketapp.service.event.searchAndFilter;
 
 import nvt.kts.ticketapp.ClearDatabaseRule;
+import nvt.kts.ticketapp.domain.dto.event.EventDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventsDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventCategory;
@@ -85,7 +86,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(eventsDTO);
         assertEquals(eventsDTO.getNumberOfElements(), 2);
 
-        List<Event> events = eventsDTO.getEvents();
+        List<EventDTO> events = eventsDTO.getEvents();
         assertEquals(events.size(), 2);
 
         assertEquals(events.get(0).getName(), "name");
@@ -108,7 +109,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(eventsDTO);
         assertEquals(eventsDTO.getNumberOfElements(), 2);
 
-        List<Event> events = eventsDTO.getEvents();
+        List<EventDTO> events = eventsDTO.getEvents();
         assertEquals(events.size(), 2);
 
         assertEquals(events.get(0).getName(), "name");
@@ -131,7 +132,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(eventsDTO);
         assertEquals(eventsDTO.getNumberOfElements(), 1);
 
-        List<Event> events = eventsDTO.getEvents();
+        List<EventDTO> events = eventsDTO.getEvents();
         assertEquals(events.size(), 1);
 
         assertEquals(events.get(0).getName(), "name");
@@ -151,7 +152,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(eventsDTO);
         assertEquals(eventsDTO.getNumberOfElements(), 1);
 
-        List<Event> events = eventsDTO.getEvents();
+        List<EventDTO> events = eventsDTO.getEvents();
         assertEquals(events.size(), 1);
 
         assertEquals(events.get(0).getName(), "name2");
@@ -171,7 +172,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(eventsDTO);
         assertEquals(eventsDTO.getNumberOfElements(), 1);
 
-        List<Event> events = eventsDTO.getEvents();
+        List<EventDTO> events = eventsDTO.getEvents();
         assertEquals(events.size(), 1);
 
         assertEquals(events.get(0).getName(), "name");
@@ -191,7 +192,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(eventsDTO);
         assertEquals(eventsDTO.getNumberOfElements(), 0);
 
-        List<Event> events = eventsDTO.getEvents();
+        List<EventDTO> events = eventsDTO.getEvents();
         assertEquals(events.size(), 0);
 
     }
@@ -207,7 +208,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(eventsDTO);
         assertEquals(eventsDTO.getNumberOfElements(), 1);
 
-        List<Event> events = eventsDTO.getEvents();
+        List<EventDTO> events = eventsDTO.getEvents();
         assertEquals(events.size(), 1);
 
         assertEquals(events.get(0).getName(), "name");

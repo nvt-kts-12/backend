@@ -26,8 +26,8 @@ public class User extends AbstractUser implements UserDetails {
     @NotNull
     private String email;
 
-    @Column(name = "last_password_reset_date")
-    private Timestamp lastPasswordResetDate;
+//    @Column(name = "last_password_reset_date")
+//    private Timestamp lastPasswordResetDate;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority",
@@ -40,11 +40,11 @@ public class User extends AbstractUser implements UserDetails {
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        Timestamp now = new Timestamp(DateTime.now().getMillis());
-        this.setLastPasswordResetDate( now );
-        this.password = password;
-    }
+//    public void setPassword(String password) {
+//        Timestamp now = new Timestamp(DateTime.now().getMillis());
+//        this.setLastPasswordResetDate( now );
+//        this.password = password;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

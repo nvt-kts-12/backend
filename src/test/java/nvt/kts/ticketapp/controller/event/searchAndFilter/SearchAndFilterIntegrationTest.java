@@ -1,6 +1,7 @@
 package nvt.kts.ticketapp.controller.event.searchAndFilter;
 
 import nvt.kts.ticketapp.ClearDatabaseRule;
+import nvt.kts.ticketapp.domain.dto.event.EventDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventsDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventCategory;
@@ -95,7 +96,7 @@ public class SearchAndFilterIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         assertNotNull(response.getBody());
-        List<Event> events  = response.getBody().getEvents();
+        List<EventDTO> events  = response.getBody().getEvents();
 
         assertEquals(events.size(), 2);
 
@@ -125,7 +126,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(response.getBody().getNumberOfElements(), 2);
 
-        List<Event> events  = response.getBody().getEvents();
+        List<EventDTO> events  = response.getBody().getEvents();
         assertEquals(events.size(), 2);
 
         assertEquals(events.get(0).getName(), "name");
@@ -154,7 +155,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(response.getBody().getNumberOfElements(), 1);
 
-        List<Event> events  = response.getBody().getEvents();
+        List<EventDTO> events  = response.getBody().getEvents();
         assertEquals(events.size(), 1);
 
 
@@ -180,7 +181,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(response.getBody().getNumberOfElements(), 1);
 
-        List<Event> events  = response.getBody().getEvents();
+        List<EventDTO> events  = response.getBody().getEvents();
         assertEquals(events.size(), 1);
 
         assertEquals(events.get(0).getName(), "name2");
@@ -205,7 +206,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(response.getBody().getNumberOfElements(), 1);
 
-        List<Event> events  = response.getBody().getEvents();
+        List<EventDTO> events  = response.getBody().getEvents();
         assertEquals(events.size(), 1);
 
         assertEquals(events.get(0).getName(), "name");
@@ -234,7 +235,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(response.getBody().getNumberOfElements(), 0);
 
-        List<Event> events  = response.getBody().getEvents();
+        List<EventDTO> events  = response.getBody().getEvents();
         assertEquals(events.size(), 0);
 
     }
@@ -259,7 +260,7 @@ public class SearchAndFilterIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(response.getBody().getNumberOfElements(), 1);
 
-        List<Event> events  = response.getBody().getEvents();
+        List<EventDTO> events  = response.getBody().getEvents();
         assertEquals(events.size(), 1);
 
         assertEquals(events.get(0).getName(), "name");

@@ -2,6 +2,7 @@ package nvt.kts.ticketapp.service.event;
 
 import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.*;
+import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
@@ -225,11 +226,75 @@ public class EventServiceImpl implements EventService {
 
         if (searchQuery == null && dateFilter == null && typeFilter == null && locationFilter == null) {
             Page<Event> events = eventRepository.findAll(pageable);
-            return new EventsDTO(events.getContent(), events.getTotalElements());
+
+            List<EventDTO> eventDTOList = ObjectMapperUtils.mapAll(events.getContent(), EventDTO.class);
+
+            for (EventDTO eventDTO : eventDTOList) {
+                List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventDTO.getId());
+
+                List<String> dates = new ArrayList<>();
+                for(EventDay eventDay : eventDays ) {
+                    dates.add(eventDay.getDate().toString());
+                }
+                eventDTO.setDates(dates);
+            }
+
+            return new EventsDTO(eventDTOList, eventDTOList.size());
+//            return new EventsDTO(events.getContent(), events.getTotalElements());
         } else {
             Page<Event> events = eventRepository.executeCustomQuery(pageable, searchQuery, dateFilter, typeFilter, locationFilter);
-            return new EventsDTO(events.getContent(), events.getTotalElements());
+
+            List<EventDTO> eventDTOList = ObjectMapperUtils.mapAll(events.getContent(), EventDTO.class);
+
+            for (EventDTO eventDTO : eventDTOList) {
+                List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventDTO.getId());
+
+                List<String> dates = new ArrayList<>();
+                for(EventDay eventDay : eventDays ) {
+                    dates.add(eventDay.getDate().toString());
+                }
+                eventDTO.setDates(dates);
+            }
+
+            return new EventsDTO(eventDTOList, eventDTOList.size());
+
+//            return new EventsDTO(events.getContent(), events.getTotalElements());
         }
+    }
+
+    @Override
+    public List<EventDayDTOHomePage> getEventDays(Long id) throws EventdayNotFound {
+        EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(id).
+                orElseThrow(()-> new EventdayNotFound(id));
+
+        List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventDay.getId());
+
+        List<EventDayDTOHomePage> result = new ArrayList<>();
+        for(EventDay ed : eventDays) {
+            List<LocationSector> locationSectors = locationSectorRepository.findAllByLocationIdAndDeletedFalse(ed.getLocation().getId());
+
+            List<LocationSectorsDTO2> locationSectorsDTO2 = new ArrayList<>();
+
+            for(LocationSector  locationSector : locationSectors) {
+                LocationSectorsDTO2 ls = new LocationSectorsDTO2(
+                        locationSector.getSector().getType(), locationSector.getSector().getId(), locationSector.getPrice(),
+                        locationSector.isVip()
+                );
+                locationSectorsDTO2.add(ls);
+            }
+
+            EventDayDTOHomePage eventDayDTOHomePage = new EventDayDTOHomePage(
+                    ed.getId(), new EventDTO(ed.getEvent()) ,ed.getDate().toString(),
+                    ed.getReservationExpirationDate().toString(),
+                    ed.getState(), ed.getLocation().getScheme().getId(),
+                    ed.getLocation().getScheme().getName(),
+                    ed.getLocation().getScheme().getAddress(),
+                    locationSectorsDTO2
+            );
+            result.add(eventDayDTOHomePage);
+        }
+
+        return result;
     }
 
     @Override

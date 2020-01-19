@@ -2,6 +2,7 @@ package nvt.kts.ticketapp.controller.auth;
 
 import nvt.kts.ticketapp.domain.dto.user.UserDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserRegistrationDTO;
+import nvt.kts.ticketapp.domain.model.user.AbstractUser;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.domain.model.user.UserTokenState;
 import nvt.kts.ticketapp.exception.user.*;
@@ -69,7 +70,7 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        User user = (User) authentication.getPrincipal();
+        AbstractUser user = (AbstractUser) authentication.getPrincipal();
         String jwt = tokenUtils.generateToken(user.getUsername());
         int expiresIn = tokenUtils.getExpiredIn();
 

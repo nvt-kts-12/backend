@@ -95,7 +95,7 @@ public class EventController {
 
         List<Ticket> tickets = null;
          try {
-             User u = userService.findByUsername(user.getName());
+             User u = (User) userService.findByUsername(user.getName());
              tickets = eventService.reserve(eventDayReservationDTO, u);
          } catch (LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible | UserNotFound ex) {
              ex.printStackTrace();
@@ -134,5 +134,18 @@ public class EventController {
             ex.printStackTrace();
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getEventDays(@PathVariable Long id) {
+        List<EventDayDTOHomePage> result = null;
+        try {
+            result = eventService.getEventDays(id);
+        } catch (EventdayNotFound ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

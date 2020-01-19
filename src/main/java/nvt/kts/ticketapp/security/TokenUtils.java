@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import nvt.kts.ticketapp.common.TimeProvider;
+import nvt.kts.ticketapp.domain.model.user.AbstractUser;
 import nvt.kts.ticketapp.domain.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -116,7 +117,7 @@ public class TokenUtils {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        User user = (User) userDetails;
+        AbstractUser user = (AbstractUser) userDetails;
         final String username = getUsernameFromToken(token);
         final Date created = getIssuedAtDateFromToken(token);
 

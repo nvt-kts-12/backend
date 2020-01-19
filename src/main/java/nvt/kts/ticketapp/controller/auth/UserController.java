@@ -3,6 +3,7 @@ package nvt.kts.ticketapp.controller.auth;
 import nvt.kts.ticketapp.domain.dto.ticket.TicketsDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserEditDTO;
+import nvt.kts.ticketapp.domain.model.user.AbstractUser;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.user.EmailNotValid;
 import nvt.kts.ticketapp.exception.user.FirstNameNotValid;
@@ -36,10 +37,9 @@ public class UserController {
 
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('REGISTERED')")
     public ResponseEntity user(Principal user) {
         try {
-            User u = userService.findByUsername(user.getName());
+            AbstractUser u = userService.findByUsername(user.getName());
             return new ResponseEntity<UserDTO>(ObjectMapperUtils.map(u, UserDTO.class), HttpStatus.OK);
         } catch (UserNotFound unf) {
             unf.printStackTrace();
@@ -63,7 +63,7 @@ public class UserController {
     @PreAuthorize("hasRole('REGISTERED')")
     public ResponseEntity getReservations(Principal user) {
         try {
-            User u = userService.findByUsername(user.getName());
+            User u = (User) userService.findByUsername(user.getName());
             return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getReservationsFromUser(u.getId())), HttpStatus.OK);
         } catch (UserNotFound unf) {
             unf.printStackTrace();
@@ -75,7 +75,7 @@ public class UserController {
     @PreAuthorize("hasRole('REGISTERED')")
     public ResponseEntity getBoughtTickets(Principal user) {
         try {
-            User u = userService.findByUsername(user.getName());
+            User u = (User) userService.findByUsername(user.getName());
             return new ResponseEntity<TicketsDTO>(new TicketsDTO(ticketService.getBoughtTicketsFromUser(u.getId())), HttpStatus.OK);
         } catch (UserNotFound unf) {
             unf.printStackTrace();
