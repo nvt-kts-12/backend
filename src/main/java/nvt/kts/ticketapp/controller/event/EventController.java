@@ -151,7 +151,7 @@ public class EventController {
     }
 
     @GetMapping("/eventDay/{id}")
-    @PreAuthorize("hasRole('REGISTERED'}")
+//    @PreAuthorize("hasRole('REGISTERED')")
     public ResponseEntity getEventDay(@PathVariable Long id) {
         EventDayBuyingDTO result = null;
         try {

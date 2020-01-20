@@ -99,7 +99,7 @@ public class GetEventDayIntegrationTest {
     public void getEventDay_Negative(){
         String url = URL + NONEXISTENT_EVENTDAY_ID;
 
-        ResponseEntity<EventDayBuyingDTO> response = restTemplate.getForEntity(url, EventDayBuyingDTO.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
