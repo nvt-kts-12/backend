@@ -49,7 +49,7 @@ import java.text.ParseException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="api/event")
+@RequestMapping(path = "api/event")
 public class EventController {
 
     private EventService eventService;
@@ -65,57 +65,58 @@ public class EventController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity save (@RequestBody @Valid  EventEventDaysDTO eventEventDaysDTO){
+    public ResponseEntity save(@RequestBody @Valid EventEventDaysDTO eventEventDaysDTO) {
 
-         Event event = null;
-         try {
-             event = eventService.create(eventEventDaysDTO);
-         } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
-             ex.printStackTrace();
-             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-         }
+        Event event = null;
+        try {
+            event = eventService.create(eventEventDaysDTO);
+        } catch (DateFormatIsNotValid | LocationSchemeDoesNotExist | SectorDoesNotExist | LocationNotAvailableThatDate | EventDaysListEmpty | SectorCapacityOverload | DateCantBeInThePast | ReservationExpireDateInvalid | ParseException ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
-         return new ResponseEntity<EventDTO>(ObjectMapperUtils.map(event, EventDTO.class), HttpStatus.OK);
-     }
+        return new ResponseEntity<EventDTO>(ObjectMapperUtils.map(event, EventDTO.class), HttpStatus.OK);
+    }
 
     @GetMapping("/show-events")
-    public ResponseEntity<EventsDTO> show (Pageable pageable, @RequestParam(required=false) String searchQuery,
-                                               @RequestParam(required=false) String dateFilter,
-                                               @RequestParam(required=false) String typeFilter,
-                                               @RequestParam(required=false) String locationFilter) {
+    public ResponseEntity<EventsDTO> show(Pageable pageable, @RequestParam(required = false) String searchQuery,
+                                          @RequestParam(required = false) String dateFilter,
+                                          @RequestParam(required = false) String typeFilter,
+                                          @RequestParam(required = false) String locationFilter) {
 
-         return new ResponseEntity<EventsDTO>(eventService.findAll(pageable, searchQuery,
-                 dateFilter, typeFilter, locationFilter),HttpStatus.OK);
-     }
+        return new ResponseEntity<EventsDTO>(eventService.findAll(pageable, searchQuery,
+                dateFilter, typeFilter, locationFilter), HttpStatus.OK);
+    }
 
 
     @PostMapping("/reserve")
     @PreAuthorize("hasRole('REGISTERED')")
-    public ResponseEntity reserve(Principal user, @RequestBody @Valid  EventDayReservationDTO eventDayReservationDTO) {
+    public ResponseEntity reserve(Principal user, @RequestBody @Valid EventDayReservationDTO eventDayReservationDTO) {
 
         List<Ticket> tickets = null;
-         try {
-             User u = (User) userService.findByUsername(user.getName());
-             tickets = eventService.reserve(eventDayReservationDTO, u);
-         } catch (LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible | UserNotFound ex) {
-             ex.printStackTrace();
-             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-         } catch (ObjectOptimisticLockingFailureException | TicketListCantBeEmpty e) {
-             e.printStackTrace();
-             return new ResponseEntity<String>("Something went wrong! Please try again.", HttpStatus.EXPECTATION_FAILED);
-         } catch (IOException| WriterException e) {
-             e.printStackTrace();
-             return new ResponseEntity<String>("Could not generate QR code", HttpStatus.EXPECTATION_FAILED);
-         }
+        try {
+            User u = (User) userService.findByUsername(user.getName());
+            tickets = eventService.reserve(eventDayReservationDTO, u);
+        } catch (LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible | UserNotFound ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ObjectOptimisticLockingFailureException | TicketListCantBeEmpty e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("Something went wrong! Please try again.", HttpStatus.EXPECTATION_FAILED);
+        } catch (IOException | WriterException e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("Could not generate QR code", HttpStatus.EXPECTATION_FAILED);
+        }
 
-        return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets),HttpStatus.OK);
-     }
+        return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity update(@PathVariable(value = "id") Long eventId, @RequestBody @Valid  EventDTO eventDetails){
+    public ResponseEntity update(@PathVariable(value = "id") Long eventId, @RequestBody @Valid EventDTO eventDetails) {
         EventDTO eventDTO = null;
         try {
-            eventDTO = eventService.update(eventId,eventDetails);
+            eventDTO = eventService.update(eventId, eventDetails);
             return new ResponseEntity<EventDTO>(eventDTO, HttpStatus.OK);
         } catch (EventNotFound eventNotFound) {
             eventNotFound.printStackTrace();
@@ -126,7 +127,7 @@ public class EventController {
 
     @PutMapping("/eventDay/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity updateEventDay(@PathVariable Long id, @RequestBody @Valid  EventDayUpdateDTO eventDayUpdateDTO){
+    public ResponseEntity updateEventDay(@PathVariable Long id, @RequestBody @Valid EventDayUpdateDTO eventDayUpdateDTO) {
 
         try {
             return new ResponseEntity<EventDayUpdateDTO>(eventService.updateEventDay(id, eventDayUpdateDTO), HttpStatus.OK);
@@ -146,6 +147,19 @@ public class EventController {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/eventDay/{id}")
+    @PreAuthorize("hasRole('REGISTERED')")
+    public ResponseEntity getEventDay(@PathVariable Long id) {
+        EventDayBuyingDTO result = null;
+        try {
+            result = eventService.getEventDay(id);
+        } catch (EventdayNotFound ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

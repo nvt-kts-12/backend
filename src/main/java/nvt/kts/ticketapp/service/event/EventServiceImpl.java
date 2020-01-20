@@ -3,6 +3,7 @@ package nvt.kts.ticketapp.service.event;
 import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
+import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
@@ -333,6 +334,24 @@ public class EventServiceImpl implements EventService {
         return  tickets;
     }
 
+
+    @Override
+    public EventDayBuyingDTO getEventDay(Long id) throws EventdayNotFound {
+        EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new EventdayNotFound(id));
+
+        List<LocationSector> locationSectors = locationSectorRepository.
+                findAllByLocationIdAndDeletedFalse(eventDay.getLocation().getId());
+
+        List<SectorDTO> eventDaysSectors = ObjectMapperUtils.mapAll(locationSectors, SectorDTO.class);
+
+        return new EventDayBuyingDTO(eventDay.getId(),
+                new EventDTO(eventDay.getEvent()), eventDay.getDate().toString(),
+                eventDay.getReservationExpirationDate().toString(), eventDay.getState(),
+                eventDay.getLocation().getId(), eventDay.getLocation().getScheme().getName(),
+                eventDay.getLocation().getScheme().getAddress(), eventDaysSectors);
+    }
+
+
     private List<Ticket> reserveGrandstand(EventDayReservationDTO eventDayReservationDTO, List<LocationSector> locationSectors, EventDay eventDay, User user) throws SectorWrongType, SeatIsNotAvailable, SectorNotFound {
 
         List<Ticket> reservedTickets = new ArrayList<>();
@@ -439,5 +458,7 @@ public class EventServiceImpl implements EventService {
         ticketEmailService.sendEmailForPurchasedTickets(tickets.get(0).getUser().getEmail(), purchasedTickets);
 
     }
+
+
 
 }

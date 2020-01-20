@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.controller.event;
 
+import nvt.kts.ticketapp.controller.event.eventDay.GetEventDayIntegrationTest;
 import nvt.kts.ticketapp.controller.event.searchAndFilter.SearchAndFilterIntegrationTest;
 import nvt.kts.ticketapp.controller.event.update.UpdateEventDayIntegrationTest;
 import nvt.kts.ticketapp.controller.event.update.UpdateEventIntegrationTest;
@@ -12,7 +13,8 @@ import org.junit.runners.Suite;
         ReserveEventIntegrationTest.class,
         SearchAndFilterIntegrationTest.class,
         UpdateEventIntegrationTest.class,
-        UpdateEventDayIntegrationTest.class
+        UpdateEventDayIntegrationTest.class,
+        GetEventDayIntegrationTest.class
 })
 public class EventControllerIntegrationTestsSuite {
 }

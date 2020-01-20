@@ -42,5 +42,7 @@ public interface EventService  {
     EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails)throws EventdayNotFound,DateFormatIsNotValid;
 
     List<EventDayDTOHomePage> getEventDays(Long id) throws EventdayNotFound;
+
+    EventDayBuyingDTO getEventDay(Long id) throws EventdayNotFound;
 }
 
