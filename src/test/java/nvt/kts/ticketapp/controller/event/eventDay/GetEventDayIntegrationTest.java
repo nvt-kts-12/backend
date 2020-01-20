@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -62,6 +63,12 @@ public class GetEventDayIntegrationTest {
     private final Long NONEXISTENT_EVENTDAY_ID = 6L;
 
     private EventDay eventDay;
+
+    @PostConstruct
+    public void postConstruct() {
+        this.restTemplate = this.restTemplate.withBasicAuth("username", "password");
+    }
+
 
     @Before
     public void setUp() throws ParseException {
