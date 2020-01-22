@@ -3,7 +3,9 @@ package nvt.kts.ticketapp.controller.auth;
 import nvt.kts.ticketapp.domain.dto.ticket.TicketsDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserEditDTO;
+import nvt.kts.ticketapp.domain.dto.user.UserWithAuthoritiesDTO;
 import nvt.kts.ticketapp.domain.model.user.AbstractUser;
+import nvt.kts.ticketapp.domain.model.user.Admin;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.user.EmailNotValid;
 import nvt.kts.ticketapp.exception.user.FirstNameNotValid;
@@ -40,7 +42,7 @@ public class UserController {
     public ResponseEntity user(Principal user) {
         try {
             AbstractUser u = userService.findByUsername(user.getName());
-            return new ResponseEntity<UserDTO>(ObjectMapperUtils.map(u, UserDTO.class), HttpStatus.OK);
+            return new ResponseEntity<UserWithAuthoritiesDTO>(ObjectMapperUtils.map(u, UserWithAuthoritiesDTO.class), HttpStatus.OK);
         } catch (UserNotFound unf) {
             unf.printStackTrace();
             return new ResponseEntity<String>(unf.getMessage(), HttpStatus.BAD_REQUEST);
