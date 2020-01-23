@@ -4,6 +4,7 @@ import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
 import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
+import nvt.kts.ticketapp.domain.dto.location.SectorForDrawingDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
@@ -102,10 +103,10 @@ public class EventServiceImpl implements EventService {
         }
 
         // create eventDays
-        for (EventDayDTO eventDayDTO: eventEventDaysDTO.getEventDays()) {
+        for (EventDayDTO eventDayDTO : eventEventDaysDTO.getEventDays()) {
 
-            Date date = parseDate(eventDayDTO.getDate(),DATE_FORMAT);
-            Date reservationExpireDate = parseDate(eventDayDTO.getReservationExpireDate(),DATE_FORMAT);
+            Date date = parseDate(eventDayDTO.getDate(), DATE_FORMAT);
+            Date reservationExpireDate = parseDate(eventDayDTO.getReservationExpireDate(), DATE_FORMAT);
 
             // check if dates in past or reservationExpireDate is before event date
             checkDates(date, reservationExpireDate);
@@ -136,15 +137,17 @@ public class EventServiceImpl implements EventService {
 
                 if (locationSector.getSector().getType() == SectorType.PARTER) {
                     // generate tickets for locationSector Parter
-                    for(int i = 0; i < locationSector.getCapacity(); i++) {
-                        Ticket ticket = new Ticket(false, locationSector.getSector().getId(), 0,0, locationSectorsDTO.getPrice(), eventDay, null, locationSectorsDTO.isVip());
+                    for (int i = 0; i < locationSector.getCapacity(); i++) {
+                        Ticket ticket = new Ticket(false, locationSector.getSector().getId(), 0, 0, locationSectorsDTO.getPrice(), eventDay, null, locationSectorsDTO.isVip());
+                        ticket.setSectorType(SectorType.PARTER);
                         tickets.add(ticket);
                     }
                 } else {
                     // generate tickets for locationSector Grandstand
                     for (int row = 1; row <= locationSector.getSector().getRowNum(); row++) {
-                        for(int col = 1; col <= locationSector.getSector().getColNum(); col++) {
+                        for (int col = 1; col <= locationSector.getSector().getColNum(); col++) {
                             Ticket ticket = new Ticket(false, locationSector.getSector().getId(), row, col, locationSectorsDTO.getPrice(), eventDay, null, locationSectorsDTO.isVip());
+                            ticket.setSectorType(SectorType.GRANDSTAND);
                             tickets.add(ticket);
                         }
                     }
@@ -182,15 +185,15 @@ public class EventServiceImpl implements EventService {
         List<EventDay> eventDays = eventDaysRepository.findAllByLocationId(locationSchemeId);
 
         if (!eventDays.isEmpty()) {
-            for (EventDay eventDay: eventDays) {
-                if(DateUtil.datesEqual(eventDay.getDate(), date)) {
+            for (EventDay eventDay : eventDays) {
+                if (DateUtil.datesEqual(eventDay.getDate(), date)) {
                     throw new LocationNotAvailableThatDate();
                 }
             }
         }
     }
 
-    public EventDTO update(Long eventId,EventDTO eventDetails) throws EventNotFound{
+    public EventDTO update(Long eventId, EventDTO eventDetails) throws EventNotFound {
 
         Event event = eventRepository.findByIdAndDeletedFalse(eventId).orElseThrow(() -> new EventNotFound(eventId));
 
@@ -204,26 +207,26 @@ public class EventServiceImpl implements EventService {
     }
 
 
-    public EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails) throws EventdayNotFound,DateFormatIsNotValid{
+    public EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails) throws EventdayNotFound, DateFormatIsNotValid {
 
         EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(id).
-                orElseThrow(()-> new EventdayNotFound(id));
+                orElseThrow(() -> new EventdayNotFound(id));
 
-        Date date = parseDate(eventDayDetails.getDate(),DATE_FORMAT);
-        Date reservationExpireDate = parseDate(eventDayDetails.getReservationExpirationDate(),DATE_FORMAT);
+        Date date = parseDate(eventDayDetails.getDate(), DATE_FORMAT);
+        Date reservationExpireDate = parseDate(eventDayDetails.getReservationExpirationDate(), DATE_FORMAT);
 
         eventDay.setDate(date);
         eventDay.setState(eventDayDetails.getEventDayState());
         eventDay.setReservationExpirationDate(reservationExpireDate);
 
 
-       return ObjectMapperUtils.map(eventDaysRepository.save(eventDay), EventDayUpdateDTO.class);
+        return ObjectMapperUtils.map(eventDaysRepository.save(eventDay), EventDayUpdateDTO.class);
 
     }
 
     @Override
     public EventsDTO findAll(Pageable pageable, String searchQuery, String dateFilter, String typeFilter,
-                               String locationFilter) {
+                             String locationFilter) {
 
         if (searchQuery == null && dateFilter == null && typeFilter == null && locationFilter == null) {
             Page<Event> events = eventRepository.findAll(pageable);
@@ -234,14 +237,14 @@ public class EventServiceImpl implements EventService {
                 List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventDTO.getId());
 
                 List<String> dates = new ArrayList<>();
-                for(EventDay eventDay : eventDays ) {
+                for (EventDay eventDay : eventDays) {
                     dates.add(eventDay.getDate().toString());
                 }
                 eventDTO.setDates(dates);
             }
 
             return new EventsDTO(eventDTOList, events.getTotalElements());
-            
+
         } else {
             Page<Event> events = eventRepository.executeCustomQuery(pageable, searchQuery, dateFilter, typeFilter, locationFilter);
 
@@ -251,7 +254,7 @@ public class EventServiceImpl implements EventService {
                 List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventDTO.getId());
 
                 List<String> dates = new ArrayList<>();
-                for(EventDay eventDay : eventDays ) {
+                for (EventDay eventDay : eventDays) {
                     dates.add(eventDay.getDate().toString());
                 }
                 eventDTO.setDates(dates);
@@ -265,17 +268,17 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDayDTOHomePage> getEventDays(Long id) throws EventdayNotFound {
         EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(id).
-                orElseThrow(()-> new EventdayNotFound(id));
+                orElseThrow(() -> new EventdayNotFound(id));
 
         List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventDay.getId());
 
         List<EventDayDTOHomePage> result = new ArrayList<>();
-        for(EventDay ed : eventDays) {
+        for (EventDay ed : eventDays) {
             List<LocationSector> locationSectors = locationSectorRepository.findAllByLocationIdAndDeletedFalse(ed.getLocation().getId());
 
             List<LocationSectorsDTO2> locationSectorsDTO2 = new ArrayList<>();
 
-            for(LocationSector  locationSector : locationSectors) {
+            for (LocationSector locationSector : locationSectors) {
                 LocationSectorsDTO2 ls = new LocationSectorsDTO2(
                         locationSector.getSector().getType(), locationSector.getSector().getId(), locationSector.getPrice(),
                         locationSector.isVip()
@@ -284,7 +287,7 @@ public class EventServiceImpl implements EventService {
             }
 
             EventDayDTOHomePage eventDayDTOHomePage = new EventDayDTOHomePage(
-                    ed.getId(), new EventDTO(ed.getEvent()) ,ed.getDate().toString(),
+                    ed.getId(), new EventDTO(ed.getEvent()), ed.getDate().toString(),
                     ed.getReservationExpirationDate().toString(),
                     ed.getState(), ed.getLocation().getScheme().getId(),
                     ed.getLocation().getScheme().getName(),
@@ -298,10 +301,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event findOne(Long id){return eventRepository.getOne(id);}
+    public Event findOne(Long id) {
+        return eventRepository.getOne(id);
+    }
 
     @Override
-    public List<Event> findAllEvents(){return eventRepository.findAll();}
+    public List<Event> findAllEvents() {
+        return eventRepository.findAll();
+    }
 
 
     @Override
@@ -331,7 +338,7 @@ public class EventServiceImpl implements EventService {
 
         sendMailsForPurchasedTickets(tickets);
 
-        return  tickets;
+        return tickets;
     }
 
 
@@ -342,7 +349,27 @@ public class EventServiceImpl implements EventService {
         List<LocationSector> locationSectors = locationSectorRepository.
                 findAllByLocationIdAndDeletedFalse(eventDay.getLocation().getId());
 
-        List<SectorDTO> eventDaysSectors = ObjectMapperUtils.mapAll(locationSectors, SectorDTO.class);
+
+        List<SectorForDrawingDTO> eventDaysSectors = new ArrayList<>();
+        for (LocationSector locationSector : locationSectors) {
+
+//            System.out.println("sector.getId() " + locationSector.getId() + " sector.getSector().getId() " + locationSector.getSector().getId());
+//            System.out.println("Searching for sector " + locationSector.getId() + " and event day " + id);
+            List<Ticket> tickets = ticketService.getAvailableTicketsForEventDayAndSector(id, locationSector.getSector().getId());
+
+            int numOfAvailablePlaces = tickets.size();
+            System.out.println("numOfAvailablePlaces " + numOfAvailablePlaces);
+
+
+            SectorForDrawingDTO convertedSector = new SectorForDrawingDTO(locationSector.isDeleted(), locationSector.getSector().getTopLeftX(),
+                    locationSector.getSector().getTopLeftY(), locationSector.getSector().getBottomRightX(),
+                    locationSector.getSector().getBottomRightY(), locationSector.getCapacity(),
+                    locationSector.getSector().getRowNum(), locationSector.getSector().getColNum(),
+                    locationSector.getPrice(), locationSector.getSector().getType(), numOfAvailablePlaces);
+            convertedSector.setId(locationSector.getId());
+
+            eventDaysSectors.add(convertedSector);
+        }
 
         return new EventDayBuyingDTO(eventDay.getId(),
                 new EventDTO(eventDay.getEvent()), eventDay.getDate().toString(),
@@ -350,7 +377,6 @@ public class EventServiceImpl implements EventService {
                 eventDay.getLocation().getId(), eventDay.getLocation().getScheme().getName(),
                 eventDay.getLocation().getScheme().getAddress(), eventDaysSectors);
     }
-
 
     private List<Ticket> reserveGrandstand(EventDayReservationDTO eventDayReservationDTO, List<LocationSector> locationSectors, EventDay eventDay, User user) throws SectorWrongType, SeatIsNotAvailable, SectorNotFound {
 
