@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Objects.isNull;
 
 
 @Service
@@ -58,9 +61,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getAvailableTickets(Long eventDayId) {
-
         return ticketRepository.findAllByEventDayIdAndUserIdNullAndDeletedFalse(eventDayId);
-
     }
 
     @Override
@@ -116,5 +117,17 @@ public class TicketServiceImpl implements TicketService {
         return ObjectMapperUtils.map(ticket, TicketDTO.class);
     }
 
+    public List<TicketDTO> getAllTicketsForSectorAndEventDay(Long sectorId, Long eventDayId){
+        List<Ticket> allTickets = ticketRepository.findAll();
+        List<TicketDTO> ticketsToReturn = new ArrayList<>();
+        for (Ticket ticket: allTickets) {
+            if(ticket.getSectorId() == sectorId && ticket.getEventDay().getId() == eventDayId){
+                ticketsToReturn.add(ObjectMapperUtils.map(ticket, TicketDTO.class));
+                System.out.println(ticket.toString());
+            }
+        }
+
+        return ticketsToReturn;
+    }
 }
 

@@ -20,9 +20,9 @@ insert into location_scheme (id, address, name) values
 insert into sector (id, bottom_rightx, bottom_righty, top_leftx, top_lefty, capacity, col_num, row_num, type, location_scheme_id) values
 (1, "0", "0", "0", "0", 5, 5, 1, "GRANDSTAND", 1 ), -- arena
 (2, "0", "0", "0", "0", 6, 2, 3, "GRANDSTAND", 1 ), -- arena
-(3, "0", "0", "0", "0", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
-(4, "0", "0", "0", "0", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
-(5, "0", "0", "0", "0", 5, 0, 0, "PARTER", 2 ); -- spens
+(3, "65", "-100", "25", "10", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
+(4, "275", "-100", "235", "10", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
+(5, "215", "-20", "85", "10", 5, 0, 0, "PARTER", 2 ); -- spens
 
 insert into location(id, scheme_id) values
 (1, 1), -- arena
@@ -43,9 +43,9 @@ insert into event (id, category, description, name) values
 (2, "ENTERTAINMENT", "Opis", "Koncert Zdravka Colica");
 
 insert into event_day(id, date, reservation_expiration_date, state, event_id, location_id) values
-(1, "2020-01-15", "2020-01-12", "RESERVABLE_AND_BUYABLE", 1, 1), -- arena, Film 1
-(2, "2020-01-18", "2020-01-16", "RESERVABLE_AND_BUYABLE", 2, 2), -- spens, Colic day 1
-(3, "2020-01-19", "2020-01-17", "RESERVABLE_AND_BUYABLE", 2, 3); -- spens, Colic day 2
+(1, "2020-02-15", "2020-02-12", "RESERVABLE_AND_BUYABLE", 1, 1), -- arena, Film 1
+(2, "2020-02-18", "2020-02-16", "RESERVABLE_AND_BUYABLE", 2, 2), -- spens, Colic day 1
+(3, "2020-02-19", "2020-02-17", "RESERVABLE_AND_BUYABLE", 2, 3); -- spens, Colic day 2
 
 insert into ticket(id, price, seat_col, seat_row, sector_id, sold, vip, event_day_id) values
 (1, 300, 1, 1, 1, 0, 0, 1), -- arena grandstand id 1
@@ -66,6 +66,6 @@ insert into ticket(id, price, seat_col, seat_row, sector_id, sold, vip, event_da
 (16, 500, 1, 1, 4, 0, 0, 3), -- spens grandstand id 3
 (17, 500, 2, 1, 4, 0, 0, 3), --
 (18, 500, 3, 1, 4, 0, 0, 3), --
-(19, 300, 1, 1, 5, 0, 0, 3), -- spens parter id 5
+(19, 300, 1, 1, 5, 1, 0, 3), -- spens parter id 5
 (20, 300, 2, 1, 5, 0, 0, 3), --
 (21, 300, 3, 1, 5, 0, 0, 3); --
