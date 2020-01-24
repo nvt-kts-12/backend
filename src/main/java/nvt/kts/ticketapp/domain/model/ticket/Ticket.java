@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nvt.kts.ticketapp.domain.model.AbstractEntity;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
+import nvt.kts.ticketapp.domain.model.location.SectorType;
 import nvt.kts.ticketapp.domain.model.user.User;
 
 import javax.persistence.*;
@@ -24,6 +25,9 @@ public class Ticket extends AbstractEntity {
 
     @NotNull
     private Long sectorId;
+
+    @Enumerated(EnumType.STRING)
+    private SectorType sectorType;
 
     @Column(name = "seat_row")
     private int seatRow;

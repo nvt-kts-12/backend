@@ -4,7 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import nvt.kts.ticketapp.domain.dto.event.EventDTO;
 import nvt.kts.ticketapp.domain.dto.event.EventDayForTicketDTO;
+import nvt.kts.ticketapp.domain.dto.user.UserDTO;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
+import nvt.kts.ticketapp.domain.model.location.SectorType;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
@@ -20,10 +22,11 @@ public class TicketDTO {
     private boolean vip;
     private double price;
     private boolean sold;
+    private SectorType sectorType;
     private EventDTO event;
     private EventDayForTicketDTO eventDay;
     private EventDayState eventDayState;
-    private User user;
+    private UserDTO user;
 
     public TicketDTO(Ticket ticket) {
         this.id = ticket.getId();
@@ -40,6 +43,7 @@ public class TicketDTO {
         eventDayForTicketDTO.setLocation(ticket.getEventDay().getLocation().getScheme().getName());
         this.eventDay = eventDayForTicketDTO;
         this.eventDayState =ticket.getEventDay().getState();
-        this.user = ticket.getUser();
+        this.user = ObjectMapperUtils.map(ticket.getUser(), UserDTO.class);
+        this.sectorType = ticket.getSectorType();
     }
 }
