@@ -20,9 +20,9 @@ insert into location_scheme (id, address, name) values
 insert into sector (id, bottom_rightx, bottom_righty, top_leftx, top_lefty, capacity, col_num, row_num, type, location_scheme_id) values
 (1, "0", "0", "0", "0", 5, 5, 1, "GRANDSTAND", 1 ), -- arena
 (2, "0", "0", "0", "0", 6, 2, 3, "GRANDSTAND", 1 ), -- arena
-(3, "0", "0", "0", "0", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
-(4, "0", "0", "0", "0", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
-(5, "0", "0", "0", "0", 5, 0, 0, "PARTER", 2 ); -- spens
+(3, "150", "200", "100", "50", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
+(4, "400", "200", "350", "50", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
+(5, "330", "180", "170", "150", 5, 0, 0, "PARTER", 2 ); -- spens
 
 insert into location(id, scheme_id) values
 (1, 1), -- arena
