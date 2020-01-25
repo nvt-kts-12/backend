@@ -144,9 +144,11 @@ public class EventController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
     @GetMapping("/eventDay/{id}")
     @PreAuthorize("hasRole('REGISTERED')")
     public ResponseEntity getEventDay(@PathVariable Long id) {
+
         EventDayBuyingDTO result = null;
         try {
             result = eventService.getEventDay(id);

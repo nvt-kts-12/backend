@@ -2,6 +2,8 @@ package nvt.kts.ticketapp.service.event;
 
 import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.*;
+import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
+import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.dto.location.SectorForDrawingDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
@@ -134,6 +136,7 @@ public class EventServiceImpl implements EventService {
                     // generate tickets for locationSector Parter
                     for (int i = 0; i < locationSector.getCapacity(); i++) {
                         Ticket ticket = new Ticket(false, locationSector.getSector().getId(), 0, 0, locationSectorsDTO.getPrice(), eventDay, null, locationSectorsDTO.isVip());
+                        ticket.setSectorType(SectorType.PARTER);
                         tickets.add(ticket);
                     }
                 } else {
@@ -141,6 +144,7 @@ public class EventServiceImpl implements EventService {
                     for (int row = 1; row <= locationSector.getSector().getRowNum(); row++) {
                         for (int col = 1; col <= locationSector.getSector().getColNum(); col++) {
                             Ticket ticket = new Ticket(false, locationSector.getSector().getId(), row, col, locationSectorsDTO.getPrice(), eventDay, null, locationSectorsDTO.isVip());
+                            ticket.setSectorType(SectorType.GRANDSTAND);
                             tickets.add(ticket);
                         }
                     }
@@ -366,7 +370,6 @@ public class EventServiceImpl implements EventService {
                 eventDay.getLocation().getId(), eventDay.getLocation().getScheme().getName(),
                 eventDay.getLocation().getScheme().getAddress(), eventDaysSectors);
     }
-
 
     private List<Ticket> reserveGrandstand(EventDayReservationDTO eventDayReservationDTO, List<LocationSector> locationSectors, EventDay eventDay, User user) throws SectorWrongType, SeatIsNotAvailable, SectorNotFound {
 

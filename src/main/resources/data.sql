@@ -20,6 +20,9 @@ insert into location_scheme (id, address, name) values
 insert into sector (id, bottom_rightx, bottom_righty, top_leftx, top_lefty, capacity, col_num, row_num, type, location_scheme_id) values
 (1, "0", "0", "0", "0", 5, 5, 1, "GRANDSTAND", 1 ), -- arena
 (2, "0", "0", "0", "0", 6, 2, 3, "GRANDSTAND", 1 ), -- arena
+(3, "150", "200", "100", "50", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
+(4, "400", "200", "350", "50", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
+(5, "330", "180", "170", "150", 5, 0, 0, "PARTER", 2 ); -- spens
 (3, "65", "-100", "25", "10", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
 (4, "275", "-100", "235", "10", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
 (5, "0", "0", "0", "0", 5, 0, 0, "PARTER", 2 ), -- spens
@@ -49,28 +52,28 @@ insert into event_day(id, date, reservation_expiration_date, state, event_id, lo
 (2, "2020-02-18", "2020-02-16", "RESERVABLE_AND_BUYABLE", 2, 2), -- spens, Colic day 1
 (3, "2020-02-19", "2020-02-17", "RESERVABLE_AND_BUYABLE", 2, 3); -- spens, Colic day 2
 
-insert into ticket(id, price, seat_col, seat_row, sector_id, sold, vip, event_day_id) values
-(1, 300, 1, 1, 1, 0, 0, 1), -- arena grandstand id 1
-(2, 300, 2, 1, 1, 0, 0, 1), --
-(3, 300, 3, 1, 1, 0, 0, 1), --
-(4, 300, 4, 1, 1, 0, 0, 1), --
-(5, 300, 5, 1, 1, 0, 0, 1), --
-(6, 600, 1, 1, 3, 0, 0, 2), -- spens grandstand id 2  day 1
-(7, 600, 2, 1, 3, 0, 0, 2), --
-(8, 500, 1, 1, 4, 0, 0, 2), -- spens grandstand id 3
-(9, 500, 2, 1, 4, 0, 0, 2), --
-(10, 500, 3, 1, 4, 0, 0, 2), --
-(11, 300, 0, 0, 5, 0, 0, 2), -- spens parter id 5
-(12, 300, 0, 0, 5, 0, 0, 2), --
-(13, 300, 0, 0, 5, 0, 0, 2), --
-(14, 600, 1, 1, 3, 0, 0, 3), -- spens grandstand id 2 day 2
-(15, 600, 2, 1, 3, 0, 0, 3), --
-(16, 500, 1, 1, 4, 0, 0, 3), -- spens grandstand id 3
-(17, 500, 2, 1, 4, 0, 0, 3), --
-(18, 500, 3, 1, 4, 0, 0, 3), --
-(19, 300, 1, 1, 5, 1, 0, 3), -- spens parter id 5
-(20, 300, 2, 1, 5, 0, 0, 3), --
-(21, 300, 3, 1, 5, 0, 0, 3), --
+insert into ticket(id, price, seat_col, seat_row, sector_id, sold, vip, event_day_id, sector_type) values
+(1, 300, 1, 1, 1, 0, 0, 1, "GRANDSTAND"), -- arena grandstand id 1
+(2, 300, 2, 1, 1, 0, 0, 1, "GRANDSTAND"), --
+(3, 300, 3, 1, 1, 0, 0, 1, "GRANDSTAND"), --
+(4, 300, 4, 1, 1, 0, 0, 1, "GRANDSTAND"), --
+(5, 300, 5, 1, 1, 0, 0, 1, "GRANDSTAND"), --
+(6, 600, 1, 1, 3, 0, 0, 2, "GRANDSTAND"), -- spens grandstand id 2  day 1
+(7, 600, 2, 1, 3, 0, 0, 2, "GRANDSTAND"), --
+(8, 500, 1, 1, 4, 0, 0, 2, "GRANDSTAND"), -- spens grandstand id 3
+(9, 500, 2, 1, 4, 0, 0, 2, "GRANDSTAND"), --
+(10, 500, 3, 1, 4, 0, 0, 2, "GRANDSTAND"), --
+(11, 300, 0, 0, 5, 0, 0, 2, "PARTER"), -- spens parter id 5
+(12, 300, 0, 0, 5, 0, 0, 2, "PARTER"), --
+(13, 300, 0, 0, 5, 0, 0, 2, "PARTER"), --
+(14, 600, 1, 1, 3, 0, 0, 3, "GRANDSTAND"), -- spens grandstand id 2 day 2
+(15, 600, 2, 1, 3, 0, 0, 3, "GRANDSTAND"), --
+(16, 500, 1, 1, 4, 0, 0, 3, "GRANDSTAND"), -- spens grandstand id 3
+(17, 500, 2, 1, 4, 0, 0, 3, "GRANDSTAND"), --
+(18, 500, 3, 1, 4, 0, 0, 3, "GRANDSTAND"), --
+(19, 300, 1, 1, 5, 0, 0, 3, "PARTER"), -- spens parter id 5
+(20, 300, 2, 1, 5, 0, 0, 3, "PARTER"), --
+(21, 300, 3, 1, 5, 0, 0, 3, "PARTER"); --
 
 
 (22, 175, 1, 1, 6, 0, 0, 3), --
