@@ -118,16 +118,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     public List<TicketDTO> getAllTicketsForSectorAndEventDay(Long sectorId, Long eventDayId){
-        List<Ticket> allTickets = ticketRepository.findAll();
-        List<TicketDTO> ticketsToReturn = new ArrayList<>();
-        for (Ticket ticket: allTickets) {
-            if(ticket.getSectorId() == sectorId && ticket.getEventDay().getId() == eventDayId){
-                ticketsToReturn.add(ObjectMapperUtils.map(ticket, TicketDTO.class));
-                System.out.println(ticket.toString());
-            }
-        }
-
-        return ticketsToReturn;
+        List<Ticket> allTickets = ticketRepository.findAllBySectorIdAndEventDayIdAndDeletedFalse(sectorId, eventDayId);
+        return ObjectMapperUtils.mapAll(allTickets, TicketDTO.class);
     }
 }
 

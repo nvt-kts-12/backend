@@ -346,20 +346,16 @@ public class EventServiceImpl implements EventService {
         List<SectorForDrawingDTO> eventDaysSectors = new ArrayList<>();
         for (LocationSector locationSector : locationSectors) {
 
-            System.out.println("sector.getId() " + locationSector.getId() + " sector.getSector().getId() " + locationSector.getSector().getId());
-            System.out.println("Searching for sector " + locationSector.getId() + " and event day " + id);
             List<Ticket> tickets = ticketService.getAvailableTicketsForEventDayAndSector(id, locationSector.getSector().getId());
 
             int numOfAvailablePlaces = tickets.size();
-            System.out.println("numOfAvailablePlaces " + numOfAvailablePlaces);
-
 
             SectorForDrawingDTO convertedSector = new SectorForDrawingDTO(locationSector.isDeleted(), locationSector.getSector().getTopLeftX(),
                     locationSector.getSector().getTopLeftY(), locationSector.getSector().getBottomRightX(),
                     locationSector.getSector().getBottomRightY(), locationSector.getCapacity(),
                     locationSector.getSector().getRowNum(), locationSector.getSector().getColNum(),
                     locationSector.getPrice(), locationSector.getSector().getType(), numOfAvailablePlaces);
-            convertedSector.setId(locationSector.getId());
+            convertedSector.setId(locationSector.getSector().getId());
 
             eventDaysSectors.add(convertedSector);
         }
