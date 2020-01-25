@@ -6,13 +6,12 @@ import nvt.kts.ticketapp.domain.dto.ticket.TicketDTO;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
-import nvt.kts.ticketapp.exception.ticket.*;
 import nvt.kts.ticketapp.domain.model.user.User;
+import nvt.kts.ticketapp.exception.ticket.*;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.ticket.TicketRepository;
 import nvt.kts.ticketapp.service.common.email.ticket.TicketEmailService;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,7 +27,7 @@ public class TicketServiceImpl implements TicketService {
     private final TicketEmailService ticketEmailService;
     private final EventDaysRepository eventDaysRepository;
 
-    public TicketServiceImpl(TicketRepository ticketRepository, TicketEmailService ticketEmailService,EventDaysRepository eventDaysRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository, TicketEmailService ticketEmailService, EventDaysRepository eventDaysRepository) {
         this.ticketRepository = ticketRepository;
         this.ticketEmailService = ticketEmailService;
         this.eventDaysRepository = eventDaysRepository;
@@ -58,9 +57,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getAvailableTickets(Long eventDayId) {
-
         return ticketRepository.findAllByEventDayIdAndUserIdNullAndDeletedFalse(eventDayId);
-
     }
 
     @Override
@@ -94,19 +91,17 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public TicketDTO cancelReservation(Long ticketId) throws TicketDoesNotExist, ReservationCanNotBeCancelled {
 
-        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(()-> new TicketDoesNotExist());
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(() -> new TicketDoesNotExist());
         EventDay ticketEventDay = ticket.getEventDay();
         User ticketUser = ticket.getUser();
 
-        if(ticket.isSold() == false && ticketUser.getId() != null){
+        if (ticket.isSold() == false && ticketUser.getId() != null) {
             ticket.setUser(null);
-        }
-        else
-        {
+        } else {
             throw new ReservationCanNotBeCancelled();
         }
 
-        if(ticketEventDay.getState() == EventDayState.SOLD_OUT){
+        if (ticketEventDay.getState() == EventDayState.SOLD_OUT) {
             ticketEventDay.setState(EventDayState.RESERVABLE_AND_BUYABLE);
             eventDaysRepository.save(ticketEventDay);
         }
@@ -116,5 +111,9 @@ public class TicketServiceImpl implements TicketService {
         return ObjectMapperUtils.map(ticket, TicketDTO.class);
     }
 
+    public List<TicketDTO> getAllTicketsForSectorAndEventDay(Long sectorId, Long eventDayId) {
+        List<Ticket> allTickets = ticketRepository.findAllBySectorIdAndEventDayIdAndDeletedFalse(sectorId, eventDayId);
+        return ObjectMapperUtils.mapAll(allTickets, TicketDTO.class);
+    }
 }
 

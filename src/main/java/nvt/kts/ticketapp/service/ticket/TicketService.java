@@ -32,4 +32,7 @@ public interface TicketService {
     Optional<Ticket> getTicketById(Long id)  throws TicketDoesNotExist;
 
     TicketDTO cancelReservation (Long ticketId) throws TicketDoesNotExist, ReservationCanNotBeCancelled;
+
+    List<TicketDTO> getAllTicketsForSectorAndEventDay(Long sectorId, Long eventDayId);
+
 }

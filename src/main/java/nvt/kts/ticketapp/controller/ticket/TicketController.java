@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/ticket")
@@ -34,7 +35,7 @@ public class TicketController {
         } catch (TicketNotFoundOrAlreadyBought ex) {
             ex.printStackTrace();
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (IOException| WriterException e) {
+        } catch (IOException | WriterException e) {
             e.printStackTrace();
             return new ResponseEntity<String>("Could not generate QR code", HttpStatus.EXPECTATION_FAILED);
         } catch (TicketListCantBeEmpty ticketListCantBeEmpty) {
@@ -53,5 +54,11 @@ public class TicketController {
             return new ResponseEntity<String>(ticketDoesNotExist.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @GetMapping("/{sectorId}/{eventDayId}")
+    @PreAuthorize("hasRole('REGISTERED')")
+    public ResponseEntity getBySectorAndDay(@PathVariable Long sectorId, @PathVariable Long eventDayId) {
+        return new ResponseEntity<List<TicketDTO>>(ticketService.getAllTicketsForSectorAndEventDay(sectorId, eventDayId), HttpStatus.OK);
     }
 }

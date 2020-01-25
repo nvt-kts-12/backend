@@ -13,11 +13,7 @@ import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.date.DateCantBeInThePast;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
-import nvt.kts.ticketapp.exception.event.EventDayDoesNotExistOrStateIsNotValid;
-import nvt.kts.ticketapp.exception.event.EventDaysListEmpty;
-import nvt.kts.ticketapp.exception.event.EventNotFound;
-import nvt.kts.ticketapp.exception.event.EventdayNotFound;
-import nvt.kts.ticketapp.exception.event.ReservationExpireDateInvalid;
+import nvt.kts.ticketapp.exception.event.*;
 import nvt.kts.ticketapp.exception.location.LocationNotAvailableThatDate;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
 import nvt.kts.ticketapp.exception.location.SectorNotFound;
@@ -44,8 +40,8 @@ import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.ParseException;
@@ -133,7 +129,6 @@ public class EventServiceImpl implements EventService {
                 }
                 LocationSector locationSector = new LocationSector(sector, location, locationSectorsDTO.getPrice(), locationSectorsDTO.getCapacity(), locationSectorsDTO.isVip());
                 locationSectors.add(locationSector);
-
 
                 if (locationSector.getSector().getType() == SectorType.PARTER) {
                     // generate tickets for locationSector Parter
@@ -353,20 +348,16 @@ public class EventServiceImpl implements EventService {
         List<SectorForDrawingDTO> eventDaysSectors = new ArrayList<>();
         for (LocationSector locationSector : locationSectors) {
 
-//            System.out.println("sector.getId() " + locationSector.getId() + " sector.getSector().getId() " + locationSector.getSector().getId());
-//            System.out.println("Searching for sector " + locationSector.getId() + " and event day " + id);
             List<Ticket> tickets = ticketService.getAvailableTicketsForEventDayAndSector(id, locationSector.getSector().getId());
 
             int numOfAvailablePlaces = tickets.size();
-            System.out.println("numOfAvailablePlaces " + numOfAvailablePlaces);
-
 
             SectorForDrawingDTO convertedSector = new SectorForDrawingDTO(locationSector.isDeleted(), locationSector.getSector().getTopLeftX(),
                     locationSector.getSector().getTopLeftY(), locationSector.getSector().getBottomRightX(),
                     locationSector.getSector().getBottomRightY(), locationSector.getCapacity(),
                     locationSector.getSector().getRowNum(), locationSector.getSector().getColNum(),
                     locationSector.getPrice(), locationSector.getSector().getType(), numOfAvailablePlaces);
-            convertedSector.setId(locationSector.getId());
+            convertedSector.setId(locationSector.getSector().getId());
 
             eventDaysSectors.add(convertedSector);
         }
@@ -387,7 +378,7 @@ public class EventServiceImpl implements EventService {
 
             boolean reservationSuccess = false;
 
-            for(LocationSector locationSector : locationSectors) {
+            for (LocationSector locationSector : locationSectors) {
                 if (locationSector.getSector().getId() != sectorId) {
                     continue;
                 }
@@ -416,10 +407,10 @@ public class EventServiceImpl implements EventService {
 
         List<Ticket> reservedTickets = new ArrayList<>();
 
-        for(ParterDTO parterDTO: eventDayReservationDTO.getParters()) {
+        for (ParterDTO parterDTO : eventDayReservationDTO.getParters()) {
             Long sectorId = parterDTO.getSectorId();
 
-            for(LocationSector locationSector : locationSectors) {
+            for (LocationSector locationSector : locationSectors) {
                 if (locationSector.getSector().getId() != sectorId) {
                     continue;
                 }
@@ -458,7 +449,7 @@ public class EventServiceImpl implements EventService {
         List<Ticket> tickets = ticketService.getAvailableTickets(eventDay.getId());
 
         if (!tickets.isEmpty()) {
-            return ;
+            return;
         }
 
         eventDay.setState(EventDayState.SOLD_OUT);
@@ -469,7 +460,7 @@ public class EventServiceImpl implements EventService {
     private void sendMailsForPurchasedTickets(List<Ticket> tickets) throws IOException, WriterException, TicketListCantBeEmpty {
 
         List<Ticket> purchasedTickets = new ArrayList<>();
-        for(Ticket ticket : tickets) {
+        for (Ticket ticket : tickets) {
             if (!ticket.isSold()) {
                 continue;
             }
@@ -484,7 +475,6 @@ public class EventServiceImpl implements EventService {
         ticketEmailService.sendEmailForPurchasedTickets(tickets.get(0).getUser().getEmail(), purchasedTickets);
 
     }
-
 
 
 }
