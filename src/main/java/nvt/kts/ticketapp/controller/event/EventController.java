@@ -23,7 +23,6 @@ import nvt.kts.ticketapp.exception.ticket.TicketListCantBeEmpty;
 import nvt.kts.ticketapp.exception.user.UserNotFound;
 import nvt.kts.ticketapp.service.event.EventService;
 import nvt.kts.ticketapp.service.location.LocationService;
-import nvt.kts.ticketapp.service.ticket.TicketService;
 import nvt.kts.ticketapp.service.user.UserService;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +48,6 @@ public class EventController {
 
     @Autowired
     private LocationService locationService;
-    @Autowired
-    private TicketService ticketService;
 
     public EventController(EventService eventService, UserService userService) {
         this.eventService = eventService;
