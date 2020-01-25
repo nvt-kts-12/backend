@@ -25,9 +25,6 @@ insert into sector (id, bottom_rightx, bottom_righty, top_leftx, top_lefty, capa
 (5, "330", "180", "170", "150", 5, 0, 0, "PARTER", 2 ); -- spens
 
 --janko :
---(3, "65", "-100", "25", "10", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
---(4, "275", "-100", "235", "10", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
---(5, "0", "0", "0", "0", 5, 0, 0, "PARTER", 2 ), -- spens
 --(6, "215", "-20", "85", "10", 25, 5, 5, "GRANDSTAND", 2 ); -- test GRANDSTAND in spens
 
 insert into location(id, scheme_id) values
@@ -42,7 +39,7 @@ insert into location_sector (id, capacity, price, vip, location_id, sector_id) v
 (4, 3, 300, 0, 2, 5), -- spens Parter eventDay 1
 (5, 2, 600, 0, 3, 3), -- spens Grandstand eventDay 2
 (6, 3, 500, 0, 3, 4), -- spens Grandstand eventDay 2
-(7, 3, 300, 0, 3, 5), -- spens Parter eventDay 2
+(7, 3, 300, 0, 3, 5); -- spens Parter eventDay 2
 -- janko:
 --(8, 25, 175, 0, 3, 6); -- spens Parter eventDay 2
 
