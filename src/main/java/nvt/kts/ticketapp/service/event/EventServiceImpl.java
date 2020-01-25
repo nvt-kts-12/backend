@@ -130,8 +130,6 @@ public class EventServiceImpl implements EventService {
                 LocationSector locationSector = new LocationSector(sector, location, locationSectorsDTO.getPrice(), locationSectorsDTO.getCapacity(), locationSectorsDTO.isVip());
                 locationSectors.add(locationSector);
 
-//                locationSectors = locationSectorRepository.saveAll(locationSectors);
-
                 if (locationSector.getSector().getType() == SectorType.PARTER) {
                     // generate tickets for locationSector Parter
                     for (int i = 0; i < locationSector.getCapacity(); i++) {
