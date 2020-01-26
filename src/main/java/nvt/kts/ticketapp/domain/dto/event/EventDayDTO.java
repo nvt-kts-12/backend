@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nvt.kts.ticketapp.domain.model.event.EventDayState;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.Date;
@@ -18,6 +19,7 @@ public class EventDayDTO {
     @NotNull
     private String date;
     @NotNull
+    @Valid
     private LocationDTO location;
     @NotNull
     private String reservationExpireDate;
