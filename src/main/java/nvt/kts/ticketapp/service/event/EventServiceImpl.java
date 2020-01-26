@@ -45,9 +45,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static nvt.kts.ticketapp.config.Constants.DATE_FORMAT;
 import static nvt.kts.ticketapp.util.DateUtil.*;
@@ -231,11 +229,14 @@ public class EventServiceImpl implements EventService {
             for (EventDTO eventDTO : eventDTOList) {
                 List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventDTO.getId());
 
-                List<String> dates = new ArrayList<>();
+                List<DateAndLocationDTO> dateAndLocationDTOList = new ArrayList<>();
                 for (EventDay eventDay : eventDays) {
-                    dates.add(eventDay.getDate().toString());
+                    DateAndLocationDTO dateAndLocationDTO = new DateAndLocationDTO();
+                    dateAndLocationDTO.setDate(eventDay.getDate().toString());
+                    dateAndLocationDTO.setLocation(eventDay.getLocation().getScheme().getName());
+                    dateAndLocationDTOList.add(dateAndLocationDTO);
                 }
-                eventDTO.setDates(dates);
+                eventDTO.setDateAndLocationDTO(dateAndLocationDTOList);
             }
 
             return new EventsDTO(eventDTOList, events.getTotalElements());
@@ -248,11 +249,14 @@ public class EventServiceImpl implements EventService {
             for (EventDTO eventDTO : eventDTOList) {
                 List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventDTO.getId());
 
-                List<String> dates = new ArrayList<>();
+                List<DateAndLocationDTO> dateAndLocationDTOList = new ArrayList<>();
                 for (EventDay eventDay : eventDays) {
-                    dates.add(eventDay.getDate().toString());
+                    DateAndLocationDTO dateAndLocationDTO = new DateAndLocationDTO();
+                    dateAndLocationDTO.setDate(eventDay.getDate().toString());
+                    dateAndLocationDTO.setLocation(eventDay.getLocation().getScheme().getName());
+                    dateAndLocationDTOList.add(dateAndLocationDTO);
                 }
-                eventDTO.setDates(dates);
+                eventDTO.setDateAndLocationDTO(dateAndLocationDTOList);
             }
 
             return new EventsDTO(eventDTOList, events.getTotalElements());
