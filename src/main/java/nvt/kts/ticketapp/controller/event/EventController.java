@@ -155,4 +155,17 @@ public class EventController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping("/getAll")
+    public ResponseEntity getAllEvents() {
+        List<Event> result = null;
+        try {
+            result = eventService.findAllEvents();
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

@@ -36,7 +36,7 @@ public class LocationSchemeController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity getAll(){
         return new ResponseEntity<List<LocationSchemeDTO>>(locationSchemeService.getAll(), HttpStatus.OK);
     }
