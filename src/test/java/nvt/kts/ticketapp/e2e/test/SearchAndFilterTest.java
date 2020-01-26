@@ -6,17 +6,20 @@ import nvt.kts.ticketapp.e2e.pages.home.Search;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(SpringRunner.class)
 public class SearchAndFilterTest {
 
     private WebDriver browser;
