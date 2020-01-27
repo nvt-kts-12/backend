@@ -1,6 +1,9 @@
 package nvt.kts.ticketapp.controller.event;
 
 import com.google.zxing.WriterException;
+import com.paypal.api.payments.Links;
+import com.paypal.api.payments.Payment;
+import com.paypal.base.rest.PayPalRESTException;
 import nvt.kts.ticketapp.domain.dto.event.*;
 import nvt.kts.ticketapp.domain.dto.ticket.TicketsDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
@@ -23,6 +26,7 @@ import nvt.kts.ticketapp.exception.ticket.TicketListCantBeEmpty;
 import nvt.kts.ticketapp.exception.user.UserNotFound;
 import nvt.kts.ticketapp.service.event.EventService;
 import nvt.kts.ticketapp.service.location.LocationService;
+import nvt.kts.ticketapp.service.paypal.PayPalService;
 import nvt.kts.ticketapp.service.user.UserService;
 import nvt.kts.ticketapp.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +37,15 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/event")
@@ -45,13 +53,15 @@ public class EventController {
 
     private EventService eventService;
     private UserService userService;
+    private PayPalService payPalService;
 
     @Autowired
     private LocationService locationService;
 
-    public EventController(EventService eventService, UserService userService) {
+    public EventController(EventService eventService, UserService userService, PayPalService payPalService) {
         this.eventService = eventService;
         this.userService = userService;
+        this.payPalService = payPalService;
     }
 
     @PostMapping()
@@ -85,10 +95,19 @@ public class EventController {
     public ResponseEntity reserve(Principal user, @RequestBody @Valid EventDayReservationDTO eventDayReservationDTO) {
 
         List<Ticket> tickets = null;
+        Map<String, Object> createdPayment = new HashMap<>();
         try {
             User u = (User) userService.findByUsername(user.getName());
             tickets = eventService.reserve(eventDayReservationDTO, u);
-        } catch (LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible | UserNotFound ex) {
+
+            if(eventDayReservationDTO.isPurchase()){
+                // calculate sum
+                double totalPrice = eventService.calculateTotalPrice(eventDayReservationDTO);
+                // call createPayment
+                createdPayment = payPalService.createPayment(String.valueOf(totalPrice));
+            }
+
+        } catch (EventDayDoesNotExist |LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible | UserNotFound ex) {
             ex.printStackTrace();
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectOptimisticLockingFailureException | TicketListCantBeEmpty e) {
@@ -99,8 +118,9 @@ public class EventController {
             return new ResponseEntity<String>("Could not generate QR code", HttpStatus.EXPECTATION_FAILED);
         }
 
-        return new ResponseEntity<TicketsDTO>(new TicketsDTO(tickets), HttpStatus.OK);
+        return new ResponseEntity<>(createdPayment, HttpStatus.OK);
     }
+
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
