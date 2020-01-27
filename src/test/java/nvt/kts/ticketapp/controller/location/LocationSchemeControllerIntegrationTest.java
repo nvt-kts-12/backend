@@ -98,7 +98,7 @@ public class LocationSchemeControllerIntegrationTest {
     @Test
     public void getAll_Positive() {
         ResponseEntity<List<LocationSchemeDTO>> allSchemes = restTemplate.withBasicAuth("username", "password")
-                .exchange(URL_PREFIX, HttpMethod.GET, null,
+                .exchange(URL_PREFIX + "/getAll", HttpMethod.GET, null,
                         new ParameterizedTypeReference<List<LocationSchemeDTO>>() {
                         });
 
