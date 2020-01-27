@@ -11,7 +11,7 @@ services:
   - mysql
 
 ignore:
-  - ./src/test/java/nvt.kts.ticketapp/e2e
+  - src/test/java/nvt.kts.ticketapp/e2e
 
 addons:
   sonarcloud:

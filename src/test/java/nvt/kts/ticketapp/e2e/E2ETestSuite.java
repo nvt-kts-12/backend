@@ -6,7 +6,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SearchAndFilterTest.class
+//        SearchAndFilterTest.class
 })
 public class E2ETestSuite {
 }
