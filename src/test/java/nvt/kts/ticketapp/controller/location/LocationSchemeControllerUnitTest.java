@@ -100,7 +100,7 @@ public class LocationSchemeControllerUnitTest {
     @Test
     public void getAll_Positive() {
         ResponseEntity<List<LocationSchemeDTO>> response = testRestTemplate.withBasicAuth("username", "password")
-                .exchange(URL_PREFIX, HttpMethod.GET,
+                .exchange(URL_PREFIX +"/getAll", HttpMethod.GET,
                 null, new ParameterizedTypeReference<List<LocationSchemeDTO>>() {
                 });
 
