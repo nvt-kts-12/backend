@@ -62,24 +62,36 @@ public class LoginIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    @Test(expected = ResourceAccessException.class)
+    @Test
     public void testLogin_wrongUsername() {
         JwtAuthenticationRequest request = new JwtAuthenticationRequest("invalidusername", "pass");
 
-        restTemplate.postForEntity(URL, request, UserTokenState.class);
+        ResponseEntity<UserTokenState> response = restTemplate.postForEntity(URL, request, UserTokenState.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertNull(response.getBody().getAccessToken());
+        assertEquals(0, response.getBody().getExpiresIn());
     }
 
-    @Test(expected = ResourceAccessException.class)
+    @Test
     public void testLogin_wrongPassword() {
         JwtAuthenticationRequest request = new JwtAuthenticationRequest("user", "wrongpass");
 
-        restTemplate.postForEntity(URL, request, UserTokenState.class);
+        ResponseEntity<UserTokenState> response = restTemplate.postForEntity(URL, request, UserTokenState.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertNull(response.getBody().getAccessToken());
+        assertEquals(0, response.getBody().getExpiresIn());
     }
 
-    @Test(expected = ResourceAccessException.class)
+    @Test
     public void testLogin_wrongUsernameAndPassword() {
         JwtAuthenticationRequest request = new JwtAuthenticationRequest("invaliduser", "wrongpass");
 
-        restTemplate.postForEntity(URL, request, UserTokenState.class);
+        ResponseEntity<UserTokenState> response = restTemplate.postForEntity(URL, request, UserTokenState.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertNull(response.getBody().getAccessToken());
+        assertEquals(0, response.getBody().getExpiresIn());
     }
 }

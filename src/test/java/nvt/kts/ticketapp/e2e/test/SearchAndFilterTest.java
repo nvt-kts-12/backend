@@ -162,6 +162,7 @@ public class SearchAndFilterTest {
 
         filter.getLocationSelect().click();
 
+        filter.ensureLocationSelectOptionsDisplayed();
         WebElement locationElement = filter.getLocationSelectOptions().get(1);
         locationElement.click();
 
