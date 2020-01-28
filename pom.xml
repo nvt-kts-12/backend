@@ -143,7 +143,7 @@
 				<version>3.0.0-M4</version>
 				<configuration>
 					<excludes>
-						<exclude>nvt.kts.ticketapp.e2e.test.*</exclude>
+						<exclude>nvt.kts.ticketapp.e2e.test.*Test</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
