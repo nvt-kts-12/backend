@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class LocationDTO {
     @NotNull
     private Long locationSchemeId;
     @NotNull
+    @Valid
     private List<LocationSectorsDTO> locationSectors;
 
     public LocationDTO(Long locationSchemeId, List<LocationSectorsDTO> locationSectors) {
