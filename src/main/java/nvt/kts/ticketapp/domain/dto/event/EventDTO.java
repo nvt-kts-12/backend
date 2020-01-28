@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.Map;
 
 @NoArgsConstructor
 @Getter
@@ -25,7 +26,7 @@ public class EventDTO {
     @NotNull
     private EventCategory category;
 
-    private List<String> dates;
+    private List<DateAndLocationDTO> dateAndLocationDTO;
 
     public EventDTO(Long id, String description, String name, EventCategory category) {
         this.id = id;
@@ -40,4 +41,5 @@ public class EventDTO {
         this.category = event.getCategory();
         this.name = event.getName();
     }
+
 }
