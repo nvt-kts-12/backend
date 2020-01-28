@@ -373,6 +373,28 @@ public class EventServiceImpl implements EventService {
                 eventDay.getLocation().getScheme().getAddress(), eventDaysSectors);
     }
 
+    @Override
+    public double calculateTotalPrice(EventDayReservationDTO eventDayReservationDTO) throws EventDayDoesNotExist {
+        double totalPrice = 0;
+        EventDay eventDay = eventDayService.findOneById(eventDayReservationDTO.getEventDayId());
+
+        List<LocationSector> locationSectors = locationSectorRepository.findAllByLocationIdAndDeletedFalse(eventDay.getLocation().getId());
+        for (LocationSector locationSector: locationSectors) {
+            for (ParterDTO parterDTO: eventDayReservationDTO.getParters()){
+                if(parterDTO.getSectorId() == locationSector.getSector().getId()){
+                    totalPrice += locationSector.getPrice() * parterDTO.getNumberOfTickets();
+                }
+            }
+            for (SeatDTO seatDTO: eventDayReservationDTO.getSeats()) {
+                if(seatDTO.getSectorId() == locationSector.getSector().getId()){
+                    totalPrice += locationSector.getPrice();
+                }
+            }
+        }
+
+        return totalPrice;
+    }
+
     private List<Ticket> reserveGrandstand(EventDayReservationDTO eventDayReservationDTO, List<LocationSector> locationSectors, EventDay eventDay, User user) throws SectorWrongType, SeatIsNotAvailable, SectorNotFound {
 
         List<Ticket> reservedTickets = new ArrayList<>();

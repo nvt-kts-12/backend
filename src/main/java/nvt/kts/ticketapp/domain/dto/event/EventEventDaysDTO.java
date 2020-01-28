@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -14,7 +15,9 @@ public class EventEventDaysDTO {
 
     @NotNull
     private EventDTO event;
+
     @NotNull
+    @Valid
     private List<EventDayDTO> eventDays;
 
     public EventEventDaysDTO(EventDTO event, List<EventDayDTO> eventDays) {

@@ -44,5 +44,7 @@ public interface EventService  {
     List<EventDayDTOHomePage> getEventDays(Long id) throws EventdayNotFound;
 
     EventDayBuyingDTO getEventDay(Long id) throws EventdayNotFound;
+
+    double calculateTotalPrice(EventDayReservationDTO eventDayReservationDTO) throws EventDayDoesNotExist;
 }
 
