@@ -186,7 +186,7 @@ public class ReportsServiceImpl implements ReportsService {
 
         // map initialising
         for (LocationSector sector : locationSectors) {
-            sectorId_tickets.put(sector.getId(), 0);
+            sectorId_tickets.put(sector.getSector().getId(), 0);
         }
 
         for (Ticket ticket : tickets) {
