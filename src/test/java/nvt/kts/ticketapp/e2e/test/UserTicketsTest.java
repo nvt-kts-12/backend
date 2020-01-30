@@ -3,7 +3,7 @@ package nvt.kts.ticketapp.e2e.test;
 import nvt.kts.ticketapp.e2e.pages.Snackbar;
 import nvt.kts.ticketapp.e2e.pages.home.HomePage;
 import nvt.kts.ticketapp.e2e.pages.login.LoginPage;
-import nvt.kts.ticketapp.e2e.pages.profile.ConfirmDialog;
+import nvt.kts.ticketapp.e2e.pages.ConfirmDialog;
 import nvt.kts.ticketapp.e2e.pages.profile.ProfilePage;
 import org.junit.After;
 import org.junit.Before;

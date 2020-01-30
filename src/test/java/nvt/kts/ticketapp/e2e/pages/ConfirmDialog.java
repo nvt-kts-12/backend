@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.e2e.pages.profile;
+package nvt.kts.ticketapp.e2e.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,10 +10,10 @@ public class ConfirmDialog {
 
     private WebDriver driver;
 
-    @FindBy(id = "confirm-dialog-button-cancel")
+    @FindBy(id = "popupCancelButton")
     private WebElement cancelButton;
 
-    @FindBy(id = "confirm-dialog-button-ok")
+    @FindBy(id = "popupOkButton")
     private WebElement okButton;
 
     public ConfirmDialog(WebDriver driver) {
