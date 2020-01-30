@@ -21,6 +21,9 @@ public class HomePage {
     @FindBy(xpath = "//*[@id=\"paginator\"]/div/div/div[2]/button[2]")
     private WebElement paginatorNextButton;
 
+    @FindBy(id = "profile-button")
+    private WebElement profileButton;
+
     public HomePage(WebDriver webDriver) {
         this.webDriver = webDriver;
     }
@@ -39,5 +42,13 @@ public class HomePage {
 
     public WebElement getNoResults() {
         return noResults;
+    }
+
+    public WebElement getProfileButton() {
+        return profileButton;
+    }
+
+    public void ensureProfileButtonClicable() {
+        (new WebDriverWait(webDriver,10)).until(ExpectedConditions.elementToBeClickable(profileButton));
     }
 }

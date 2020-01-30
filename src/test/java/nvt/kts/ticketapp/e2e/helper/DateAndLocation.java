@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.e2e.pages.home.helper;
+package nvt.kts.ticketapp.e2e.helper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

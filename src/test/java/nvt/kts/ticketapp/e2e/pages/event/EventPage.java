@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.e2e.pages.home;
+package nvt.kts.ticketapp.e2e.pages.event;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
