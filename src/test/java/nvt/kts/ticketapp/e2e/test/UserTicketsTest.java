@@ -162,18 +162,20 @@ public class UserTicketsTest {
 
         int numberOfRows = rows.size();
 
-        for (WebElement row : rows) {
-            WebElement cancelButton = row.findElement(By.className("cancel-reservation-button"));
-            (new WebDriverWait(browser, 10)).until(ExpectedConditions.elementToBeClickable(cancelButton));
-            cancelButton.click();
-
-            confirmDialog.ensureCancelButtonClickable();
-            confirmDialog.getCancelButton().click();
-
-            int newNumberOfRows = reservations.findElements(By.xpath("./div/table/tbody/tr")).size();
-            assertEquals(numberOfRows, newNumberOfRows);
-
+        if (numberOfRows == 0) {
+            return;
         }
+        WebElement row = rows.get(0);
+
+        WebElement cancelButton = row.findElement(By.className("cancel-reservation-button"));
+        (new WebDriverWait(browser, 10)).until(ExpectedConditions.elementToBeClickable(cancelButton));
+        cancelButton.click();
+
+        confirmDialog.ensureCancelButtonClickable();
+        confirmDialog.getCancelButton().click();
+
+        int newNumberOfRows = reservations.findElements(By.xpath("./div/table/tbody/tr")).size();
+        assertEquals(numberOfRows, newNumberOfRows);
     }
 
     @Test
