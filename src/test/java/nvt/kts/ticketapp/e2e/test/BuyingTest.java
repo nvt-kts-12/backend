@@ -10,15 +10,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringRunner.class)
@@ -59,35 +62,57 @@ public class BuyingTest {
     }
 
     private void goToEventDay() {
-        homePage.ensurePaginatorSelectIsClickable();
-        homePage.ensureEventBtnIsClickable();
 
-        homePage.getEventBtn().click();
+        List<WebElement> events = homePage.getResultList();
+        (new WebDriverWait(browser, 10)).until(ExpectedConditions.visibilityOfAllElements(events));
 
-        eventPage.ensureEventDayBtnIsDisplayed();
-        eventPage.getEventDayBtn().click();
+        if (events.size() == 0) {
+            assertEquals("No results", homePage.getNoResults().getText());
+        } else {
+            WebElement event = events.get(0);
+            WebElement moreInfoBtn = event.findElement(By.xpath("./mat-card/button"));
+
+            String[] urlTokens = moreInfoBtn.getAttribute("ng-reflect-router-link").split(",");
+            (new WebDriverWait(browser, 10)).until(ExpectedConditions.elementToBeClickable(moreInfoBtn));
+            moreInfoBtn.click();
+
+            String expectedUrl = "http://localhost:4200/" + urlTokens[0] + urlTokens[1];
+            assertEquals(expectedUrl, browser.getCurrentUrl());
+
+            List<WebElement> eventDays = eventPage.getEventDays();
+            (new WebDriverWait(browser, 10)).until(ExpectedConditions.visibilityOfAllElements(eventDays));
+
+            if (eventDays.size() == 0) {
+                System.out.println("no event days");
+            } else {
+                WebElement eventDay = eventDays.get(0);
+                WebElement continueBtn = eventDay.findElement(By.xpath("./div/div/button"));
+                urlTokens = continueBtn.getAttribute("ng-reflect-router-link").split(",");
+                (new WebDriverWait(browser, 10)).until(ExpectedConditions.elementToBeClickable(continueBtn));
+                continueBtn.click();
+
+                assertEquals(expectedUrl + "/" + urlTokens[0] + "/" + urlTokens[1], browser.getCurrentUrl());
+            }
+        }
     }
 
-    private void doThePayPalWork() throws InterruptedException {
+    private void doThePayPalWork() {
         ticketReservationPage.ensureThatBuyBtnIsDisplayed();
         ticketReservationPage.getBuyButton().click();
 
-        Thread.sleep(1000);
         ticketReservationPage.ensureConfirmYesIsClickable();
         ticketReservationPage.getConfirmYesBtn().click();
 
-        Thread.sleep(10000);
-        assertTrue(browser.getCurrentUrl().contains("https://www.sandbox.paypal.com"));
         payPalPage.ensureNextIsClickable();
+        assertTrue(browser.getCurrentUrl().contains("https://www.sandbox.paypal.com"));
         payPalPage.setEmailInput("sb-arjxx785590@personal.example.com");
         payPalPage.getBtnNext().click();
         payPalPage.ensureLoginIsClickable();
         payPalPage.setPasswordInput("0202998742015");
         payPalPage.getBtnLogin().click();
 
-        Thread.sleep(10000);
-        assertTrue(browser.getCurrentUrl().contains("https://www.sandbox.paypal.com/webapps/hermes"));
         payPalPage.ensureSubmitIsClickable();
+        assertTrue(browser.getCurrentUrl().contains("https://www.sandbox.paypal.com/webapps/hermes"));
         payPalPage.getBtnSubmit().click();
 
         payPalPage.ensureHomeIsClickable();
@@ -95,17 +120,16 @@ public class BuyingTest {
     }
 
     @Test()
-    public void buyGrandstandSeat_Positive() throws InterruptedException {
+    public void buyGrandstandSeat() {
         logIn();
         goToEventDay();
 
-        Thread.sleep(5000);
-
         List<WebElement> sectorsList = ticketReservationPage.getSectorsList();
+        (new WebDriverWait(browser, 10)).until(ExpectedConditions.visibilityOfAllElements(sectorsList));
         ticketReservationPage.ensureSectorsAreClickable();
 
-        if (sectorsList.size() > 0) {
-            sectorsList.get(0).click();
+        for (int i = 0; i < sectorsList.size(); i++) {
+            sectorsList.get(i).click();
             sectorPage.ensureCancelIsClickable();
 
             if (sectorPage.getTitle().getText().toLowerCase().contains("grandstand")) {
@@ -116,6 +140,13 @@ public class BuyingTest {
                     freeSeats.get(0).click();
                     sectorPage.ensurePickIsClickable();
                     sectorPage.getPickBtn().click();
+                    break;
+                }
+            } else {
+                sectorPage.getCancelBtn().click();
+                if (i == sectorsList.size() - 1) {
+                    System.out.println("Haven't found a grandstand sector");
+                    fail();
                 }
             }
         }
@@ -123,71 +154,74 @@ public class BuyingTest {
     }
 
     @Test()
-    public void buyParter_Positive() throws InterruptedException {
+    public void buyParterPlace() throws InterruptedException {
         logIn();
         goToEventDay();
 
-        Thread.sleep(5000);
-
         List<WebElement> sectorsList = ticketReservationPage.getSectorsList();
+        (new WebDriverWait(browser, 10)).until(ExpectedConditions.visibilityOfAllElements(sectorsList));
         ticketReservationPage.ensureSectorsAreClickable();
 
-        if (sectorsList.size() > 0) {
-            sectorsList.get(2).click();
+        for (int i = 0; i < sectorsList.size(); i++) {
+            sectorsList.get(i).click();
             sectorPage.ensureCancelIsClickable();
 
             if (sectorPage.getTitle().getText().toLowerCase().contains("parter")) {
                 sectorPage.ensureCancelIsClickable();
                 sectorPage.setParterInput(String.valueOf(1));
-
                 sectorPage.ensurePickIsClickable();
                 sectorPage.getPickBtn().click();
+                break;
+
+            } else {
+                sectorPage.getCancelBtn().click();
+                if (i == sectorsList.size() - 1) {
+                    System.out.println("Haven't found a parter sector");
+                    fail();
+                }
             }
+
         }
+
         doThePayPalWork();
     }
 
     @Test()
-    public void buyParterAndGrandstand() throws InterruptedException {
+    public void buyOnAllSectors() throws InterruptedException {
         logIn();
         goToEventDay();
 
-        Thread.sleep(5000);
-
         List<WebElement> sectorsList = ticketReservationPage.getSectorsList();
+        (new WebDriverWait(browser, 10)).until(ExpectedConditions.visibilityOfAllElements(sectorsList));
         ticketReservationPage.ensureSectorsAreClickable();
 
-        if (sectorsList.size() > 0) {
-            sectorsList.get(2).click();
+        for (WebElement sector : sectorsList) {
+            sector.click();
             sectorPage.ensureCancelIsClickable();
 
             if (sectorPage.getTitle().getText().toLowerCase().contains("parter")) {
                 sectorPage.ensureCancelIsClickable();
                 sectorPage.setParterInput(String.valueOf(1));
-
                 sectorPage.ensurePickIsClickable();
                 sectorPage.getPickBtn().click();
+
+            } else if (sectorPage.getTitle().getText().toLowerCase().contains("grandstand")) {
+                sectorPage.ensureCancelIsClickable();
+                List<WebElement> freeSeats = sectorPage.getSeats();
+
+                if (freeSeats.size() > 0) {
+                    freeSeats.get(0).click();
+                    sectorPage.ensurePickIsClickable();
+                    sectorPage.getPickBtn().click();
+                }
+            } else {
+                sectorPage.getCancelBtn().click();
             }
 
-        }
-
-        ticketReservationPage.ensureSectorsAreClickable();
-        sectorsList.get(0).click();
-        sectorPage.ensureCancelIsClickable();
-
-        if (sectorPage.getTitle().getText().toLowerCase().contains("grandstand")) {
-            sectorPage.ensureCancelIsClickable();
-            List<WebElement> freeSeats = sectorPage.getSeats();
-
-            if (freeSeats.size() > 0) {
-                freeSeats.get(0).click();
-                sectorPage.ensurePickIsClickable();
-                sectorPage.getPickBtn().click();
-            }
         }
         doThePayPalWork();
-    }
 
+    }
 
 
     @After

@@ -45,23 +45,23 @@ public class PayPalPage {
     }
 
     public void ensureHomeIsClickable() {
-        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(btnHome));
+        (new WebDriverWait(webDriver, 20)).until(ExpectedConditions.elementToBeClickable(btnHome));
     }
 
     public void ensureSubmitIsClickable() {
-        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(btnSubmit));
+        (new WebDriverWait(webDriver, 20)).until(ExpectedConditions.elementToBeClickable(btnSubmit));
     }
 
     public void ensureLoginIsClickable() {
-        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(btnLogin));
+        (new WebDriverWait(webDriver, 20)).until(ExpectedConditions.elementToBeClickable(btnLogin));
     }
 
     public void ensureNextIsClickable() {
-        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(btnNext));
+        (new WebDriverWait(webDriver, 20)).until(ExpectedConditions.elementToBeClickable(btnNext));
     }
 
     public void ensureCreateIsClickable() {
-        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(btnCreate));
+        (new WebDriverWait(webDriver, 20)).until(ExpectedConditions.elementToBeClickable(btnCreate));
     }
 
     public WebElement getEmailInput() {

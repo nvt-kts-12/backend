@@ -18,16 +18,16 @@ insert into location_scheme (id, address, name) values
 (2, "Sutjeska 2, Novi Sad", "Spens");
 
 insert into sector (id, bottom_rightx, bottom_righty, top_leftx, top_lefty, capacity, col_num, row_num, type, location_scheme_id) values
-(1, "0", "0", "0", "0", 5, 5, 1, "GRANDSTAND", 1 ), -- arena
-(2, "0", "0", "0", "0", 6, 2, 3, "GRANDSTAND", 1 ), -- arena
+(1, "150", "200", "100", "50", 5, 5, 1, "GRANDSTAND", 1 ), -- arena
+(2, "400", "200", "350", "50", 6, 2, 3, "GRANDSTAND", 1 ), -- arena
 
 (3, "150", "200", "100", "50", 25, 5, 5, "GRANDSTAND", 2 ), -- spens
 
 (4, "400", "200", "350", "50", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
-(5, "330", "180", "170", "150", 5, 0, 0, "PARTER", 2 ); -- spens
+(5, "330", "180", "170", "150", 5, 0, 0, "PARTER", 2 ), -- spens
 
 --janko :
---(6, "215", "-20", "85", "10", 25, 5, 5, "GRANDSTAND", 2 ); -- test GRANDSTAND in spens
+(6, "330", "180", "170", "150", 7, 0, 0, "PARTER", 1 ); -- test PARTER in arena
 
 insert into location(id, scheme_id) values
 (1, 1), -- arena
@@ -35,17 +35,15 @@ insert into location(id, scheme_id) values
 (3, 2); -- spens eventDay 2
 
 insert into location_sector (id, capacity, price, vip, location_id, sector_id) values
-(1, 5, 3, 0, 1, 1), -- arena Grandstane
+(1, 5, 3, 0, 1, 1), -- arena Grandstand
 (2, 2, 6, 0, 2, 3), -- spens Grandstand eventDay 1
 (3, 3, 5, 0, 2, 4), -- spens Grandstand eventDay 1
 (4, 3, 4, 0, 2, 5), -- spens Parter eventDay 1
-
 (5, 25, 6, 0, 3, 3), -- spens Grandstand eventDay 2
-
 (6, 3, 5, 0, 3, 4), -- spens Grandstand eventDay 2
-(7, 3, 3, 0, 3, 5); -- spens Parter eventDay 2
--- janko:
---(8, 25, 2, 0, 3, 6); -- spens Parter eventDay 2
+(7, 3, 3, 0, 3, 5), -- spens Parter eventDay 2
+
+(8, 7, 5, 1, 1, 6); -- arena PARTER test Janko
 
 insert into event (id, category, description, name) values
 (1, "ENTERTAINMENT", "Opis", "Film 1"),
@@ -103,6 +101,14 @@ insert into ticket(id, price, seat_col, seat_row, sector_id, sold, vip, event_da
 (41, 2, 4, 5, 3, 0, 0, 3, "GRANDSTAND"), --
 (42, 2, 5, 1, 3, 0, 0, 3, "GRANDSTAND"), --
 (43, 2, 5, 2, 3, 0, 0, 3, "GRANDSTAND"), --
-(44, 2, 5, 3, 3, 0, 0, 3, "GRANDSTAND"); --
---(45, 2, 5, 4, 3, 0, 3, "GRANDSTAND"), --
---(46, 2, 5, 5, 3, 0, 3, "GRANDSTAND"); --
+(44, 2, 5, 3, 3, 0, 0, 3, "GRANDSTAND"), --
+
+--(id, price, seat_col, seat_row, sector_id, sold, vip, event_day_id, sector_type)
+
+(45, 5, 0, 0, 6, 0, 0, 1, "PARTER"), -- arena PARTER
+(46, 5, 0, 0, 6, 0, 0, 1, "PARTER"),
+(47, 5, 0, 0, 6, 0, 0, 1, "PARTER"),
+(48, 5, 0, 0, 6, 0, 0, 1, "PARTER"),
+(49, 5, 0, 0, 6, 0, 0, 1, "PARTER"),
+(50, 5, 0, 0, 6, 0, 0, 1, "PARTER"),
+(51, 5, 0, 0, 6, 0, 0, 1, "PARTER"); --
