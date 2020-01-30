@@ -20,7 +20,9 @@ insert into location_scheme (id, address, name) values
 insert into sector (id, bottom_rightx, bottom_righty, top_leftx, top_lefty, capacity, col_num, row_num, type, location_scheme_id) values
 (1, "0", "0", "0", "0", 5, 5, 1, "GRANDSTAND", 1 ), -- arena
 (2, "0", "0", "0", "0", 6, 2, 3, "GRANDSTAND", 1 ), -- arena
-(3, "150", "200", "100", "50", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
+
+(3, "150", "200", "100", "50", 25, 5, 5, "GRANDSTAND", 2 ), -- spens
+
 (4, "400", "200", "350", "50", 5, 5, 1, "GRANDSTAND", 2 ), -- spens
 (5, "330", "180", "170", "150", 5, 0, 0, "PARTER", 2 ); -- spens
 
@@ -37,11 +39,13 @@ insert into location_sector (id, capacity, price, vip, location_id, sector_id) v
 (2, 2, 6, 0, 2, 3), -- spens Grandstand eventDay 1
 (3, 3, 5, 0, 2, 4), -- spens Grandstand eventDay 1
 (4, 3, 4, 0, 2, 5), -- spens Parter eventDay 1
-(5, 2, 6, 0, 3, 3), -- spens Grandstand eventDay 2
+
+(5, 25, 6, 0, 3, 3), -- spens Grandstand eventDay 2
+
 (6, 3, 5, 0, 3, 4), -- spens Grandstand eventDay 2
 (7, 3, 3, 0, 3, 5); -- spens Parter eventDay 2
 -- janko:
---(8, 25, 175, 0, 3, 6); -- spens Parter eventDay 2
+--(8, 25, 2, 0, 3, 6); -- spens Parter eventDay 2
 
 insert into event (id, category, description, name) values
 (1, "ENTERTAINMENT", "Opis", "Film 1"),
@@ -73,31 +77,32 @@ insert into ticket(id, price, seat_col, seat_row, sector_id, sold, vip, event_da
 (18, 5, 3, 1, 4, 0, 0, 3, "GRANDSTAND"), --
 (19, 3, 1, 1, 5, 0, 0, 3, "PARTER"), -- spens parter id 5
 (20, 3, 2, 1, 5, 0, 0, 3, "PARTER"), --
-(21, 3, 3, 1, 5, 0, 0, 3, "PARTER"); --
+(21, 3, 3, 1, 5, 0, 0, 3, "PARTER"), --
 
 -- janko:
---(22, 175, 1, 1, 6, 0, 0, 3), --
---(23, 175, 1, 2, 6, 0, 0, 3), --
---(24, 175, 1, 3, 6, 0, 0, 3), --
---(25, 175, 1, 4, 6, 0, 0, 3), --
---(26, 175, 1, 5, 6, 0, 0, 3), --
---(27, 175, 2, 1, 6, 0, 0, 3), --
---(28, 175, 2, 2, 6, 0, 0, 3), --
---(29, 175, 2, 3, 6, 0, 0, 3), --
---(30, 175, 2, 4, 6, 0, 0, 3), --
---(31, 175, 2, 5, 6, 0, 0, 3), --
---(32, 175, 3, 1, 6, 0, 0, 3), --
---(33, 175, 3, 2, 6, 0, 0, 3), --
---(34, 175, 3, 3, 6, 0, 0, 3), --
---(35, 175, 3, 4, 6, 0, 0, 3), --
---(36, 175, 3, 5, 6, 0, 0, 3), --
---(37, 175, 4, 1, 6, 0, 0, 3), --
---(38, 175, 4, 2, 6, 0, 0, 3), --
---(39, 175, 4, 3, 6, 0, 0, 3), --
---(40, 175, 4, 4, 6, 0, 0, 3), --
---(41, 175, 4, 5, 6, 0, 0, 3), --
---(42, 175, 5, 1, 6, 0, 0, 3), --
---(43, 175, 5, 2, 6, 0, 0, 3), --
---(44, 175, 5, 3, 6, 0, 0, 3), --
---(45, 175, 5, 4, 6, 0, 0, 3), --
---(46, 175, 5, 5, 6, 0, 0, 3); --
+--(id, price, seat_col, seat_row, sector_id, sold, vip, event_day_id, sector_type)
+(22, 2, 5, 4, 3, 0, 0, 3, "GRANDSTAND"), --
+(23, 2, 1, 2, 3, 0, 0, 3, "GRANDSTAND"), --
+(24, 2, 1, 3, 3, 0, 0, 3, "GRANDSTAND"), --
+(25, 2, 1, 4, 3, 0, 0, 3, "GRANDSTAND"), --
+(26, 2, 1, 5, 3, 0, 0, 3, "GRANDSTAND"), --
+(27, 2, 5, 5, 3, 0, 0, 3, "GRANDSTAND"), --
+(28, 2, 2, 2, 3, 0, 0, 3, "GRANDSTAND"), --
+(29, 2, 2, 3, 3, 0, 0, 3, "GRANDSTAND"), --
+(30, 2, 2, 4, 3, 0, 0, 3, "GRANDSTAND"), --
+(31, 2, 2, 5, 3, 0, 0, 3, "GRANDSTAND"), --
+(32, 2, 3, 1, 3, 0, 0, 3, "GRANDSTAND"), --
+(33, 2, 3, 2, 3, 0, 0, 3, "GRANDSTAND"), --
+(34, 2, 3, 3, 3, 0, 0, 3, "GRANDSTAND"), --
+(35, 2, 3, 4, 3, 0, 0, 3, "GRANDSTAND"), --
+(36, 2, 3, 5, 3, 0, 0, 3, "GRANDSTAND"), --
+(37, 2, 4, 1, 3, 0, 0, 3, "GRANDSTAND"), --
+(38, 2, 4, 2, 3, 0, 0, 3, "GRANDSTAND"), --
+(39, 2, 4, 3, 3, 0, 0, 3, "GRANDSTAND"), --
+(40, 2, 4, 4, 3, 0, 0, 3, "GRANDSTAND"), --
+(41, 2, 4, 5, 3, 0, 0, 3, "GRANDSTAND"), --
+(42, 2, 5, 1, 3, 0, 0, 3, "GRANDSTAND"), --
+(43, 2, 5, 2, 3, 0, 0, 3, "GRANDSTAND"), --
+(44, 2, 5, 3, 3, 0, 0, 3, "GRANDSTAND"); --
+--(45, 2, 5, 4, 3, 0, 3, "GRANDSTAND"), --
+--(46, 2, 5, 5, 3, 0, 3, "GRANDSTAND"); --
