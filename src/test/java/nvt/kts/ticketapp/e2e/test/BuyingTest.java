@@ -1,4 +1,4 @@
-package nvt.kts.ticketapp.e2e.test.reservationAndBuying;
+package nvt.kts.ticketapp.e2e.test;
 
 import nvt.kts.ticketapp.e2e.pages.auth.LoginPage;
 import nvt.kts.ticketapp.e2e.pages.home.EventPage;
