@@ -50,10 +50,6 @@ public class SectorPage {
         return seats;
     }
 
-    public void setSeats(List<WebElement> seats) {
-        this.seats = seats;
-    }
-
     public WebElement getTitle() {
         return title;
     }

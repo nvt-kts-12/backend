@@ -64,14 +64,6 @@ public class PayPalPage {
         (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(btnCreate));
     }
 
-    public WebDriver getWebDriver() {
-        return webDriver;
-    }
-
-    public void setWebDriver(WebDriver webDriver) {
-        this.webDriver = webDriver;
-    }
-
     public WebElement getEmailInput() {
         return emailInput;
     }
@@ -121,11 +113,4 @@ public class PayPalPage {
         return btnHome;
     }
 
-    public WebElement getShipToHeading() {
-        return shipToHeading;
-    }
-
-    public WebElement getHeaderText() {
-        return headerText;
-    }
 }

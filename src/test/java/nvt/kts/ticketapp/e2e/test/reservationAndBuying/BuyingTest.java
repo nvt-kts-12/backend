@@ -105,7 +105,6 @@ public class BuyingTest {
         ticketReservationPage.ensureSectorsAreClickable();
 
         if (sectorsList.size() > 0) {
-            ticketReservationPage.ensureFirstSectorIsClickable();
             sectorsList.get(0).click();
             sectorPage.ensureCancelIsClickable();
 
@@ -134,7 +133,6 @@ public class BuyingTest {
         ticketReservationPage.ensureSectorsAreClickable();
 
         if (sectorsList.size() > 0) {
-            ticketReservationPage.ensureFirstSectorIsClickable();
             sectorsList.get(2).click();
             sectorPage.ensureCancelIsClickable();
 
@@ -160,7 +158,6 @@ public class BuyingTest {
         ticketReservationPage.ensureSectorsAreClickable();
 
         if (sectorsList.size() > 0) {
-            ticketReservationPage.ensureFirstSectorIsClickable();
             sectorsList.get(2).click();
             sectorPage.ensureCancelIsClickable();
 
@@ -174,7 +171,7 @@ public class BuyingTest {
 
         }
 
-        ticketReservationPage.ensureFirstSectorIsClickable();
+        ticketReservationPage.ensureSectorsAreClickable();
         sectorsList.get(0).click();
         sectorPage.ensureCancelIsClickable();
 
