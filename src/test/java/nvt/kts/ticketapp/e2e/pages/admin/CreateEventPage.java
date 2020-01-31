@@ -42,6 +42,9 @@ public class CreateEventPage {
     @FindBy(id = "dates-list")
     private WebElement datesList;
 
+    @FindBy(id = "snackbar")
+    private WebElement snackbar;
+
     public CreateEventPage(WebDriver webDriver) {
         this.webDriver = webDriver;
     }
@@ -84,6 +87,10 @@ public class CreateEventPage {
 
     public WebElement getDatesList() {
         return datesList;
+    }
+
+    public WebElement getSnackbar() {
+        return snackbar;
     }
 
     public void setEventNameInput(String value) {

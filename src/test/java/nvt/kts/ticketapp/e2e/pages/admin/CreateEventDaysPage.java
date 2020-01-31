@@ -27,9 +27,6 @@ public class CreateEventDaysPage {
     @FindBy(xpath = "//button[@class=\'mat-calendar-next-button mat-icon-button\']")
     private WebElement goToNextMonthButton;
 
-    @FindBy(xpath = "//button[@class=\'mat-calendar-previous-button mat-icon-button\']")
-    private WebElement goToPreviousMonthButton;
-
     @FindBy(xpath = "//td[@class=\'mat-calendar-body-cell ng-star-inserted\']")
     private List<WebElement> datesInNextMonth;
 
@@ -42,8 +39,17 @@ public class CreateEventDaysPage {
     @FindBy(xpath = "//*[@id=\"11-2\"]")
     private WebElement selectOptionTwo;
 
-    @FindBy(xpath = "//*[@class=\'sectors-svg\']/rect")
+    @FindBy(id = "sector-rect")
     private List<WebElement> sectors;
+
+    @FindBy(className = "sector-price-input")
+    private List<WebElement> sectorPriceInputs;
+
+    @FindBy(className = "sector-capacity-input")
+    private List<WebElement> sectorCapacityInputs;
+
+    @FindBy(id = "finish-button")
+    private WebElement finishButton;
 
     public CreateEventDaysPage(WebDriver webDriver) {
         this.webDriver = webDriver;
@@ -86,11 +92,37 @@ public class CreateEventDaysPage {
         return selectOptionTwo;
     }
 
-    public void ensureGoToPreviousMonthButtonIsClickable() {
-        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(goToPreviousMonthButton));
-    }
-
     public List<WebElement> getSectors() {
         return sectors;
+    }
+
+    public List<WebElement> getSectorCapacityInputs() {
+        return sectorCapacityInputs;
+    }
+
+    public WebElement getFinishButton() {
+        return finishButton;
+    }
+
+    public void ensureSectorsAreClickable() {
+        for (WebElement sector : sectors) {
+            (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(sector));
+        }
+    }
+
+    public List<WebElement> getSectorPriceInputs() {
+        return sectorPriceInputs;
+    }
+
+    public void ensurePriceInputsAreVisible() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.visibilityOfAllElements(sectorPriceInputs));
+    }
+
+    public void ensureCapacityInputsAreVisible() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.visibilityOfAllElements(sectorCapacityInputs));
+    }
+
+    public void ensureFinishButtonIsClickable() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(finishButton));
     }
 }

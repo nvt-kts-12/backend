@@ -52,7 +52,7 @@ public class CreateEventTest {
     }
 
     @Test
-    public void CreateEvent() throws InterruptedException {
+    public void CreateEvent() {
 
         logIn();
 
@@ -119,12 +119,10 @@ public class CreateEventTest {
 
         createEventDaysPage.getOpenDatepickerButtons().get(0).click();
         createEventDaysPage.getGoToNextMonthButton().click();
-        createEventDaysPage.ensureGoToPreviousMonthButtonIsClickable();
         createEventDaysPage.getDatesInNextMonth().get(5).click();
 
         createEventDaysPage.getOpenDatepickerButtons().get(1).click();
         createEventDaysPage.getGoToNextMonthButton().click();
-        createEventDaysPage.ensureGoToPreviousMonthButtonIsClickable();
         createEventDaysPage.getDatesInNextMonth().get(6).click();
 
         createEventDaysPage.getSelects().get(0).click();
@@ -133,7 +131,40 @@ public class CreateEventTest {
         createEventDaysPage.getSelects().get(1).click();
         createEventDaysPage.getSelectOptionTwo().click();
 
+        (new WebDriverWait(browser, 10)).until(ExpectedConditions.visibilityOfAllElements(createEventDaysPage.getSectors()));
+        createEventDaysPage.ensureSectorsAreClickable();
+
         createEventDaysPage.getSectors().get(0).click();
-        createEventDaysPage.getSectors().get(createEventDaysPage.getSectors().size()).click();
+        createEventDaysPage.getSectors().get(createEventDaysPage.getSectors().size() - 1).click();
+
+        createEventDaysPage.ensurePriceInputsAreVisible();
+
+        WebElement priceInputOne = createEventDaysPage.getSectorPriceInputs().get(0);
+        priceInputOne.clear();
+        priceInputOne.sendKeys("50");
+
+        WebElement priceInputTwo = createEventDaysPage.getSectorPriceInputs().get(1);
+        priceInputTwo.clear();
+        priceInputTwo.sendKeys("40");
+
+        createEventDaysPage.ensureCapacityInputsAreVisible();
+
+        WebElement capacityInputOne = createEventDaysPage.getSectorCapacityInputs().get(0);
+        capacityInputOne.clear();
+        capacityInputOne.sendKeys("10");
+
+        WebElement capacityInputTwo = createEventDaysPage.getSectorCapacityInputs().get(1);
+        capacityInputTwo.clear();
+        capacityInputTwo.sendKeys("10");
+
+        createEventDaysPage.ensureFinishButtonIsClickable();
+        createEventDaysPage.getFinishButton().click();
+
+        (new WebDriverWait(browser, 10)).until(ExpectedConditions.urlToBe("http://localhost:4200/admin/create-event"));
+
+        String expectedUrl4 = "http://localhost:4200/admin/create-event";
+        assertEquals(expectedUrl4, browser.getCurrentUrl());
+
+        assertEquals(createEventPage.getSnackbar().getText(), "you have successfully created the event!");
     }
 }
