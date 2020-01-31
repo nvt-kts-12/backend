@@ -19,6 +19,10 @@ public class LoginPage {
     @FindBy(id = "submitLogin")
     private WebElement submitBtn;
 
+    @FindBy(id="snackbar")
+    private WebElement snackbar;
+
+
     public LoginPage(WebDriver webDriver) {
         this.webDriver = webDriver;
     }
@@ -29,6 +33,10 @@ public class LoginPage {
 
     public void ensureUsernameIsClickable() {
         (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(usernameInput));
+    }
+
+    public WebElement getSnackbar() {
+        return snackbar;
     }
 
     public WebElement getUsernameInput() {
@@ -53,5 +61,9 @@ public class LoginPage {
 
     public WebElement getSubmitBtn() {
         return submitBtn;
+    }
+
+    public void ensureSnackbarIsDisplayed() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.visibilityOf(snackbar));
     }
 }

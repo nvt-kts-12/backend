@@ -12,6 +12,9 @@ public class HomePage {
 
     private WebDriver webDriver;
 
+    @FindBy(xpath="/html/body/app-root/div/app-navbar/mat-toolbar/div/button[2]")
+    private WebElement loginButton;
+
     @FindBy(xpath="//*[@id=\"event-list\"]/*[@id=\"no-results\"]")
     private WebElement noResults;
 
@@ -30,6 +33,10 @@ public class HomePage {
 
     public HomePage(WebDriver webDriver) {
         this.webDriver = webDriver;
+    }
+
+    public WebElement getLoginButton() {
+        return loginButton;
     }
 
     public List<WebElement> getResultList() {
