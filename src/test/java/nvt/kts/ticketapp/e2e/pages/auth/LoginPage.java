@@ -66,4 +66,8 @@ public class LoginPage {
     public void ensureSnackbarIsDisplayed() {
         (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.visibilityOf(snackbar));
     }
+
+    public void ensureLoginButtonIsClickable(){
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(submitBtn));
+    }
 }

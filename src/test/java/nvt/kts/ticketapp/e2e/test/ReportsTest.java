@@ -17,6 +17,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -51,12 +54,14 @@ public class ReportsTest {
         adminPage = PageFactory.initElements(browser,AdminPage.class);
     }
 
+
+
     @Test
     public void reportsTest() throws InterruptedException {
-        WebDriverWait wait1 = new WebDriverWait (browser, 20);
-        WebDriverWait wait2 = new WebDriverWait (browser, 20);
-        WebDriverWait wait3 = new WebDriverWait (browser, 20);
-        WebDriverWait wait4 = new WebDriverWait (browser, 20);
+
+        List<WebElement> eventSelects;
+        List<WebElement> showBySelects;
+        List<WebElement> locationSelects;
 
         homePage.getLoginButton().click();
         assertEquals("http://localhost:4200/login",
@@ -72,16 +77,26 @@ public class ReportsTest {
         adminPage.getViewReportsButton().click();
 
         WebElement eventSelect = reportsPage.getEventSelect();
+        WebDriverWait wait1 = new WebDriverWait (browser, 20);
         wait1.until(ExpectedConditions.elementToBeClickable(eventSelect));
         eventSelect.click();
-        WebElement eventSelectOption = browser.findElement(By.id("1"));
-        eventSelectOption.click();
+        eventSelects = browser.findElements(By.className("eventOptions"));
+        if(!eventSelects.isEmpty()){
+            eventSelects.get(1).click();
+        }else{
+            System.out.println("No events in database");
+        }
 
         WebElement showBySelect = reportsPage.getShowBySelect();
+        WebDriverWait wait2 = new WebDriverWait (browser, 20);
         wait2.until(ExpectedConditions.elementToBeClickable(showBySelect));
         showBySelect.click();
-        WebElement showByOption = browser.findElement(By.id("selectOption1"));
-        showByOption.click();
+        showBySelects = browser.findElements(By.className("showByOptions"));
+        if(!showBySelects.isEmpty()){
+            showBySelects.get(1).click();
+        }else{
+            System.out.println("No show by options presented");
+        }
 
         assertTrue(reportsPage.getCanvas().isDisplayed());
 
@@ -91,13 +106,21 @@ public class ReportsTest {
         Thread.sleep(1000);
 
         WebElement locationSelect = reportsPage.getLocationSelect();
+        WebDriverWait wait3 = new WebDriverWait (browser, 20);
         wait3.until(ExpectedConditions.elementToBeClickable(locationSelect));
         locationSelect.click();
-        WebElement locationOption = browser.findElement(By.id("2"));
-        locationOption.click();
+        locationSelects = browser.findElements(By.className("locationOptions"));
+        if(!locationSelects.isEmpty()){
+            locationSelects.get(1).click();
+        }else{
+            System.out.println("No locations in database");
+        }
 
+        WebDriverWait wait4 = new WebDriverWait (browser, 20);
         wait4.until(ExpectedConditions.elementToBeClickable(reportsPage.getCanvas()));
         assertTrue(reportsPage.getCanvas().isDisplayed());
+
+
     }
 
     @After
