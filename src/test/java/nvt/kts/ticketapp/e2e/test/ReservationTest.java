@@ -1,7 +1,7 @@
 package nvt.kts.ticketapp.e2e.test;
 
 import nvt.kts.ticketapp.e2e.pages.auth.LoginPage;
-import nvt.kts.ticketapp.e2e.pages.home.EventPage;
+import nvt.kts.ticketapp.e2e.pages.event.EventPage;
 import nvt.kts.ticketapp.e2e.pages.home.HomePage;
 import nvt.kts.ticketapp.e2e.pages.ticketReservation.SectorPage;
 import nvt.kts.ticketapp.e2e.pages.ticketReservation.TicketReservationPage;

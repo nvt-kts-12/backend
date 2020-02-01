@@ -1,8 +1,6 @@
 package nvt.kts.ticketapp.e2e.test;
 
-import nvt.kts.ticketapp.e2e.pages.auth.LoginPage;
 import nvt.kts.ticketapp.e2e.pages.auth.RegistrationPage;
-import nvt.kts.ticketapp.e2e.pages.home.HomePage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +13,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class RegistrationTest {
@@ -29,7 +26,7 @@ public class RegistrationTest {
     @Before
     public void setupSelenium() {
         // instantiate browser
-        System.setProperty("webdriver.chrome.driver","C:\\Users\\marko23\\Downloads\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","chromedriver.exe");
         browser = new ChromeDriver();
         // maximize window
         browser.manage().window().maximize();

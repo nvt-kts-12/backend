@@ -6,69 +6,65 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-
 public class AdminPage {
 
-    private WebDriver driver;
+    private WebDriver webDriver;
 
     @FindBy(id = "create_event")
-    private WebElement createEventButton;
+    private WebElement createEventOption;
 
     @FindBy(id = "edit_event")
-    private WebElement editEventButton;
+    private WebElement editEventOption;
 
     @FindBy(id = "create_location")
-    private WebElement addLocationButton;
+    private WebElement createLocationOption;
 
     @FindBy(id = "edit_location")
-    private WebElement editLocationButton;
+    private WebElement editLocationOption;
 
     @FindBy(id = "bar_chart")
     private WebElement viewReportsButton;
 
+    public AdminPage(WebDriver webDriver) { this.webDriver = webDriver; }
 
-    public AdminPage(WebDriver driver) {
-        this.driver = driver;
+    public void ensureCreateEventIsClickable() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(createEventOption));
     }
 
-    public WebDriver getDriver() {
-        return driver;
+    public void ensureEditEventIsClickable() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(editEventOption));
     }
 
-    public WebElement getCreateEventButton() {
-        return createEventButton;
+    public void ensureCreateLocationIsClickable() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(createLocationOption));
     }
 
-    public WebElement getEditEventButton() {
-        return editEventButton;
-    }
-
-    public WebElement getAddLocationButton() {
-        return addLocationButton;
-    }
-
-    public WebElement getEditLocationButton() {
-        return editLocationButton;
-    }
-
-    public WebElement getViewReportsButton() {
-        return viewReportsButton;
+    public void ensureEditLocationIsClickable() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(editLocationOption));
     }
 
     public void ensureReportsButtonIsDisplayed() {
-        (new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(viewReportsButton));
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(viewReportsButton));
     }
-    public void ensureCreateEventButtonIsDisplayed() {
-        (new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(createEventButton));
+
+    public WebElement getViewReportsButton() { return viewReportsButton; }
+
+    public WebElement getCreateEventOption() {
+        return createEventOption;
     }
-    public void ensureEditEventButtonIsDisplayed() {
-        (new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(editEventButton));
+
+    public WebElement getEditEventOption() {
+        return editEventOption;
     }
-    public void ensureAddLocationButtonIsDisplayed() {
-        (new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(addLocationButton));
+
+    public WebElement getCreateLocationOption() {
+        return createLocationOption;
     }
-    public void ensureEditLocationButtonIsDisplayed() {
-        (new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(editLocationButton));
+
+    public WebElement getEditLocationOption() {
+        return editLocationOption;
+
+
+
     }
 }

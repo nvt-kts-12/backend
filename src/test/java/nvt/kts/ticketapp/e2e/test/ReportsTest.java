@@ -17,12 +17,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 
 @RunWith(SpringRunner.class)
@@ -40,7 +38,7 @@ public class ReportsTest {
     @Before
     public void setupSelenium() {
         // instantiate browser
-        System.setProperty("webdriver.chrome.driver","C:\\Users\\marko23\\Downloads\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","chromedriver.exe");
         browser = new ChromeDriver();
         // maximize window
         browser.manage().window().maximize();

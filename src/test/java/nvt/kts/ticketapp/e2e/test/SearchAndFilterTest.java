@@ -1,10 +1,10 @@
 package nvt.kts.ticketapp.e2e.test;
 
-import nvt.kts.ticketapp.e2e.pages.home.EventPage;
+import nvt.kts.ticketapp.e2e.pages.event.EventPage;
 import nvt.kts.ticketapp.e2e.pages.home.Filter;
 import nvt.kts.ticketapp.e2e.pages.home.HomePage;
 import nvt.kts.ticketapp.e2e.pages.home.Search;
-import nvt.kts.ticketapp.e2e.pages.home.helper.DateAndLocation;
+import nvt.kts.ticketapp.e2e.helper.DateAndLocation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
