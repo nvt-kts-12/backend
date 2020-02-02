@@ -1,9 +1,6 @@
 package nvt.kts.ticketapp.e2e;
 
-import nvt.kts.ticketapp.e2e.test.SearchAndFilterTest;
-import nvt.kts.ticketapp.e2e.test.BuyingTest;
-import nvt.kts.ticketapp.e2e.test.ReservationTest;
-import nvt.kts.ticketapp.e2e.test.UserTicketsTest;
+import nvt.kts.ticketapp.e2e.test.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -12,7 +9,9 @@ import org.junit.runners.Suite;
         SearchAndFilterTest.class,
         BuyingTest.class,
         ReservationTest.class,
-        UserTicketsTest.class
+        UserTicketsTest.class,
+        CreateEventTest.class,
+        EditEventTest.class
 })
 public class E2ETestSuite {
 }

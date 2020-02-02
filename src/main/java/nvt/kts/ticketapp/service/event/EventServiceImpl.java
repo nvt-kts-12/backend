@@ -45,6 +45,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static nvt.kts.ticketapp.config.Constants.DATE_FORMAT;
@@ -210,8 +211,10 @@ public class EventServiceImpl implements EventService {
         Date date = parseDate(eventDayDetails.getDate(), DATE_FORMAT);
         List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventId);
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         for (EventDay dayFromList : eventDays) {
-            if (dayFromList.getDate().toString().equals(eventDayDetails.getDate()) && !dayFromList.getId().equals(eventDay.getId())) {
+            if (parseDate(sdf.format(dayFromList.getDate()), DATE_FORMAT).equals(date) && !dayFromList.getId().equals(eventDay.getId())) {
                 throw new EventDayForDateExists();
             }
         }

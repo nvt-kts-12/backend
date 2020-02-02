@@ -29,6 +29,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -47,12 +49,7 @@ public class UpdateEventDayIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private EventRepository eventRepository;
-
-    @Autowired
-    private AuthorityRepository authorityRepository;
 
     private final String URL = "/api/event/eventDay";
 
@@ -63,50 +60,44 @@ public class UpdateEventDayIntegrationTest {
     @Autowired
     private LocationSchemeRepository locationSchemeRepository;
 
-    private static Event event;
     private static EventDay eventDay1;
-    private static EventDayUpdateDTO eventDay2;
     private static EventDayUpdateDTO eventDayDetails;
-    private static Location location;
-    private static LocationScheme locationScheme;
     private static EventDayUpdateDTO eventDayDetails_badDateFormat;
+    private static EventDayUpdateDTO eventDayDetails_dateExists;
 
     @Before
-    public void setUp(){
-        locationScheme = new LocationScheme("schemeName","address");
-        location= new Location(locationScheme);
-        event= new Event("name4", EventCategory.SPORT, "good4");
-        eventDay1 = new EventDay(new Date(2020-01-28),location,new Date(2020-01-27), EventDayState.RESERVABLE_AND_BUYABLE,event);
-        eventDayDetails = new EventDayUpdateDTO(1L,"2020-01-12","2020-01-10",EventDayState.SOLD_OUT);
-        eventDayDetails_badDateFormat = new EventDayUpdateDTO(1L,"12-01-2020","10-01-2020",EventDayState.SOLD_OUT);
+    public void setUp() throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        LocationScheme locationScheme = new LocationScheme("schemeName", "address");
+        Location location = new Location(locationScheme);
+        Event event = new Event("name4", EventCategory.SPORT, "good4");
+        eventDay1 = new EventDay(format.parse("2020-01-28"), location,format.parse("2020-01-27"), EventDayState.RESERVABLE_AND_BUYABLE, event);
+        EventDay eventDay2 = new EventDay(format.parse("2020-05-25"), location, format.parse("2020-05-23"), EventDayState.RESERVABLE_AND_BUYABLE, event);
+        eventDayDetails = new EventDayUpdateDTO(1L,"2020-05-05","2020-05-03",EventDayState.NOT_IN_SALE);
+        eventDayDetails_badDateFormat = new EventDayUpdateDTO(1L,"10.01.2020","2020-05-03",EventDayState.NOT_IN_SALE);
+        eventDayDetails_dateExists = new EventDayUpdateDTO(1L,"2020-05-25","2020-05-10",EventDayState.NOT_IN_SALE);
 
         locationSchemeRepository.save(locationScheme);
         locationRepository.save(location);
         eventRepository.save(event);
         eventDaysRepository.save(eventDay1);
+        eventDaysRepository.save(eventDay2);
     }
 
-    /*              BACA UNSEPARABLE DATE I DATE FORMAT IS NOT VALID I TEST PADA
     @Test
     public void updateEventDay_DateFormatNotValid() {
-                                                                             //bad format
-        EventDayUpdateDTO eventDayDetails = new EventDayUpdateDTO(1L,"10.01.2020","2020-05-03",EventDayState.NOT_IN_SALE);
-
-        HttpEntity<EventDayUpdateDTO> eventDayEditDTOHttpEntity = new HttpEntity<EventDayUpdateDTO>(eventDayDetails);
+        HttpEntity<EventDayUpdateDTO> eventDayEditDTOHttpEntity = new HttpEntity<EventDayUpdateDTO>(eventDayDetails_badDateFormat);
 
         ResponseEntity<String> eventResponse = restTemplate.withBasicAuth("admin", "password")
                 .exchange(URL + "/" + eventDay1.getId(), HttpMethod.PUT,
                         eventDayEditDTOHttpEntity, String.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, eventResponse.getStatusCode());
-        assertEquals("Date format is not valid.", eventResponse.getBody());
+        assertEquals("Date format is not valid", eventResponse.getBody());
     }
-*/
+
     @Test
     public void updateEventDay_success() {
-
-        EventDayUpdateDTO eventDayDetails = new EventDayUpdateDTO(1L,"2020-05-05","2020-05-03",EventDayState.NOT_IN_SALE);
-
         HttpEntity<EventDayUpdateDTO> eventDayEditDTOHttpEntity = new HttpEntity<EventDayUpdateDTO>(eventDayDetails);
 
         ResponseEntity<EventDayUpdateDTO> eventResponse = restTemplate.withBasicAuth("admin", "password")
@@ -116,5 +107,17 @@ public class UpdateEventDayIntegrationTest {
         assertEquals(HttpStatus.OK, eventResponse.getStatusCode());
         assertNotNull(eventResponse.getBody());
         assertEquals(eventDayDetails.getEventDayState(), eventResponse.getBody().getEventDayState());
+    }
+
+    @Test
+    public void updateEventDay_DateExists() {
+        HttpEntity<EventDayUpdateDTO> eventDayEditDTOHttpEntity = new HttpEntity<EventDayUpdateDTO>(eventDayDetails_dateExists);
+
+        ResponseEntity<String> eventResponse = restTemplate.withBasicAuth("admin", "password")
+                .exchange(URL + "/" + eventDay1.getId(), HttpMethod.PUT,
+                        eventDayEditDTOHttpEntity, String.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, eventResponse.getStatusCode());
+        assertEquals("An eventday for this date already exists.", eventResponse.getBody());
     }
 }
