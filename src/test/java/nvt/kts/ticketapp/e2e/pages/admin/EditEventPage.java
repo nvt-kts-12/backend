@@ -148,4 +148,8 @@ public class EditEventPage {
     public void ensureSaveEventDayChangesIsClickable() {
         (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(saveEventDayChanges));
     }
+
+    public void ensureSnackbarTextHasChanged() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.textToBePresentInElement(snackbar, "You have successfully edited the event day"));
+    }
 }

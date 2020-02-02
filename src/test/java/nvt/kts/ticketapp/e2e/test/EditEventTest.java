@@ -5,7 +5,9 @@ import nvt.kts.ticketapp.e2e.pages.auth.LoginPage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -79,31 +81,24 @@ public class EditEventTest {
         editEventPage.ensureSnackbarIsVisible();
         assertEquals("You have successfully edited the event.", editEventPage.getSnackbar().getText());
 
-        editEventPage.getEventDayStateSelect().click();
-        editEventPage.getEditStateOptions().get(0).click();
-
         editEventPage.getChooseNewDateButton().click();
         editEventPage.ensureNextMonthButtonIsClickable();
         editEventPage.getGoToNextMonthButton().click();
         editEventPage.getDatesInNextMonth().get(5).click();
 
-//        (new WebDriverWait(browser, 10)).until(ExpectedConditions.elementToBeClickable(editEventPage.getChooseNewDateButtons().get(1)));
         editEventPage.getChooseNewExpireDateButton().click();
         editEventPage.ensureNextMonthButtonIsClickable();
         editEventPage.getGoToNextMonthButton().click();
         editEventPage.getDatesInNextMonth().get(3).click();
 
-        browser.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        editEventPage.getEditEventDaysTitle().click();
-        browser.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        editEventPage.getEventDayStateSelect().click();
+        editEventPage.getEditStateOptions().get(0).click();
 
         editEventPage.ensureSaveEventDayChangesIsClickable();
         editEventPage.getSaveEventDayChanges().click();
 
-//        editEventPage.ensureSnackbarIsVisible();
-//        System.out.println(editEventPage.getSnackbar().getAttribute("class"));
-
-        //editEventPage.getSnackbar().getAttribute("class");  mat-snack-bar-container ng-tns-c11-55 ng-trigger ng-trigger-state snackbar-success ng-star-inserted
+        editEventPage.ensureSnackbarIsVisible();
+        editEventPage.ensureSnackbarTextHasChanged();
+        assertEquals("You have successfully edited the event day",editEventPage.getSnackbar().getText());
     }
-
 }
