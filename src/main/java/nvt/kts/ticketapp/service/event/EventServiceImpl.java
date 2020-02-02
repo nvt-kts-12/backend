@@ -200,12 +200,22 @@ public class EventServiceImpl implements EventService {
     }
 
 
-    public EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails) throws EventdayNotFound, DateFormatIsNotValid {
+    public EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails) throws EventdayNotFound, DateFormatIsNotValid, EventDayForDateExists {
 
         EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(id).
                 orElseThrow(() -> new EventdayNotFound(id));
 
+        Long eventId = eventDay.getEvent().getId();
+
         Date date = parseDate(eventDayDetails.getDate(), DATE_FORMAT);
+        List<EventDay> eventDays = eventDaysRepository.findAllByEventId(eventId);
+
+        for (EventDay dayFromList : eventDays) {
+            if (dayFromList.getDate().toString().equals(eventDayDetails.getDate()) && !dayFromList.getId().equals(eventDay.getId())) {
+                throw new EventDayForDateExists();
+            }
+        }
+
         Date reservationExpireDate = parseDate(eventDayDetails.getReservationExpirationDate(), DATE_FORMAT);
 
         eventDay.setDate(date);

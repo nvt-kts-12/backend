@@ -142,7 +142,7 @@ public class EventController {
 
         try {
             return new ResponseEntity<EventDayUpdateDTO>(eventService.updateEventDay(id, eventDayUpdateDTO), HttpStatus.OK);
-        } catch (EventdayNotFound | DateFormatIsNotValid ex) {
+        } catch (EventdayNotFound | DateFormatIsNotValid | EventDayForDateExists ex) {
             ex.printStackTrace();
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }

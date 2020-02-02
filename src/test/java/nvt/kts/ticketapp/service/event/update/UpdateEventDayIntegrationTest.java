@@ -11,6 +11,7 @@ import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDayDoesNotExist;
+import nvt.kts.ticketapp.exception.event.EventDayForDateExists;
 import nvt.kts.ticketapp.exception.event.EventdayNotFound;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.repository.event.EventRepository;
@@ -76,19 +77,19 @@ public class UpdateEventDayIntegrationTest {
     }
 
     @Test
-    public void update_success() throws DateFormatIsNotValid, EventdayNotFound {
+    public void update_success() throws DateFormatIsNotValid, EventdayNotFound, EventDayForDateExists {
         EventDayUpdateDTO updated = eventService.updateEventDay(eventDay1.getId(),eventDayDetails);
         assertNotNull(updated);
         assertEquals(updated.getEventDayState(),eventDayDetails.getEventDayState());
     }
 
     @Test(expected = DateFormatIsNotValid.class)
-    public void update_DateFormatIsNotValid() throws DateFormatIsNotValid, EventdayNotFound {
+    public void update_DateFormatIsNotValid() throws DateFormatIsNotValid, EventdayNotFound, EventDayForDateExists {
         EventDayUpdateDTO updated = eventService.updateEventDay(eventDay1.getId(),eventDayDetails_badDateFormat);
     }
 
     @Test(expected = EventdayNotFound.class)
-    public void update_EventdayNotFound() throws DateFormatIsNotValid, EventdayNotFound {
+    public void update_EventdayNotFound() throws DateFormatIsNotValid, EventdayNotFound, EventDayForDateExists {
         EventDayUpdateDTO updated = eventService.updateEventDay(500L,eventDayDetails);
     }
 

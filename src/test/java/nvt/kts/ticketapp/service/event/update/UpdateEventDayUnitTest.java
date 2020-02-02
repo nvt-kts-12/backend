@@ -9,6 +9,7 @@ import nvt.kts.ticketapp.domain.model.location.Location;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.exception.date.DateFormatIsNotValid;
 import nvt.kts.ticketapp.exception.event.EventDayDoesNotExist;
+import nvt.kts.ticketapp.exception.event.EventDayForDateExists;
 import nvt.kts.ticketapp.exception.event.EventdayNotFound;
 import nvt.kts.ticketapp.repository.event.EventDaysRepository;
 import nvt.kts.ticketapp.service.event.EventService;
@@ -63,7 +64,7 @@ public class UpdateEventDayUnitTest {
     }
 
     @Test
-    public void updateEventDay_success() throws DateFormatIsNotValid, EventdayNotFound {
+    public void updateEventDay_success() throws DateFormatIsNotValid, EventdayNotFound, EventDayForDateExists {
         eventDayDetails = new EventDayUpdateDTO(10L,"2020-01-15","2020-01-12",EventDayState.NOT_IN_SALE);
         EventDayUpdateDTO updatedEventDay = eventService.updateEventDay(eventDay.getId(),eventDayDetails);
         assertNotNull(updatedEventDay);
@@ -72,14 +73,14 @@ public class UpdateEventDayUnitTest {
     }
 
     @Test(expected = EventdayNotFound.class)
-    public void updateEventDay_EventDayNotFound() throws DateFormatIsNotValid, EventdayNotFound {
+    public void updateEventDay_EventDayNotFound() throws DateFormatIsNotValid, EventdayNotFound, EventDayForDateExists {
         eventDayDetails = new EventDayUpdateDTO(10L,"2020-01-15","2020-01-12",EventDayState.NOT_IN_SALE);
         EventDayUpdateDTO updatedEventDay = eventService.updateEventDay(eventDay_notFound.getId(),eventDayDetails);
 
     }
 
     @Test(expected = DateFormatIsNotValid.class)
-    public void updateEventDay_DateFormatNotValid() throws DateFormatIsNotValid, EventdayNotFound {
+    public void updateEventDay_DateFormatNotValid() throws DateFormatIsNotValid, EventdayNotFound, EventDayForDateExists {
         eventDayDetails = new EventDayUpdateDTO(10L,"15-1-2020","12-1-2020",EventDayState.NOT_IN_SALE);
         EventDayUpdateDTO updatedEventDay = eventService.updateEventDay(eventDay.getId(),eventDayDetails);
     }
