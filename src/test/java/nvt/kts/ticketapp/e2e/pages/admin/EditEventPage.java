@@ -152,4 +152,8 @@ public class EditEventPage {
     public void ensureSnackbarTextHasChanged() {
         (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.textToBePresentInElement(snackbar, "You have successfully edited the event day"));
     }
+
+    public void ensureSnackbarIsInvisible() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.invisibilityOf(snackbar));
+    }
 }
