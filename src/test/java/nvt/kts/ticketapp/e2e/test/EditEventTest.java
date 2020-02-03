@@ -52,7 +52,7 @@ public class EditEventTest {
 
 
     @Test
-    public void editEvent() throws InterruptedException {
+    public void editEvent() {
 
         logIn();
 

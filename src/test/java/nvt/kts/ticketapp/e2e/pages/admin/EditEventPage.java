@@ -1,5 +1,6 @@
 package nvt.kts.ticketapp.e2e.pages.admin;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -154,6 +155,6 @@ public class EditEventPage {
     }
 
     public void ensureSnackbarIsInvisible() {
-        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.invisibilityOf(snackbar));
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.invisibilityOf(webDriver.findElement(By.id("snackbar"))));
     }
 }
