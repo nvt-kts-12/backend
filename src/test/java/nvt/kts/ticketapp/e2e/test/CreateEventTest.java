@@ -56,9 +56,10 @@ public class CreateEventTest {
 
         logIn();
 
-        (new WebDriverWait(browser, 10)).until(ExpectedConditions.urlToBe("http://localhost:4200/admin"));
-
         String expectedUrl = "http://localhost:4200/admin";
+
+        (new WebDriverWait(browser, 10)).until(ExpectedConditions.urlToBe(expectedUrl));
+
         assertEquals(expectedUrl, browser.getCurrentUrl());
 
         adminPage.ensureCreateEventIsClickable();
@@ -85,7 +86,7 @@ public class CreateEventTest {
         createEventPage.ensureNextMonthButtonIsClickable();
         createEventPage.getGoToNextMonthButton().click();
 
-        WebElement dateButton = createEventPage.getDatesInNextMonth().get(9);
+        WebElement dateButton = createEventPage.getDatesInNextMonth().get(8);
         String clickedDateOne = dateButton.getText();
         dateButton.click();
 
@@ -93,7 +94,7 @@ public class CreateEventTest {
         createEventPage.ensureNextMonthButtonIsClickable();
         createEventPage.getGoToNextMonthButton().click();
 
-        WebElement dateButton2 = createEventPage.getDatesInNextMonth().get(10);
+        WebElement dateButton2 = createEventPage.getDatesInNextMonth().get(9);
         String clickedDateTwo = dateButton2.getText();
         dateButton2.click();
 
