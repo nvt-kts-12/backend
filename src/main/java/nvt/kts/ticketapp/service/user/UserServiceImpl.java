@@ -2,6 +2,7 @@ package nvt.kts.ticketapp.service.user;
 
 import nvt.kts.ticketapp.domain.dto.user.UserEditDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserRegistrationDTO;
+import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.user.AbstractUser;
 import nvt.kts.ticketapp.domain.model.user.Admin;
 import nvt.kts.ticketapp.domain.model.user.Authority;
@@ -127,5 +128,8 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             return user;
         }
+
     }
+
+
 }

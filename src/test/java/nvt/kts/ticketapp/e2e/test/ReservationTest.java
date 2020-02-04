@@ -37,7 +37,7 @@ public class ReservationTest {
 
     @Before
     public void setUpSelenium() {
-        System.setProperty("webdriver.chrome.driver", "chromedriver");
+        System.setProperty("webdriver.chrome.driver","C:\\Users\\marko23\\Downloads\\chromedriver.exe");
         browser = new ChromeDriver();
         browser.manage().window().maximize();
 

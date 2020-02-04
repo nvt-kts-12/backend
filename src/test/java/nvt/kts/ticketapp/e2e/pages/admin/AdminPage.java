@@ -22,6 +22,9 @@ public class AdminPage {
     @FindBy(id = "edit_location")
     private WebElement editLocationOption;
 
+    @FindBy(id = "bar_chart")
+    private WebElement viewReportsButton;
+
     public AdminPage(WebDriver webDriver) { this.webDriver = webDriver; }
 
     public void ensureCreateEventIsClickable() {
@@ -40,6 +43,12 @@ public class AdminPage {
         (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(editLocationOption));
     }
 
+    public void ensureReportsButtonIsDisplayed() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(viewReportsButton));
+    }
+
+    public WebElement getViewReportsButton() { return viewReportsButton; }
+
     public WebElement getCreateEventOption() {
         return createEventOption;
     }
@@ -54,5 +63,8 @@ public class AdminPage {
 
     public WebElement getEditLocationOption() {
         return editLocationOption;
+
+
+
     }
 }
