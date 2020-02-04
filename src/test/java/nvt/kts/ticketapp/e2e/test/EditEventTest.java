@@ -52,7 +52,7 @@ public class EditEventTest {
 
 
     @Test
-    public void editEvent() throws InterruptedException {
+    public void editEvent() {
 
         logIn();
 
@@ -81,6 +81,7 @@ public class EditEventTest {
         editEventPage.ensureSnackbarIsVisible();
         assertEquals("You have successfully edited the event.", editEventPage.getSnackbar().getText());
 
+        editEventPage.ensureSnackbarIsInvisible();
         editEventPage.getChooseNewDateButton().click();
         editEventPage.ensureNextMonthButtonIsClickable();
         editEventPage.getGoToNextMonthButton().click();
