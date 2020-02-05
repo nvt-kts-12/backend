@@ -20,4 +20,5 @@ public interface EventDaysRepository extends JpaRepository<EventDay, Long> {
 
     Optional<EventDay> findByIdAndDeletedFalse(Long evendDayId);
 
+    Optional<EventDay> findOneByIdAndDateAfter(Long eventDayId, Date date);
 }

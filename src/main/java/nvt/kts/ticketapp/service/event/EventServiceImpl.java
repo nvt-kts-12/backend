@@ -2,8 +2,6 @@ package nvt.kts.ticketapp.service.event;
 
 import com.google.zxing.WriterException;
 import nvt.kts.ticketapp.domain.dto.event.*;
-import nvt.kts.ticketapp.domain.dto.location.LocationSchemeDTO;
-import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.dto.location.SectorForDrawingDTO;
 import nvt.kts.ticketapp.domain.model.event.Event;
 import nvt.kts.ticketapp.domain.model.event.EventDay;
@@ -46,7 +44,9 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static nvt.kts.ticketapp.config.Constants.DATE_FORMAT;
 import static nvt.kts.ticketapp.util.DateUtil.*;
@@ -325,9 +325,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException, TicketListCantBeEmpty {
+    public List<Ticket> reserve(EventDayReservationDTO eventDayReservationDTO, User user) throws EventDayDoesNotExistOrStateIsNotValid, LocationSectorsDoesNotExistForLocation, SectorNotFound, SectorWrongType, NumberOfTicketsException, SeatIsNotAvailable, ReservationIsNotPossible, IOException, WriterException, TicketListCantBeEmpty, EventdayNotFound {
 
-        EventDay eventDay = eventDayService.getReservableAndBuyableAndDateAfter(eventDayReservationDTO.getEventDayId(), setTimeToMidnight(new Date()));
+        EventDay eventDay = null;
+        if (!eventDayReservationDTO.isPurchase()) {
+            eventDay = eventDayService.getReservableAndBuyableAndDateAfter(eventDayReservationDTO.getEventDayId(), setTimeToMidnight(new Date()));
+        } else {
+            eventDay = eventDayService.getByIdAndDateAfter(eventDayReservationDTO.getEventDayId(), setTimeToMidnight(new Date()));
+            if (eventDay.getState().equals(EventDayState.NOT_IN_SALE) ||
+                    eventDay.getState().equals(EventDayState.SOLD_OUT) ||
+                    eventDay.getState().equals(EventDayState.CANCELLED)) {
+                throw new EventDayDoesNotExistOrStateIsNotValid(eventDay.getId());
+            }
+        }
 
         // if it is reservation, check reservation date
         if (!eventDayReservationDTO.isPurchase() && eventDay.getReservationExpirationDate().before(setTimeToMidnight(new Date()))) {
@@ -392,14 +402,14 @@ public class EventServiceImpl implements EventService {
         EventDay eventDay = eventDayService.findOneById(eventDayReservationDTO.getEventDayId());
 
         List<LocationSector> locationSectors = locationSectorRepository.findAllByLocationIdAndDeletedFalse(eventDay.getLocation().getId());
-        for (LocationSector locationSector: locationSectors) {
-            for (ParterDTO parterDTO: eventDayReservationDTO.getParters()){
-                if(parterDTO.getSectorId() == locationSector.getSector().getId()){
+        for (LocationSector locationSector : locationSectors) {
+            for (ParterDTO parterDTO : eventDayReservationDTO.getParters()) {
+                if (parterDTO.getSectorId() == locationSector.getSector().getId()) {
                     totalPrice += locationSector.getPrice() * parterDTO.getNumberOfTickets();
                 }
             }
-            for (SeatDTO seatDTO: eventDayReservationDTO.getSeats()) {
-                if(seatDTO.getSectorId() == locationSector.getSector().getId()){
+            for (SeatDTO seatDTO : eventDayReservationDTO.getSeats()) {
+                if (seatDTO.getSectorId() == locationSector.getSector().getId()) {
                     totalPrice += locationSector.getPrice();
                 }
             }

@@ -34,6 +34,9 @@ public class PayPalPage {
     @FindBy(id = "btnHome")
     private WebElement btnHome;
 
+    @FindBy(id = "btnProfile")
+    private WebElement btnProfile;
+
     @FindBy(id = "ShipTo")
     private WebElement shipToHeading;
 
@@ -60,8 +63,8 @@ public class PayPalPage {
         (new WebDriverWait(webDriver, 20)).until(ExpectedConditions.elementToBeClickable(btnNext));
     }
 
-    public void ensureCreateIsClickable() {
-        (new WebDriverWait(webDriver, 20)).until(ExpectedConditions.elementToBeClickable(btnCreate));
+    public void ensureProfileIsClickable() {
+        (new WebDriverWait(webDriver, 20)).until(ExpectedConditions.elementToBeClickable(btnProfile));
     }
 
     public WebElement getEmailInput() {
@@ -88,6 +91,9 @@ public class PayPalPage {
         return btnCreate;
     }
 
+    public WebElement getBtnProfile() {
+        return btnProfile;
+    }
 
     public WebElement getPasswordInput() {
         return passwordInput;

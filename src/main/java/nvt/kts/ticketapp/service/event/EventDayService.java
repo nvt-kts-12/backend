@@ -20,6 +20,8 @@ public interface EventDayService {
 
     EventDay getReservableAndBuyableAndDateAfter(Long eventDayId, Date date) throws EventDayDoesNotExistOrStateIsNotValid;
 
+    EventDay getByIdAndDateAfter(Long eventDayId, Date date) throws EventdayNotFound;
+
     EventDay save(EventDay eventDay);
 
 }
