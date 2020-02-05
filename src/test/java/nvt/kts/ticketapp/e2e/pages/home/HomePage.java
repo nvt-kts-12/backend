@@ -12,6 +12,12 @@ public class HomePage {
 
     private WebDriver webDriver;
 
+    @FindBy(id="profileIcon")
+    private WebElement profileIcon;
+
+    @FindBy(id="loginButton")
+    private WebElement loginButton;
+
     @FindBy(xpath="//*[@id=\"event-list\"]/*[@id=\"no-results\"]")
     private WebElement noResults;
 
@@ -33,6 +39,14 @@ public class HomePage {
 
     public HomePage(WebDriver webDriver) {
         this.webDriver = webDriver;
+    }
+
+    public WebElement getLoginButton() {
+        return loginButton;
+    }
+
+    public WebElement getProfileIcon() {
+        return profileIcon;
     }
 
     public List<WebElement> getResultList() {
