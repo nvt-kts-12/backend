@@ -274,6 +274,7 @@ public class ReserveEventUnitTest {
         eventDayReservationDTO_Parter.setPurchase(true);
 
         when(eventDayServiceMocked.getReservableAndBuyableAndDateAfter(Mockito.anyLong(), Mockito.any(Date.class))).thenReturn(eventDay);
+        when(eventDayServiceMocked.getByIdAndDateAfter(Mockito.anyLong(), Mockito.any(Date.class))).thenReturn(eventDay);
 
         when(locationSectorServiceMocked.get(location.getId())).thenReturn(new ArrayList<>(Collections.singletonList(locationSector1)));
         when(ticketServiceMocked.getAvailableTicketsForEventDayAndSector(eventDay.getId(), sector1.getId())).thenReturn(new ArrayList<>(Collections.singletonList(ticket_Parter)));
@@ -456,6 +457,7 @@ public class ReserveEventUnitTest {
 
         when(locationSectorServiceMocked.get(location.getId())).thenReturn(new ArrayList<>(Collections.singletonList(locationSector2)));
         when(ticketServiceMocked.getAvailableGrandstandTicketForEventDayAndSector(Mockito.any(SeatDTO.class), Mockito.any(EventDay.class))).thenReturn(ticket_Grandstand);
+        when(eventDayServiceMocked.getByIdAndDateAfter(Mockito.anyLong(), Mockito.any(Date.class))).thenReturn(eventDay);
 
         ticket_Grandstand.setUser(user);
 
@@ -670,6 +672,7 @@ public class ReserveEventUnitTest {
         eventDayReservationDTO.setPurchase(true);
 
         when(eventDayServiceMocked.getReservableAndBuyableAndDateAfter(Mockito.anyLong(), Mockito.any(Date.class))).thenReturn(eventDay);
+        when(eventDayServiceMocked.getByIdAndDateAfter(Mockito.anyLong(), Mockito.any(Date.class))).thenReturn(eventDay);
 
         when(locationSectorServiceMocked.get(location.getId())).thenReturn(new ArrayList<>(Arrays.asList(locationSector1, locationSector2)));
 
