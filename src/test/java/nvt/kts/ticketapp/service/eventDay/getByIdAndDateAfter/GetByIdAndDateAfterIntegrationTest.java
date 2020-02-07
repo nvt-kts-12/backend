@@ -33,6 +33,7 @@ import static org.junit.Assert.assertNotNull;
 public class GetByIdAndDateAfterIntegrationTest {
 
     private final Long NONEXISTENT_EVENTDAY_ID = 5L;
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 
     @Rule
@@ -56,11 +57,18 @@ public class GetByIdAndDateAfterIntegrationTest {
     private Date eventDayDate;
     private Date expireDate;
 
+    /**
+     * Should be before expireDate
+     */
+    private Date todayDate;
+
     @Before
     public void setUp() throws ParseException {
 
-        eventDayDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-05");
-        expireDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01");
+        eventDayDate = sdf.parse("2021-05-05");
+        expireDate = sdf.parse("2021-05-01");
+
+        todayDate = sdf.parse("2020-02-02");
 
         locationScheme = locationSchemeRepository.save(new LocationScheme("schemeName", "address"));
         location = locationRepository.save(new Location(locationScheme));
@@ -68,13 +76,9 @@ public class GetByIdAndDateAfterIntegrationTest {
         eventDay1 = eventDaysRepository.save(new EventDay(eventDayDate, location, expireDate, EventDayState.RESERVABLE_AND_BUYABLE, event));
     }
 
-    /**
-     * FIXME: FAILS FOR NO REASON. Kao ne postoji event sa eventday1.getId() u bazi
-     * @throws EventdayNotFound
-     */
     @Test
     public void getByIdAndDateAfter_Positive() throws EventdayNotFound {
-        EventDay foundEventDay = eventDayService.getByIdAndDateAfter(eventDay1.getId(), eventDay1.getDate());
+        EventDay foundEventDay = eventDayService.getByIdAndDateAfter(eventDay1.getId(), todayDate);
 
         assertNotNull(foundEventDay);
         assertEquals(eventDay1.getId(), foundEventDay.getId());
@@ -85,7 +89,7 @@ public class GetByIdAndDateAfterIntegrationTest {
 
     @Test(expected = EventdayNotFound.class)
     public void getByIdAndDateAfter_Negative_NonexistentId() throws EventdayNotFound {
-        eventDayService.getByIdAndDateAfter(NONEXISTENT_EVENTDAY_ID, eventDay1.getDate());
+        eventDayService.getByIdAndDateAfter(NONEXISTENT_EVENTDAY_ID, todayDate);
     }
 
 
