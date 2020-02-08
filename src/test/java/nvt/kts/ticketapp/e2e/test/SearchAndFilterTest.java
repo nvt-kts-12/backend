@@ -16,6 +16,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
@@ -33,10 +34,13 @@ public class SearchAndFilterTest {
 
     private String url = "http://localhost:4200/";
 
+    @Value("${spring.chromedriver}")
+    private String chromedriver;
+
     @Before
     public void setupSelenium() {
         // instantiate browser
-        System.setProperty("webdriver.chrome.driver", "chromedriver");
+        System.setProperty("webdriver.chrome.driver", this.chromedriver);
         browser = new ChromeDriver();
         // maximize window
         browser.manage().window().maximize();
