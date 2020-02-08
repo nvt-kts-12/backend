@@ -115,7 +115,7 @@ public class EventServiceImpl implements EventService {
             Location location = new Location(locationScheme);
             locations.add(location);
 
-            EventDay eventDay = new EventDay(date, location, reservationExpireDate, EventDayState.NOT_IN_SALE, event);
+            EventDay eventDay = new EventDay(date, location, reservationExpireDate, EventDayState.RESERVABLE_AND_BUYABLE, event);
             eventDays.add(eventDay);
 
             // create locationSectors
