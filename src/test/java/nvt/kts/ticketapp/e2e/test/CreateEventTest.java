@@ -31,7 +31,7 @@ public class CreateEventTest {
 
     @Before
     public void setUpSelenium() {
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "chromedriver");
         browser = new ChromeDriver();
         browser.manage().window().maximize();
 

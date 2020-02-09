@@ -11,7 +11,13 @@ import org.junit.runners.Suite;
         ReservationTest.class,
         UserTicketsTest.class,
         CreateEventTest.class,
-        EditEventTest.class
+        EditEventTest.class,
+        ConfirmReservationTest.class,
+        EditLocationSchemeTest.class,
+        EditProfileTest.class,
+        LoginTest.class,
+        RegistrationTest.class,
+        ReportsTest.class
 })
 public class E2ETestSuite {
 }

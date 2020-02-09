@@ -34,13 +34,11 @@ public class SearchAndFilterTest {
 
     private String url = "http://localhost:4200/";
 
-    @Value("${spring.chromedriver}")
-    private String chromedriver;
 
     @Before
     public void setupSelenium() {
         // instantiate browser
-        System.setProperty("webdriver.chrome.driver", this.chromedriver);
+        System.setProperty("webdriver.chrome.driver", "chromedriver");
         browser = new ChromeDriver();
         // maximize window
         browser.manage().window().maximize();
