@@ -107,7 +107,7 @@ public class EventController {
                 createdPayment = payPalService.createPayment(String.valueOf(totalPrice));
             }
 
-        } catch (EventDayDoesNotExist |LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible | UserNotFound ex) {
+        } catch (EventdayNotFound | EventDayDoesNotExist |LocationSectorsDoesNotExistForLocation | SectorNotFound | SectorWrongType | EventDayDoesNotExistOrStateIsNotValid | NumberOfTicketsException | SeatIsNotAvailable | ReservationIsNotPossible | UserNotFound ex) {
             ex.printStackTrace();
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectOptimisticLockingFailureException | TicketListCantBeEmpty e) {

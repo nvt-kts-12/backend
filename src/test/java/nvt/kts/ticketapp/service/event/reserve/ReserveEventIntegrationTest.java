@@ -13,6 +13,7 @@ import nvt.kts.ticketapp.domain.model.location.*;
 import nvt.kts.ticketapp.domain.model.ticket.Ticket;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.event.EventDayDoesNotExistOrStateIsNotValid;
+import nvt.kts.ticketapp.exception.event.EventdayNotFound;
 import nvt.kts.ticketapp.exception.location.LocationSectorsDoesNotExistForLocation;
 import nvt.kts.ticketapp.exception.location.SectorNotFound;
 import nvt.kts.ticketapp.exception.sector.SectorWrongType;
@@ -109,8 +110,8 @@ public class ReserveEventIntegrationTest {
         EventDay eventDay = new EventDay(date, location, reservationExpirationDate, EventDayState.RESERVABLE_AND_BUYABLE, event);
         eventDaysRepository.save(eventDay);
 
-        Ticket ticketParter = new Ticket(false, sectorParter.getId(), 0, 0, 200, eventDay, null,false);
-        Ticket ticketGrandstand = new Ticket(false, sectorGrandstand.getId(), 1, 1, 200, eventDay, null,false);
+        Ticket ticketParter = new Ticket(false, sectorParter.getId(), 0, 0, 200, eventDay, null, false);
+        Ticket ticketGrandstand = new Ticket(false, sectorGrandstand.getId(), 1, 1, 200, eventDay, null, false);
 
         ticketRepository.saveAll(Arrays.asList(ticketParter, ticketGrandstand));
 
@@ -169,7 +170,7 @@ public class ReserveEventIntegrationTest {
     // PARTER
 
     @Test
-    public void reserve_parter_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO_Parter = generateEventDayReservationDTO_Parter();
 
@@ -179,7 +180,7 @@ public class ReserveEventIntegrationTest {
 
         int reservedTickets = 0;
         Ticket reservedTicket = null;
-        for (Ticket t: tickets) {
+        for (Ticket t : tickets) {
             if (t.getUser() != null) {
                 reservedTickets++;
                 reservedTicket = t;
@@ -200,7 +201,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test
-    public void buy_parter_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void buy_parter_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO_Parter = generateEventDayReservationDTO_Parter();
         eventDayReservationDTO_Parter.setPurchase(true);
@@ -211,7 +212,7 @@ public class ReserveEventIntegrationTest {
 
         int reservedTickets = 0;
         Ticket reservedTicket = null;
-        for (Ticket t: tickets) {
+        for (Ticket t : tickets) {
             if (t.getUser() != null) {
                 reservedTickets++;
                 reservedTicket = t;
@@ -232,7 +233,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
-    public void reserve_parter_EventDayDoesNotExist() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_EventDayDoesNotExist() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Parter();
         eventDayReservationDTO.setEventDayId(10L);
@@ -242,7 +243,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
-    public void reserve_parter_EventDayDoesNotExist_DateAfter() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_EventDayDoesNotExist_DateAfter() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Parter();
 
@@ -257,7 +258,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
-    public void reserve_parter_StateIsNotValid() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_StateIsNotValid() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Parter();
 
@@ -270,7 +271,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = SectorNotFound.class)
-    public void reserve_parter_SectorNotFound() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_SectorNotFound() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
 
         EventDayReservationDTO eventDayReservationDTO_Parter = generateEventDayReservationDTO_Parter();
@@ -280,7 +281,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = SectorWrongType.class)
-    public void reserve_parter_SectorWrongType() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_SectorWrongType() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
 
         EventDayReservationDTO eventDayReservationDTO_Parter = generateEventDayReservationDTO_Parter();
@@ -290,7 +291,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = LocationSectorsDoesNotExistForLocation.class)
-    public void reserve_parter_LocationSectorsDoesNotExistForLocation() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_LocationSectorsDoesNotExistForLocation() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO_Parter = generateEventDayReservationDTO_Parter();
 
@@ -307,7 +308,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = NumberOfTicketsException.class)
-    public void reserve_parter_NumberOfTicketsException() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_NumberOfTicketsException() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO_Parter = generateEventDayReservationDTO_Parter();
 
@@ -317,7 +318,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = ReservationIsNotPossible.class)
-    public void reserve_parter_ReservationIsNotPossible() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_ReservationIsNotPossible() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
 
         EventDayReservationDTO eventDayReservationDTO_Parter = generateEventDayReservationDTO_Parter();
@@ -336,7 +337,7 @@ public class ReserveEventIntegrationTest {
     // GRANDSTAND
 
     @Test
-    public void reserve_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
 
         EventDayReservationDTO eventDayReservationDTO_Grandstand = generateEventDayReservationDTO_Grandstand();
@@ -347,7 +348,7 @@ public class ReserveEventIntegrationTest {
 
         int reservedTickets = 0;
         Ticket reservedTicket = null;
-        for (Ticket t: tickets) {
+        for (Ticket t : tickets) {
             if (t.getUser() != null) {
                 reservedTickets++;
                 reservedTicket = t;
@@ -367,7 +368,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test
-    public void buy_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void buy_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
 
         EventDayReservationDTO eventDayReservationDTO_Grandstand = generateEventDayReservationDTO_Grandstand();
@@ -379,7 +380,7 @@ public class ReserveEventIntegrationTest {
 
         int reservedTickets = 0;
         Ticket reservedTicket = null;
-        for (Ticket t: tickets) {
+        for (Ticket t : tickets) {
             if (t.getUser() != null) {
                 reservedTickets++;
                 reservedTicket = t;
@@ -399,7 +400,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
-    public void reserve_grandstand_EventDayDoesNotExist() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_grandstand_EventDayDoesNotExist() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Parter();
         eventDayReservationDTO.setEventDayId(10L);
@@ -409,7 +410,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
-    public void reserve_grandstand_EventDayDoesNotExist_DateAfter() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_grandstand_EventDayDoesNotExist_DateAfter() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Parter();
 
@@ -424,7 +425,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = EventDayDoesNotExistOrStateIsNotValid.class)
-    public void reserve_grandstand_StateIsNotValid() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_grandstand_StateIsNotValid() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Parter();
 
@@ -437,7 +438,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = SectorNotFound.class)
-    public void reserve_grandstand_SectorNotFound() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_grandstand_SectorNotFound() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO_Grandstand = generateEventDayReservationDTO_Grandstand();
         eventDayReservationDTO_Grandstand.getSeats().get(0).setSectorId(10L);
@@ -446,7 +447,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = SectorWrongType.class)
-    public void reserve_grandstand_SectorWrongType() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_grandstand_SectorWrongType() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO_Grandstand = generateEventDayReservationDTO_Grandstand();
         eventDayReservationDTO_Grandstand.getSeats().get(0).setSectorId(1L);
@@ -455,7 +456,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = LocationSectorsDoesNotExistForLocation.class)
-    public void reserve_grandstand_LocationSectorsDoesNotExistForLocation() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_grandstand_LocationSectorsDoesNotExistForLocation() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO_Grandstand = generateEventDayReservationDTO_Grandstand();
 
@@ -472,7 +473,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = SeatIsNotAvailable.class)
-    public void reserve_grandstand_SeatIsNotAvailable() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_grandstand_SeatIsNotAvailable() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO_Grandstand = generateEventDayReservationDTO_Grandstand();
 
@@ -486,7 +487,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test(expected = ReservationIsNotPossible.class)
-    public void reserve_grandstand_ReservationIsNotPossible() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_grandstand_ReservationIsNotPossible() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO_Grandstand = generateEventDayReservationDTO_Grandstand();
 
@@ -503,7 +504,7 @@ public class ReserveEventIntegrationTest {
     // PARTER AND GRANDSTAND
 
     @Test
-    public void reserve_parter_and_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void reserve_parter_and_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Parter_and_Grandstand();
 
@@ -513,7 +514,7 @@ public class ReserveEventIntegrationTest {
 
         int numberOfReservedTickets = 2;
         List<Ticket> reservedTickets = new ArrayList<>();
-        for (Ticket t: tickets) {
+        for (Ticket t : tickets) {
             if (t.getUser() != null) {
                 numberOfReservedTickets++;
                 reservedTickets.add(t);
@@ -535,7 +536,7 @@ public class ReserveEventIntegrationTest {
     }
 
     @Test
-    public void buy_parter_and_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty {
+    public void buy_parter_and_grandstand_success() throws EventDayDoesNotExistOrStateIsNotValid, SeatIsNotAvailable, SectorNotFound, SectorWrongType, LocationSectorsDoesNotExistForLocation, NumberOfTicketsException, WriterException, ReservationIsNotPossible, IOException, TicketListCantBeEmpty, EventdayNotFound {
 
         EventDayReservationDTO eventDayReservationDTO = generateEventDayReservationDTO_Parter_and_Grandstand();
         eventDayReservationDTO.setPurchase(true);
@@ -546,7 +547,7 @@ public class ReserveEventIntegrationTest {
 
         int numberOfReservedTickets = 2;
         List<Ticket> reservedTickets = new ArrayList<>();
-        for (Ticket t: tickets) {
+        for (Ticket t : tickets) {
             if (t.getUser() != null) {
                 numberOfReservedTickets++;
                 reservedTickets.add(t);
