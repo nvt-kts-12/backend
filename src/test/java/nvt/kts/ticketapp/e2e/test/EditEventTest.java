@@ -2,6 +2,7 @@ package nvt.kts.ticketapp.e2e.test;
 
 import nvt.kts.ticketapp.e2e.pages.admin.*;
 import nvt.kts.ticketapp.e2e.pages.auth.LoginPage;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -102,4 +103,11 @@ public class EditEventTest {
         editEventPage.ensureSnackbarTextHasChanged();
         assertEquals("You have successfully edited the event day",editEventPage.getSnackbar().getText());
     }
+
+
+    @After
+    public void closeSelenium() {
+        browser.quit();
+    }
+
 }

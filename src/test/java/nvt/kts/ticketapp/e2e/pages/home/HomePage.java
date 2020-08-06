@@ -53,6 +53,10 @@ public class HomePage {
         return events;
     }
 
+    public void ensureProfileIconIsClickable(){
+        (new WebDriverWait(webDriver,10)).until(ExpectedConditions.elementToBeClickable(profileIcon));
+    }
+
     public void ensureEventBtnIsClickable(){
         (new WebDriverWait(webDriver,10)).until(ExpectedConditions.elementToBeClickable(eventBtn));
     }

@@ -110,7 +110,7 @@ public class CreateEventIntegrationTest {
 
         LocationDTO locationDTO = new LocationDTO(locationScheme.getId(), locationSectorsDTOS );
 
-        EventDayDTO eventDayDTO = new EventDayDTO("2020-03-18", locationDTO, "2020-03-16");
+        EventDayDTO eventDayDTO = new EventDayDTO("2020-10-18", locationDTO, "2020-10-16");
 
         evenyDays.add(eventDayDTO);
 
@@ -153,8 +153,8 @@ public class CreateEventIntegrationTest {
 
         Event event = new Event("Event", EventCategory.ENTERTAINMENT, "desc");
 
-        Date date = DateUtil.parseDate("2020-03-18", "yyyy-MM-dd");
-        Date reservationExpirationDate = DateUtil.parseDate("2020-03-16", "yyyy-MM-dd");
+        Date date = DateUtil.parseDate("2020-10-18", "yyyy-MM-dd");
+        Date reservationExpirationDate = DateUtil.parseDate("2020-10-16", "yyyy-MM-dd");
 
         EventDay eventDay = new EventDay(date, location, reservationExpirationDate, EventDayState.NOT_IN_SALE, event);
 

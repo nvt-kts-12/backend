@@ -33,10 +33,10 @@ public class CreateEventDaysPage {
     @FindBy(tagName = "mat-select")
     private List<WebElement> selects;
 
-    @FindBy(xpath = "//*[@id=\"10-1\"]")
+    @FindBy(xpath = "//*[@id=\"Petrovaradinska tvrdjava\"]")        // changed to 11-1 from 10-
     private WebElement selectOptionOne;
 
-    @FindBy(xpath = "//*[@id=\"11-2\"]")
+    @FindBy(xpath = "//*[@id=\"Spens\"]")
     private WebElement selectOptionTwo;
 
     @FindBy(id = "sector-rect")
@@ -124,5 +124,8 @@ public class CreateEventDaysPage {
 
     public void ensureFinishButtonIsClickable() {
         (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.elementToBeClickable(finishButton));
+    }
+    public void ensureSelectsOptionsDisplayed() {
+        (new WebDriverWait(webDriver, 10)).until(ExpectedConditions.visibilityOfAllElements(selects));
     }
 }

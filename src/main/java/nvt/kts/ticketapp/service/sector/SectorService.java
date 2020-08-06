@@ -4,6 +4,7 @@ import nvt.kts.ticketapp.domain.dto.location.SectorDTO;
 import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.domain.model.location.Sector;
 import nvt.kts.ticketapp.exception.location.SectorNotFound;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeCanNotBeDeleted;
 import nvt.kts.ticketapp.exception.sector.CanNotDeleteSchemeSectors;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
 import org.springframework.stereotype.Service;

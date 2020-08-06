@@ -5,6 +5,7 @@ import nvt.kts.ticketapp.domain.model.location.LocationScheme;
 import nvt.kts.ticketapp.domain.model.location.LocationSector;
 import nvt.kts.ticketapp.domain.model.location.Sector;
 import nvt.kts.ticketapp.exception.location.SectorNotFound;
+import nvt.kts.ticketapp.exception.locationScheme.LocationSchemeCanNotBeDeleted;
 import nvt.kts.ticketapp.exception.sector.CanNotDeleteSchemeSectors;
 import nvt.kts.ticketapp.exception.sector.SectorDoesNotExist;
 import nvt.kts.ticketapp.repository.sector.LocationSectorRepository;
@@ -62,7 +63,8 @@ public class SectorServiceImpl implements SectorService {
             List<LocationSector> locationSectors = locationSectorRepository.
                     findAllBySectorId(sector.getId());
             if (!locationSectors.isEmpty()) {
-                throw new CanNotDeleteSchemeSectors(sector.getId());
+                Long locationSchemeId = locationSectors.get(0).getLocation().getScheme().getId();
+                throw new CanNotDeleteSchemeSectors(locationSchemeId);
             }
             sector.setDeleted(true);
         }

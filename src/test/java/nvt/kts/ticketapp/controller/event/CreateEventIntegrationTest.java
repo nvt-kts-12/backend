@@ -123,7 +123,7 @@ public class CreateEventIntegrationTest {
 
         LocationDTO locationDTO = new LocationDTO(locationScheme.getId(), locationSectorsDTOS );
 
-        EventDayDTO eventDayDTO = new EventDayDTO("2020-03-18", locationDTO, "2020-03-16");
+        EventDayDTO eventDayDTO = new EventDayDTO("2020-10-18", locationDTO, "2020-10-16");
 
         evenyDays.add(eventDayDTO);
 
@@ -142,7 +142,7 @@ public class CreateEventIntegrationTest {
     @Test
     public void create_DateFormatIsNotValid() {
 
-        eventEventDaysDTO.getEventDays().get(0).setDate("05-05-2020");
+        eventEventDaysDTO.getEventDays().get(0).setDate("05-10-2020");
         ResponseEntity<String> response = adminTemplate.postForEntity(url, new HttpEntity<>(eventEventDaysDTO), String.class);
 
         assertNotNull(response.getBody());
@@ -184,8 +184,8 @@ public class CreateEventIntegrationTest {
 
         Event event = new Event("Event", EventCategory.ENTERTAINMENT, "desc");
 
-        Date date = DateUtil.parseDate("2020-03-18", "yyyy-MM-dd");
-        Date reservationExpirationDate = DateUtil.parseDate("2020-03-16", "yyyy-MM-dd");
+        Date date = DateUtil.parseDate("2020-10-18", "yyyy-MM-dd");
+        Date reservationExpirationDate = DateUtil.parseDate("2020-10-16", "yyyy-MM-dd");
 
         EventDay eventDay = new EventDay(date, location, reservationExpirationDate, EventDayState.NOT_IN_SALE, event);
 
@@ -235,7 +235,7 @@ public class CreateEventIntegrationTest {
     @Test
     public void create_ReservationExpireDateInvalid() {
 
-        eventEventDaysDTO.getEventDays().get(0).setReservationExpireDate("2020-05-05");
+        eventEventDaysDTO.getEventDays().get(0).setReservationExpireDate("2021-05-05");
         ResponseEntity<String> response = adminTemplate.postForEntity(url, new HttpEntity<>(eventEventDaysDTO), String.class);
 
         assertNotNull(response.getBody());

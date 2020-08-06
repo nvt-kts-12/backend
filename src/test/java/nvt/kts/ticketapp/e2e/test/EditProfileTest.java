@@ -49,7 +49,8 @@ public class EditProfileTest {
         Thread.sleep(1000);
 
         assertEquals("http://localhost:4200/",browser.getCurrentUrl());
-        homePage.getProfileIcon().click();
+        homePage.ensureProfileButtonClicable();
+        homePage.getProfileButton().click();
 
         userProfilePage.ensureUsernameIsVisible();
         assertEquals("user",userProfilePage.getUserName().getText());

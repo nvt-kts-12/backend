@@ -173,10 +173,11 @@ public class ConfirmReservationTest {
 
                 sectorPage.ensurePickIsClickable();
                 sectorPage.getPickBtn().click();
+                break;
             } else {
                 sectorPage.getCancelBtn().click();
                 if (i == sectorsList.size() - 1) {
-                    System.out.println("Haven't found a grandstand sector");
+                    System.out.println("Haven't found a parter sector");
                     fail();
                 }
             }

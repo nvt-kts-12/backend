@@ -13,6 +13,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -59,7 +60,7 @@ public class SearchAndFilterTest {
 
     @Test
     public void searchTest() throws InterruptedException {
-        String term = "film";
+        String term = "tezina";
 
         search.setSearch(term);
 
@@ -96,7 +97,13 @@ public class SearchAndFilterTest {
                 continue;
             }
 
-            button.findElement(By.xpath("./label/div[1]/div[1]")).click();
+
+            WebElement elementToClick = button.findElement(By.xpath("./label/div[1]/div[1]"));
+
+            Actions actions = new Actions(browser);             // added these actions because method used in line that is commented down below is not working fsr
+
+            actions.moveToElement(elementToClick).click().perform();
+//            button.findElement(By.xpath("./label/div[1]/div[1]")).click();
             Thread.sleep(1000);
             List<WebElement> events = homePage.getResultList();
 
@@ -248,6 +255,7 @@ public class SearchAndFilterTest {
                     moreInformationButton.click();
                     assertEquals(this.url + urlTokens[0] + urlTokens[1], browser.getCurrentUrl());
 
+                    Thread.sleep(2000);
                     // check main info about event
                     assertEquals(title, eventPage.getEventName().getText());
                     assertEquals(category, eventPage.getEventCategory().getText());

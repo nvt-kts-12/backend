@@ -72,6 +72,8 @@ public class LocationSchemeSectorController {
 
         } catch (CanNotDeleteSchemeSectors | LocationSchemeDoesNotExist | LocationSchemeCanNotBeDeleted ex) {
             ex.printStackTrace();
+            System.out.println("Ovo je poruka greske");
+            System.out.println(ex.getMessage());
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

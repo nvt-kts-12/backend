@@ -112,8 +112,10 @@ public class ReservationTest {
         (new WebDriverWait(browser, 10)).until(ExpectedConditions.visibilityOfAllElements(sectorsList));
         ticketReservationPage.ensureSectorsAreClickable();
 
-        if (sectorsList.size() > 0) {
-            sectorsList.get(0).click();
+        for(int i = 0; i <sectorsList.size(); i++){
+
+//            if (sectorsList.size() > 0) {
+            sectorsList.get(i).click();
             sectorPage.ensureCancelIsClickable();
 
             if (sectorPage.getTitle().getText().toLowerCase().contains("grandstand")) {
@@ -124,9 +126,15 @@ public class ReservationTest {
                     freeSeats.get(0).click();
                     sectorPage.ensurePickIsClickable();
                     sectorPage.getPickBtn().click();
+                    break;
+
                 }
+            }else {
+                sectorPage.getCancelBtn().click();
             }
+//            }
         }
+
         doTheReservationWork();
     }
 
@@ -149,10 +157,11 @@ public class ReservationTest {
 
                 sectorPage.ensurePickIsClickable();
                 sectorPage.getPickBtn().click();
+                break;
             } else {
                 sectorPage.getCancelBtn().click();
                 if (i == sectorsList.size() - 1) {
-                    System.out.println("Haven't found a grandstand sector");
+                    System.out.println("Haven't found a parter sector");
                     fail();
                 }
             }

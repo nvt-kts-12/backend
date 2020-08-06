@@ -4,6 +4,7 @@ import nvt.kts.ticketapp.e2e.pages.admin.AdminPage;
 import nvt.kts.ticketapp.e2e.pages.admin.EditLocationSchemePage;
 import nvt.kts.ticketapp.e2e.pages.admin.LocationSchemesListPage;
 import nvt.kts.ticketapp.e2e.pages.auth.LoginPage;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
@@ -89,8 +90,15 @@ public class EditLocationSchemeTest {
             (new WebDriverWait(browser, 10)).until(ExpectedConditions.urlToBe(expectedUrl3));
             assertEquals(expectedUrl3, browser.getCurrentUrl());
         } else {
-            String expectedMessage = "Location scheme sector with id: " + id + " can not be deleted because it is used in some event.";
+
+            String expectedMessage = "Location scheme with id " + id + " can not be deleted because one of its sectors is used in some event.";
             assertEquals(expectedMessage, editLocationSchemePage.getSnackbar().getText());
         }
     }
+
+    @After
+    public void closeSelenium() {
+        browser.quit();
+    }
+
 }

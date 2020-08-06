@@ -4,6 +4,7 @@ import nvt.kts.ticketapp.e2e.pages.admin.AdminPage;
 import nvt.kts.ticketapp.e2e.pages.admin.CreateEventDaysPage;
 import nvt.kts.ticketapp.e2e.pages.admin.CreateEventPage;
 import nvt.kts.ticketapp.e2e.pages.auth.LoginPage;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -86,7 +87,7 @@ public class CreateEventTest {
         createEventPage.ensureNextMonthButtonIsClickable();
         createEventPage.getGoToNextMonthButton().click();
 
-        WebElement dateButton = createEventPage.getDatesInNextMonth().get(8);
+        WebElement dateButton = createEventPage.getDatesInNextMonth().get(10);
         String clickedDateOne = dateButton.getText();
         dateButton.click();
 
@@ -94,7 +95,7 @@ public class CreateEventTest {
         createEventPage.ensureNextMonthButtonIsClickable();
         createEventPage.getGoToNextMonthButton().click();
 
-        WebElement dateButton2 = createEventPage.getDatesInNextMonth().get(9);
+        WebElement dateButton2 = createEventPage.getDatesInNextMonth().get(11);
         String clickedDateTwo = dateButton2.getText();
         dateButton2.click();
 
@@ -127,9 +128,11 @@ public class CreateEventTest {
         createEventDaysPage.getDatesInNextMonth().get(6).click();
 
         createEventDaysPage.getSelects().get(0).click();
-        createEventDaysPage.getSelectOptionOne().click();
+        createEventDaysPage.ensureSelectsOptionsDisplayed();
+        createEventDaysPage.getSelectOptionOne().click();       // FIXME
 
         createEventDaysPage.getSelects().get(1).click();
+        createEventDaysPage.ensureSelectsOptionsDisplayed();
         createEventDaysPage.getSelectOptionTwo().click();
 
         (new WebDriverWait(browser, 10)).until(ExpectedConditions.visibilityOfAllElements(createEventDaysPage.getSectors()));
@@ -168,4 +171,11 @@ public class CreateEventTest {
 
         assertEquals(createEventPage.getSnackbar().getText(), "you have successfully created the event!");
     }
+
+    @After
+    public void closeSelenium() {
+        browser.quit();
+    }
+
+
 }
