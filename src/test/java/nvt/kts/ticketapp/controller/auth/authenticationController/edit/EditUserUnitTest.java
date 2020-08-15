@@ -1,36 +1,28 @@
 package nvt.kts.ticketapp.controller.auth.authenticationController.edit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import nvt.kts.ticketapp.domain.dto.user.UserDTO;
 import nvt.kts.ticketapp.domain.dto.user.UserEditDTO;
 import nvt.kts.ticketapp.domain.model.user.User;
 import nvt.kts.ticketapp.exception.user.EmailNotValid;
 import nvt.kts.ticketapp.exception.user.FirstNameNotValid;
 import nvt.kts.ticketapp.exception.user.LastNameNotValid;
-import nvt.kts.ticketapp.exception.user.UserNotFound;
 import nvt.kts.ticketapp.service.user.UserServiceImpl;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.*;
-import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-
-import javax.annotation.PostConstruct;
-import java.security.Principal;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
