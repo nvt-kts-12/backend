@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static nvt.kts.ticketapp.config.Constants.DATE_FORMAT;
 import static nvt.kts.ticketapp.util.DateUtil.*;
@@ -202,6 +203,7 @@ public class EventServiceImpl implements EventService {
 
 
     public EventDayUpdateDTO updateEventDay(Long id, EventDayUpdateDTO eventDayDetails) throws EventdayNotFound, DateFormatIsNotValid, EventDayForDateExists {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 
         EventDay eventDay = eventDaysRepository.findByIdAndDeletedFalse(id).
                 orElseThrow(() -> new EventdayNotFound(id));

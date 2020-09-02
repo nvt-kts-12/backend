@@ -17,7 +17,7 @@ public interface LocationSchemeService {
      * @param locationScheme - scheme to save
      * @return
      */
-    public LocationSchemeDTO save(LocationScheme locationScheme) throws LocationSchemeAlreadyExists;
+    LocationSchemeDTO save(LocationScheme locationScheme) throws LocationSchemeAlreadyExists;
 
     /**
      * Provides location scheme with given id
@@ -25,13 +25,13 @@ public interface LocationSchemeService {
      * @return  -   returns location scheme with sectors provided
      * @throws LocationSchemeDoesNotExist
      */
-    public LocationSchemeDTO get(Long id) throws LocationSchemeDoesNotExist;
+    LocationSchemeDTO get(Long id) throws LocationSchemeDoesNotExist;
 
     /**
      * Provides all location schemes
      * @return
      */
-    public List<LocationSchemeDTO> getAll();
+    List<LocationSchemeDTO> getAll();
 
     /**
      * Provides location scheme Entity by its id
@@ -39,12 +39,12 @@ public interface LocationSchemeService {
      * @return
      * @throws LocationSchemeDoesNotExist
      */
-    public LocationScheme getScheme(Long id) throws LocationSchemeDoesNotExist;
+    LocationScheme getScheme(Long id) throws LocationSchemeDoesNotExist;
 
     /**
      * Deletes location scheme from database
      * @param id    -   id of scheme that is going to be deleted
      * @throws LocationSchemeDoesNotExist
      */
-    public LocationSchemeDTO delete(Long id) throws LocationSchemeDoesNotExist, LocationSchemeCanNotBeDeleted;
+    LocationSchemeDTO delete(Long id) throws LocationSchemeDoesNotExist, LocationSchemeCanNotBeDeleted;
 }

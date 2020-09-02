@@ -17,7 +17,9 @@ INSERT INTO `location_scheme` (`id`, `deleted`, `address`, `name`) VALUES
 (1,0,'Petrovaradin, Novi Sad','Petrovaradinska tvrdjava'),
 (2,0,'Sutjeska 2, Novi Sad','Spens'),
 (3,0,'Pozorisni trg 1, Novi Sad','Srpsko narodno pozoriste'),
-(4,0,'Bul. Mihajla Pupina 3, Novi Sad','Arena Cineplex');
+(4,0,'Bul. Mihajla Pupina 3, Novi Sad','Arena Cineplex'),
+(5,0,'Nišavski kej, Niš','Niški amfiteatar');
+
 
 INSERT INTO `sector` (`id`, `deleted`, `bottom_rightx`, `bottom_righty`, `capacity`, `col_num`, `row_num`, `top_leftx`, `top_lefty`, `type`, `location_scheme_id`) VALUES
  (1,0,489,109,200,0,0,12,9,'PARTER',1),
@@ -31,7 +33,9 @@ INSERT INTO `sector` (`id`, `deleted`, `bottom_rightx`, `bottom_righty`, `capaci
  (9,0,495,207,50,5,10,13,8,'GRANDSTAND',3),
  (10,0,490,292,20,10,2,19,215,'GRANDSTAND',3),
  (11,0,368,191,16,4,4,140,25,'GRANDSTAND',4),
- (12,0,485,293,30,10,3,18,199,'GRANDSTAND',4);
+ (12,0,485,293,30,10,3,18,199,'GRANDSTAND',4),
+ (13,0,485,293,75,25,3,18,199,'GRANDSTAND',5);
+
 
 INSERT INTO `location` (`id`, `deleted`, `scheme_id`) VALUES (1,0,1),(2,0,1),(3,0,1),(4,0,2),(5,0,3),(6,0,4);
 
